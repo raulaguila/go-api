@@ -1,0 +1,1021 @@
+basePath: /
+definitions:
+  github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO:
+    properties:
+      login:
+        example: admin@admin.com
+        type: string
+      password:
+        example: "12345678"
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO:
+    properties:
+      accesstoken:
+        type: string
+      refreshtoken:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO:
+    properties:
+      name:
+        example: Automation
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Automation
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+        type: array
+      pages:
+        type: integer
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+        type: array
+      pages:
+        type: integer
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        type: array
+      pages:
+        type: integer
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO:
+    properties:
+      password:
+        example: secret
+        type: string
+      password_confirm:
+        example: secret
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
+    properties:
+      name:
+        example: ADMIN
+        type: string
+      permissions:
+        additionalProperties: true
+        type: object
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: ADMIN
+        type: string
+      permissions:
+        additionalProperties: true
+        type: object
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
+    properties:
+      email:
+        example: john.cena@email.com
+        type: string
+      name:
+        example: John Cena
+        type: string
+      profile_id:
+        example: 1
+        type: integer
+      status:
+        example: true
+        type: boolean
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO:
+    properties:
+      email:
+        example: john.cena@email.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Cena
+        type: string
+      profile:
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+      status:
+        example: true
+        type: boolean
+    type: object
+  github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+info:
+  contact:
+    email: email@email.com
+    name: Raul del Aguila
+  description: This API template is a user-friendly solution designed to serve as
+    the foundation for more complex APIs.
+  title: Go API Template
+paths:
+  /:
+    get:
+      description: Ping Pong
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ping Pong
+      tags:
+      - Ping
+  /auth:
+    get:
+      consumes:
+      - application/json
+      description: User authenticated
+      parameters:
+      - description: User token
+        in: header
+        name: Authorization
+        type: string
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: User authenticated
+      tags:
+      - Auth
+    post:
+      consumes:
+      - application/json
+      description: User authentication
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Credentials model
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      summary: User authentication
+      tags:
+      - Auth
+    put:
+      consumes:
+      - application/json
+      description: User refresh
+      parameters:
+      - description: User token
+        in: header
+        name: Authorization
+        type: string
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      summary: User refresh
+      tags:
+      - Auth
+  /department:
+    delete:
+      consumes:
+      - application/json
+      description: Delete departments by IDs
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Department ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Delete departments by IDs
+      tags:
+      - Department
+    get:
+      consumes:
+      - application/json
+      description: List departments
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - example: 10
+        in: query
+        name: limit
+        type: integer
+      - example: descending order 'desc' or ascending order 'asc'
+        in: query
+        name: order
+        type: string
+      - example: 1
+        in: query
+        name: page
+        type: integer
+      - example: name
+        in: query
+        name: search
+        type: string
+      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
+          the response object'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: List departments
+      tags:
+      - Department
+    post:
+      consumes:
+      - application/json
+      description: Insert department
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Department model
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Insert department
+      tags:
+      - Department
+  /department/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get department by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get department by ID
+      tags:
+      - Department
+    put:
+      consumes:
+      - application/json
+      description: Update department by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Department model
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Update department by ID
+      tags:
+      - Department
+  /profile:
+    delete:
+      consumes:
+      - application/json
+      description: Delete profiles by IDs
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Profile ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Delete profiles by IDs
+      tags:
+      - Profile
+    get:
+      consumes:
+      - application/json
+      description: Get profiles
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - example: 10
+        in: query
+        name: limit
+        type: integer
+      - example: descending order 'desc' or ascending order 'asc'
+        in: query
+        name: order
+        type: string
+      - example: 1
+        in: query
+        name: page
+        type: integer
+      - example: name
+        in: query
+        name: search
+        type: string
+      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
+          the response object'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get profiles
+      tags:
+      - Profile
+    post:
+      consumes:
+      - application/json
+      description: Insert profile
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Profile model
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Insert profile
+      tags:
+      - Profile
+  /profile/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get profile by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get profile by ID
+      tags:
+      - Profile
+    put:
+      consumes:
+      - application/json
+      description: Update profile by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: Profile ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Profile model
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Update profile
+      tags:
+      - Profile
+  /user:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User ID
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Delete user
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - example: 10
+        in: query
+        name: limit
+        type: integer
+      - example: descending order 'desc' or ascending order 'asc'
+        in: query
+        name: order
+        type: string
+      - example: 1
+        in: query
+        name: page
+        type: integer
+      - example: 1
+        in: query
+        name: profile_id
+        type: integer
+      - example: name
+        in: query
+        name: search
+        type: string
+      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
+          the response object'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get users
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: Insert user
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User model
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Insert user
+      tags:
+      - User
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get user
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update user by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User model
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Update user
+      tags:
+      - User
+  /user/{id}/photo:
+    get:
+      consumes:
+      - application/json
+      description: Get user photo
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Get user photo
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Set user photo
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: profile photo
+        in: formData
+        name: photo
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Set user photo
+      tags:
+      - User
+  /user/pass:
+    delete:
+      consumes:
+      - application/json
+      description: Reset user password by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      security:
+      - Bearer: []
+      summary: Reset user password
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Set user password by ID
+      parameters:
+      - description: Language responses
+        in: query
+        name: lang
+        type: string
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: Password model
+        in: body
+        name: password
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+      summary: Set user password
+      tags:
+      - User
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

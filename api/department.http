@@ -1,0 +1,138 @@
+@host = http://127.0.0.1:9000
+@lang = lang=en
+@endpoint = /department
+@filter = {{lang}}&page=1&limit=5&order=asc&sort=name
+
+###
+
+# @name login
+POST {{host}}/auth?lang={{lang}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "admin@admin.com",
+  "password": "12345678"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        client.global.set("accesstoken", response.body.accesstoken);
+    });
+%}
+
+###
+
+# @name getAll
+GET {{host}}{{endpoint}}?{{filter}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+    });
+%}
+
+###
+
+# @name createItem
+POST {{host}}/{{endpoint}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "name": "Department Created"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201, "Wrong status code");
+        client.global.set("id", response.body.id);
+        client.global.set("body_create", "{\"name\":\"Department Created\"}");
+    });
+%}
+
+###
+
+# @name getCreatedItemByID
+GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        let auxSend = JSON.parse(client.global.get("body_create"));
+        let auxRecv = response.body;
+        for (let key in auxSend) {
+            client.assert(auxSend[key] === auxRecv[key], "Wrong key value: " + key + "(" + auxSend[key] + " != " + auxRecv[key] + ")");
+        }
+    });
+%}
+
+###
+
+# @name updateItemByID
+PUT {{host}}/{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "name": "Department Updated"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        client.global.set("id", response.body.id);
+        client.global.set("body_update", "{\"name\":\"Department Updated\"}");
+    });
+%}
+
+###
+
+# @name getUpdatedItemByID
+GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        let auxSend = JSON.parse(client.global.get("body_update"));
+        let auxRecv = response.body;
+        for (let key in auxSend) {
+            client.assert(auxSend[key] === auxRecv[key], "Wrong key value: " + key + "(" + auxSend[key] + "!=" + auxRecv[key] + ")");
+        }
+    });
+%}
+
+###
+
+# @name deleteItemByID
+DELETE {{host}}{{endpoint}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "ids": [{{id}}]
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 204, "Wrong status code");
+    });
+%}
+
+###
+
+# @name getDeletedItemByID
+GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 404, "Wrong status code");
+    });
+%}

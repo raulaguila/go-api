@@ -1,0 +1,48 @@
+name: go_build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Build:
+    runs-on: [ ubuntu-latest ]
+
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v4
+
+      - name: Get build version
+        id: getVersion
+        run: echo "version=$(cat configs/version.txt)" >> $GITHUB_OUTPUT
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22"
+
+      - name: Environment file
+        run: make init
+
+      - name: Remove object and cached files
+        run: go clean -modcache
+
+      - name: Build
+        run: make build
+
+      - name: Copy README.md
+        run: cp .github/README.md README.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go_template_${{ steps.getVersion.outputs.version }}
+          path: |
+            configs/.env
+            docker-compose.yml
+            Dockerfile
+            backend
+            README.md
+            Makefile
+            test/
+          if-no-files-found: error
+          overwrite: true
