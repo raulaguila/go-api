@@ -1,0 +1,87 @@
+[ErrDepartmentNotFound]
+one = "Department not found."
+other = "Department not found."
+
+[ErrDepartmentRegistered]
+one = "Department already registered."
+other = "Department already registered."
+
+[ErrDepartmentUsed]
+one = "Department is being used."
+other = "Department is being used."
+
+[ErrDisabledUser]
+one = "Disabled user."
+other = "Disabled user."
+
+[ErrExpiredToken]
+one = "Expired token."
+other = "Expired token."
+
+[ErrFileNotFound]
+one = "File not found."
+other = "File not found."
+
+[ErrGeneric]
+one = "An unexpected error occurred, try again later."
+other = "An unexpected error occurred, try again later."
+
+[ErrIncorrectCredentials]
+one = "Incorrect credentials."
+other = "Incorrect credentials."
+
+[ErrInvalidDatas]
+one = "Invalid data, please specify valid data."
+other = "Invalid data, please specify valid data."
+
+[ErrInvalidId]
+one = "Invalid ID, please specify a valid ID."
+other = "Invalid ID, please specify a valid ID."
+
+[ErrManyRequest]
+one = "You have completed many requests in a short period of time! Please wait a minute!"
+other = "You have completed many requests in a short period of time! Please wait a minute!"
+
+[ErrPassUnmatch]
+one = "Passwords does not match."
+other = "Passwords does not match."
+
+[ErrProfileNotFound]
+one = "Profile not found."
+other = "Profile not found."
+
+[ErrProfileRegistered]
+one = "Profile already registered."
+other = "Profile already registered."
+
+[ErrProfileUsed]
+one = "Profile is being used."
+other = "Profile is being used."
+
+[ErrUndefinedColumn]
+one = "Undefined column or parameter name."
+other = "Undefined column or parameter name."
+
+[ErrUserHasNoPhoto]
+one = "User has no profile photo."
+other = "User has no profile photo."
+
+[ErrUserHasPass]
+one = "User already has registered password."
+other = "User already has registered password."
+
+[ErrUserNotFound]
+one = "User not found."
+other = "User not found."
+
+[ErrUserRegistered]
+one = "User already registered."
+other = "User already registered."
+
+[ErrUserUsed]
+one = "User is being used."
+other = "User is being used."
+
+[ErrorNonexistentRoute]
+one = "Route does not exist in this API."
+other = "Route does not exist in this API."

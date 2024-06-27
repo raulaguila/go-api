@@ -1,0 +1,138 @@
+@host = http://127.0.0.1:9000
+@lang = en
+
+###
+
+# @name login
+POST {{host}}/auth?lang={{lang}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "admin@admin.com",
+  "password": "12345678"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        client.global.set("accesstoken", response.body.accesstoken);
+    });
+%}
+
+###
+
+# @name getAll
+GET {{host}}/profile?lang={{lang}}&page=1&limit=5&order=asc&sort=name HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+    });
+%}
+
+###
+
+# @name create
+POST {{host}}/profile?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "name": "Profile Created",
+  "permissions": {
+    "user_module": true,
+    "profile_module": true,
+    "department_module": true
+  }
+}
+
+> {%
+    client.global.set("id", response.body.id);
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201, "Wrong status code");
+    });
+%}
+
+###
+
+# @name getCreatedByID
+GET {{host}}/profile/{{id}}?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        client.assert(response.body.name === "Profile Created", "Wrong created name");
+        client.assert(response.body.permissions.user_module === true, "Wrong updated user permission");
+        client.assert(response.body.permissions.profile_module === true, "Wrong created profile permission");
+        client.assert(response.body.permissions.department_module === true, "Wrong created department permission");
+    });
+%}
+
+###
+
+# @name updateByID
+PUT {{host}}/profile/{{id}}?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "name": "Profile Updated",
+  "permissions": {
+    "user_module": false,
+    "profile_module": false,
+    "department_module": false
+  }
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+    });
+%}
+
+###
+
+# @name getUpdatedByID
+GET {{host}}/profile/{{id}}?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Wrong status code");
+        client.assert(response.body.name === "Profile Updated", "Wrong updated name");
+        client.assert(response.body.permissions.user_module === false, "Wrong updated user permission");
+        client.assert(response.body.permissions.profile_module === false, "Wrong updated profile permission");
+        client.assert(response.body.permissions.department_module === false, "Wrong updated department permission");
+    });
+%}
+
+###
+
+# @name deleteByID
+DELETE {{host}}/profile?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+Content-Type: application/json
+
+{
+  "ids": [{{id}}]
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 204, "Wrong status code");
+    });
+%}
+
+###
+
+# @name getDeletedByID
+GET {{host}}/profile/{{id}}?lang={{lang}} HTTP/1.1
+Authorization: Bearer {{accesstoken}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 404, "Wrong status code");
+    });
+%}

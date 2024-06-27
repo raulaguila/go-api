@@ -1,0 +1,1570 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This API template is a user-friendly solution designed to serve as the foundation for more complex APIs.",
+        "title": "Go API Template",
+        "contact": {
+            "name": "Raul del Aguila",
+            "email": "email@email.com"
+        }
+    },
+    "basePath": "/",
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Ping Pong",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ping"
+                ],
+                "summary": "Ping Pong",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "User authenticated",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User authenticated",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User token",
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "User refresh",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User refresh",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User token",
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "User authentication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User authentication",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Credentials model",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/department": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "List departments",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Department"
+                ],
+                "summary": "List departments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Insert department",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Department"
+                ],
+                "summary": "Insert department",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Department model",
+                        "name": "department",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Delete departments by IDs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Department"
+                ],
+                "summary": "Delete departments by IDs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Department ID",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/department/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get department by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Department"
+                ],
+                "summary": "Get department by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Department ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update department by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Department"
+                ],
+                "summary": "Update department by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Department ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Department model",
+                        "name": "department",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get profiles",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get profiles",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Insert profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Insert profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Profile model",
+                        "name": "profile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Delete profiles by IDs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Delete profiles by IDs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get profile by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get profile by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update profile by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Profile ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Profile model",
+                        "name": "profile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "profile_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Insert user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Insert user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "User model",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Delete user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/pass": {
+            "put": {
+                "description": "Set user password by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Set user password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Password model",
+                        "name": "password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Reset user password by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Reset user password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User model",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/photo": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get user photo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user photo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Set user photo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Set user photo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Language responses",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "profile photo",
+                        "name": "photo",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "admin@admin.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "12345678"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO": {
+            "type": "object",
+            "properties": {
+                "accesstoken": {
+                    "type": "string"
+                },
+                "refreshtoken": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Automation"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Automation"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                    }
+                },
+                "pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                    }
+                },
+                "pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                    }
+                },
+                "pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "secret"
+                },
+                "password_confirm": {
+                    "type": "string",
+                    "example": "secret"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "ADMIN"
+                },
+                "permissions": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "ADMIN"
+                },
+                "permissions": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john.cena@email.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Cena"
+                },
+                "profile_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john.cena@email.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Cena"
+                },
+                "profile": {
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "status bad request"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "description": "Type \"Bearer\" followed by a space and JWT token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
