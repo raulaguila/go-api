@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: go_template_${{ steps.getVersion.outputs.version }}
+          name: go_api_${{ steps.getVersion.outputs.version }}
           path: |
             configs/.env
             docker-compose.yml
@@ -43,6 +43,6 @@ jobs:
             backend
             README.md
             Makefile
-            test/
+            api/
           if-no-files-found: error
           overwrite: true
