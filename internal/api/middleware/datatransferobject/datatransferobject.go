@@ -1,11 +1,12 @@
 package datatransferobject
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"reflect"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-func isPointerOfStruct(i interface{}) bool {
+func isPointerOfStruct(i any) bool {
 	return reflect.ValueOf(i).Kind() == reflect.Ptr && reflect.TypeOf(i).Elem().Kind() == reflect.Struct
 }
 
@@ -33,7 +34,7 @@ func New(config ...Config) fiber.Handler {
 		}
 	}
 
-	parser := func(c *fiber.Ctx, obj interface{}) (interface{}, error) {
+	parser := func(c *fiber.Ctx, obj any) (any, error) {
 		switch cfg.OnLookup {
 		case Body:
 			return obj, c.BodyParser(obj)

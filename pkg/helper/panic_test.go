@@ -8,7 +8,7 @@ import (
 
 func restore() {
 	if r := recover(); r != nil {
-		fmt.Println("Recovered in f", r)
+		fmt.Printf("Recovered in f: %v\n", r)
 	}
 }
 

@@ -39,9 +39,9 @@ func (s *Filter) ApplySearchLike(db *gorm.DB, columns ...string) *gorm.DB {
 		where := ""
 		for i, column := range columns {
 			if i > 0 {
-				where = where + " or "
+				where += " or "
 			}
-			where = where + whereLike(column, s.Search)
+			where += whereLike(column, s.Search)
 		}
 
 		if where != "" {

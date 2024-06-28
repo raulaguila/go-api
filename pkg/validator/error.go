@@ -1,17 +1,19 @@
 package validator
 
-import "fmt"
+import (
+	"fmt"
+)
 
-var ErrValidator *ErrorValidator
+var ErrValidator *ValidateError
 
-type ErrorValidator struct {
+type ValidateError struct {
 	field string
 	tag   string
 	param string
-	value interface{}
+	value any
 }
 
-func (m *ErrorValidator) Error() string {
+func (m *ValidateError) Error() string {
 	if m.param != "" {
 		return fmt.Sprintf("value: '%v' in the '%s' field does not meet the requirement: %s[%s]", m.value, m.field, m.tag, m.param)
 	}

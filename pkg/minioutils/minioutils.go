@@ -1,16 +1,17 @@
-package minio_client
+package minioutils
 
 import (
 	"context"
 	"fmt"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"io"
 	"net/url"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 type Minio struct {

@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 

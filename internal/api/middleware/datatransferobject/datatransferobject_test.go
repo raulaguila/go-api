@@ -1,13 +1,14 @@
 package datatransferobject
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/stretchr/testify/require"
 )
 
 type (

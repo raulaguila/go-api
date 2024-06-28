@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
+	"os"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"os"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 )

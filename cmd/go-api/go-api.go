@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/raulaguila/go-api/internal/api/middleware/language"
-	"github.com/raulaguila/go-api/pkg/minio-client"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/raulaguila/go-api/pkg/minioutils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -15,14 +15,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	_ "github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
-// @title 							Go API Template
-// @description 					This API template is a user-friendly solution designed to serve as the foundation for more complex APIs.
+// @title 							Go API
+// @description 					This API is a user-friendly solution designed to serve as the foundation for more complex APIs.
 
 // @contact.name					Raul del Aguila
 // @contact.email					email@email.com
@@ -37,7 +38,7 @@ func main() {
 	db, err := database.ConnectPostgresDB()
 	helper.PanicIfErr(err)
 
-	minioClient := minio_client.NewMinioClient()
+	minioClient := minioutils.NewMinioClient()
 	helper.PanicIfErr(minioClient.InitBucket(context.Background(), os.Getenv("MINIO_BUCKET_FILES"), "*"))
 
 	app := fiber.New(fiber.Config{
@@ -65,10 +66,10 @@ func main() {
 	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
 		app.Use(logger.New(logger.Config{
 			CustomTags: map[string]logger.LogFunc{
-				"xip": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
-				"fullPath": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"fullPath": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(string(c.Request().RequestURI()))
 				},
 			},

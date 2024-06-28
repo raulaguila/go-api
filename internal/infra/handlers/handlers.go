@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/minio-client"
+	"github.com/raulaguila/go-api/pkg/minioutils"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"github.com/raulaguila/go-api/pkg/helper"
 
 	"github.com/raulaguila/go-api/docs"
 	"github.com/raulaguila/go-api/internal/api/handler"
@@ -32,7 +32,7 @@ var (
 )
 
 // initRepositories Initialize all repositories.
-func initRepositories(db *gorm.DB, minioClient *minio_client.Minio) {
+func initRepositories(db *gorm.DB, minioClient *minioutils.Minio) {
 	profileRepository = repository.NewProfileRepository(db)
 	userRepository = repository.NewUserRepository(db, minioClient)
 	departmentRepository = repository.NewDepartmentRepository(db)
@@ -40,7 +40,6 @@ func initRepositories(db *gorm.DB, minioClient *minio_client.Minio) {
 
 // initServices Initialize all services.
 func initServices() {
-
 	profileService = service.NewProfileService(profileRepository)
 	userService = service.NewUserService(userRepository)
 	authService = service.NewAuthService(userRepository)
@@ -66,7 +65,7 @@ func initHandlers(app *fiber.App) {
 	})
 }
 
-func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minio_client.Minio) {
+func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "true" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 

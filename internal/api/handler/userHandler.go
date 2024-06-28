@@ -2,15 +2,16 @@ package handler
 
 import (
 	"errors"
+	"github.com/raulaguila/go-api/pkg/pgutils"
+	"log"
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/pg-utils"
 	"gorm.io/gorm"
-	"log"
-	"strings"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
@@ -49,12 +50,12 @@ func (h *UserHandler) foreignKeyViolatedFrom(c *fiber.Ctx, messages *i18n.Transl
 func (h *UserHandler) handlerError(c *fiber.Ctx, err error) error {
 	messages := c.Locals(helper.LocalLang).(*i18n.Translation)
 
-	switch pgErr := pg_utils.HandlerError(err); {
-	case errors.Is(pgErr, pg_utils.ErrDuplicatedKey):
+	switch pgErr := pgutils.HandlerError(err); {
+	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
 		return helper.NewHTTPResponse(c, fiber.StatusConflict, messages.ErrUserRegistered)
-	case errors.Is(pgErr, pg_utils.ErrForeignKeyViolated):
+	case errors.Is(pgErr, pgutils.ErrForeignKeyViolated):
 		return h.foreignKeyViolatedFrom(c, messages)
-	case errors.Is(pgErr, pg_utils.ErrUndefinedColumn):
+	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
 		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUndefinedColumn)
 	case errors.Is(pgErr, myerrors.ErrUserHasNoPhoto):
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrUserHasNoPhoto)
@@ -102,7 +103,7 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 // @Param        lang query string false "Language responses"
 // @Param        id     path    int     true        "User ID"
 // @Success      200  {object}  nil
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id}/photo [get]
 // @Security	 Bearer
 func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
@@ -125,7 +126,7 @@ func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
 // @Param        id     path    int     true        "User ID"
 // @Param		 photo formData	file			true	"profile photo"
 // @Success      200  {object}  nil
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id}/photo [put]
 // @Security	 Bearer
 func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
@@ -147,7 +148,7 @@ func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
 // @Param        lang query string false "Language responses"
 // @Param        filter query filters.UserFilter false "Optional Filter"
 // @Success      200  {array}   dto.ItemsOutputDTO[dto.UserOutputDTO]
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user [get]
 // @Security	 Bearer
 func (h *UserHandler) getUsers(c *fiber.Ctx) error {
@@ -168,9 +169,9 @@ func (h *UserHandler) getUsers(c *fiber.Ctx) error {
 // @Param        lang query string false "Language responses"
 // @Param        user body dto.UserInputDTO true "User model"
 // @Success      201  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      409  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      409  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user [post]
 // @Security	 Bearer
 func (h *UserHandler) createUser(c *fiber.Ctx) error {
@@ -192,9 +193,9 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 // @Param        lang query string false "Language responses"
 // @Param        id     path    int     true        "User ID"
 // @Success      200  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id} [get]
 // @Security	 Bearer
 func (h *UserHandler) getUser(c *fiber.Ctx) error {
@@ -217,9 +218,9 @@ func (h *UserHandler) getUser(c *fiber.Ctx) error {
 // @Param        id     path    int     true        "User ID"
 // @Param        user body dto.UserInputDTO true "User model"
 // @Success      200  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id} [put]
 // @Security	 Bearer
 func (h *UserHandler) updateUser(c *fiber.Ctx) error {
@@ -242,8 +243,8 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Param        lang query string false "Language responses"
 // @Param        id   body      dto.IDsInputDTO     true        "User ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
@@ -268,8 +269,8 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Param        lang query string false "Language responses"
 // @Param        email     query    string     true        "User email"
 // @Success      200  {object}  nil
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/pass [delete]
 // @Security	 Bearer
 func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
@@ -291,8 +292,8 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Param        email     query    string     true        "User email"
 // @Param        password body dto.PasswordInputDTO true "Password model"
 // @Success      200  {object}  nil
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/pass [put]
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 	pass := c.Locals(helper.LocalDTO).(*dto.PasswordInputDTO)

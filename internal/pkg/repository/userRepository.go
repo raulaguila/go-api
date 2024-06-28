@@ -3,22 +3,23 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"github.com/raulaguila/go-api/pkg/minio-client"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
+	"github.com/raulaguila/go-api/pkg/minioutils"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/google/uuid"
+	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/postgre"
 )
 
-func NewUserRepository(db *gorm.DB, minioClient *minio_client.Minio) domain.UserRepository {
+func NewUserRepository(db *gorm.DB, minioClient *minioutils.Minio) domain.UserRepository {
 	return &userRepository{
 		db:    db,
 		minio: minioClient,
@@ -27,7 +28,7 @@ func NewUserRepository(db *gorm.DB, minioClient *minio_client.Minio) domain.User
 
 type userRepository struct {
 	db    *gorm.DB
-	minio *minio_client.Minio
+	minio *minioutils.Minio
 }
 
 func (s *userRepository) applyFilter(ctx context.Context, filter *filters.UserFilter) *gorm.DB {

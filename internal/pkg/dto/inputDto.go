@@ -6,8 +6,8 @@ type (
 	}
 
 	ProfileInputDTO struct {
-		Name        *string                `json:"name" example:"ADMIN"`
-		Permissions map[string]interface{} `json:"permissions"`
+		Name        *string        `json:"name" example:"ADMIN"`
+		Permissions map[string]any `json:"permissions"`
 	}
 
 	UserInputDTO struct {

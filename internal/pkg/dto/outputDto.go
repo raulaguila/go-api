@@ -7,9 +7,9 @@ type (
 	}
 
 	ProfileOutputDTO struct {
-		Id          *uint                  `json:"id" example:"1"`
-		Name        *string                `json:"name" example:"ADMIN"`
-		Permissions map[string]interface{} `json:"permissions,omitempty"`
+		Id          *uint          `json:"id" example:"1"`
+		Name        *string        `json:"name" example:"ADMIN"`
+		Permissions map[string]any `json:"permissions,omitempty"`
 	}
 
 	UserOutputDTO struct {

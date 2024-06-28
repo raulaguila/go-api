@@ -2,14 +2,15 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"log"
 	"mime/multipart"
 	"path/filepath"
 	"slices"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/pkg/domain"
+	"github.com/raulaguila/go-api/internal/pkg/i18n"
+	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {

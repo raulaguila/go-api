@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
@@ -50,7 +51,7 @@ func (s *profileRepository) GetProfileByID(ctx context.Context, profileID uint) 
 }
 
 func (s *profileRepository) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*domain.Profile, error) {
-	profile := &domain.Profile{Permissions: map[string]interface{}{}}
+	profile := &domain.Profile{Permissions: map[string]any{}}
 	if err := profile.Bind(data); err != nil {
 		return nil, err
 	}

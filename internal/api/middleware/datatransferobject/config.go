@@ -17,8 +17,8 @@ type Config struct {
 	OnLookup Lookup
 
 	// Model pointer to struct to parse dto.
-	// Optional. Default value *map[string]interface{}.
-	Model interface{}
+	// Optional. Default value *map[string]any.
+	Model any
 
 	// Next defines a function to skip middleware.
 	// Optional. Default: nil
@@ -33,7 +33,7 @@ type Config struct {
 var defaultConfig = Config{
 	ContextKey: "localDTO",
 	OnLookup:   Body,
-	Model:      new(map[string]interface{}),
+	Model:      new(map[string]any),
 	Next:       nil,
 	ErrorHandler: func(c *fiber.Ctx, err error) error {
 		return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{

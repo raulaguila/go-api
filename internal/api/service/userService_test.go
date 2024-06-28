@@ -3,14 +3,15 @@ package service
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/stretchr/testify/suite"
-	"testing"
-	"time"
 )
 
 func TestUserSuit(t *testing.T) {
@@ -36,7 +37,7 @@ func (s *UserTestSuite) SetupTest() {
 		Profile: &domain.Profile{
 			Base:        domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
 			Name:        "ADMIN",
-			Permissions: map[string]interface{}{"user": true},
+			Permissions: map[string]any{"user": true},
 		},
 		Token: nil,
 	}

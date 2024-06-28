@@ -3,11 +3,12 @@ package middleware
 import (
 	"encoding/base64"
 	"errors"
+	"log"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
@@ -42,7 +43,7 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
 			messages := c.Locals(helper.LocalLang).(*i18n.Translation)
-			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (interface{}, error) {
+			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 					return nil, err
 				}
