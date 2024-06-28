@@ -2,10 +2,10 @@ name: go_api
 
 volumes:
 
-  go_api_postgres_volume:
-    name: go_api_postgres_volume
-  go_api_minio_volume:
-    name: go_api_minio_volume
+  api_postgres_volume:
+    name: api_postgres_volume
+  api_minio_volume:
+    name: api_minio_volume
 
 networks:
 
@@ -18,11 +18,11 @@ services:
   postgres:
 
     hostname: postgres
-    container_name: go_api_postgres
+    container_name: api_postgres
     image: postgres:14.7-alpine
     restart: always
     volumes:
-      - go_api_postgres_volume:/var/lib/postgresql/data
+      - api_postgres_volume:/var/lib/postgresql/data
     command: -p ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -37,11 +37,11 @@ services:
   minio:
 
     hostname: minio
-    container_name: go_api_minio
+    container_name: api_minio
     image: bitnami/minio:2024
     restart: always
     volumes:
-      - go_api_minio_volume:/bitnami/minio/data
+      - api_minio_volume:/bitnami/minio/data
     ports:
       - ${MINIO_API_PORT}:${MINIO_API_PORT}
       - ${MINIO_WEB_PORT}:${MINIO_WEB_PORT}
@@ -56,9 +56,9 @@ services:
 
   backend:
 
-    container_name: go_api_backend
+    container_name: api_backend
     build: .
-    image: go_api_backend
+    image: api_backend
     restart: always
     depends_on:
       - postgres

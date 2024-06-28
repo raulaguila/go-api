@@ -1,6 +1,8 @@
 package datatransferobject
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type Config struct {
 	// ContextKey string key to store the dto object into context.

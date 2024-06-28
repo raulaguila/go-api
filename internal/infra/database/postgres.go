@@ -5,13 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"os"
 	"time"
 
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,10 +19,8 @@ import (
 func pgConnect(dbName string) *gorm.DB {
 	uri := fmt.Sprintf("host=%s user=%s password=%s dbname=%v port=%s sslmode=disable TimeZone=%v", os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASS"), dbName, os.Getenv("POSTGRES_PORT"), time.Local.String())
 	db, err := gorm.Open(postgres.Open(uri), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
-		NowFunc: func() time.Time {
-			return time.Now()
-		},
+		Logger:      logger.Default.LogMode(logger.Silent),
+		NowFunc:     time.Now,
 		PrepareStmt: true,
 	})
 	helper.PanicIfErr(err)

@@ -26,7 +26,7 @@ func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
 	helper.PanicIfErr(err)
 
-	_ = os.Setenv("SYS_VERSION", version)
+	helper.PanicIfErr(os.Setenv("SYS_VERSION", version))
 
 	time.Local, err = time.LoadLocation(os.Getenv("TZ"))
 	helper.PanicIfErr(err)

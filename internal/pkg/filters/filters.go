@@ -1,6 +1,8 @@
 package filters
 
-import "github.com/raulaguila/go-api/pkg/filter"
+import (
+	"github.com/raulaguila/go-api/pkg/filter"
+)
 
 type (
 	UserFilter struct {
