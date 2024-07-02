@@ -50,14 +50,14 @@ compose-stats: ## Run 'docker compose stats' to display containers stats
 go-run: ## Run application from source code
 	@go run cmd/go-api/go-api.go
 
-.PHONY: go-build
-go-build: ## Build the application from source code
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
-
 .PHONY: go-test
 go-test: ## Run tests and generate coverage report
 	@go run gotest.tools/gotestsum@latest -f testdox -- ./... -race -count=1 -coverprofile=/tmp/coverage.out -covermode=atomic
 	@go tool cover -html=/tmp/coverage.out
+
+.PHONY: go-build
+go-build: ## Build the application from source code
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
 
 .PHONY: go-benchmark
 go-benchmark: ## Benchmark code performance
