@@ -56,7 +56,7 @@ go-build: ## Build the application from source code
 
 .PHONY: go-test
 go-test: ## Run tests and generate coverage report
-	@go run gotest.tools/gotestsum@latest -f testname -- ./... -race -count=1 -coverprofile=/tmp/coverage.out -covermode=atomic
+	@go run gotest.tools/gotestsum@latest -f testdox -- ./... -race -count=1 -coverprofile=/tmp/coverage.out -covermode=atomic
 	@go tool cover -html=/tmp/coverage.out
 
 .PHONY: go-benchmark

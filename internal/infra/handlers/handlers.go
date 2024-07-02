@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"os"
 	"strings"
 
@@ -59,7 +58,7 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+		var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrorNonexistentRoute)
 	})
 }
@@ -80,5 +79,5 @@ func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) 
 	initServices()
 	initHandlers(app)
 
-	log.Fatal(app.Listen(":" + os.Getenv("API_PORT")))
+	panic(app.Listen(":" + os.Getenv("API_PORT")))
 }

@@ -21,12 +21,12 @@ type userService struct {
 
 func (s *userService) GenerateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
 	return &dto.UserOutputDTO{
-		Id:     &user.Id,
+		ID:     &user.Id,
 		Name:   &user.Name,
 		Email:  &user.Email,
 		Status: &user.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
-			Id:   &user.Auth.Profile.Id,
+			ID:   &user.Auth.Profile.Id,
 			Name: &user.Auth.Profile.Name,
 		},
 	}
@@ -65,17 +65,6 @@ func (s *userService) GetUsers(ctx context.Context, filter *filters.UserFilter) 
 		Pages: filter.CalcPages(count),
 	}, nil
 }
-
-//
-//// GetUserByMail Implementation of 'GetUserByMail'.
-//func (s *userService) GetUserByMail(ctx context.Context, userMail string) (*domain.User, error) {
-//	return s.userRepository.GetUserByMail(ctx, userMail)
-//}
-//
-//// GetUserByToken Implementation of 'GetUserByToken'.
-//func (s *userService) GetUserByToken(ctx context.Context, token string) (*domain.User, error) {
-//	return s.userRepository.GetUserByToken(ctx, token)
-//}
 
 // CreateUser Implementation of 'CreateUser'.
 func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {

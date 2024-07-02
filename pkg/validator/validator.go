@@ -21,7 +21,7 @@ func init() {
 func (v validatorStruct) Validate(data any) error {
 	if result := v.validator.Struct(data); result != nil {
 		var errs validator.ValidationErrors
-		if errors.As(errs, &errs) {
+		if errors.As(result, &errs) {
 			for _, err := range errs {
 				return &ValidateError{err.Field(), err.Tag(), err.Param(), err.Value()}
 			}

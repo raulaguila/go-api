@@ -2,21 +2,21 @@ package handler
 
 import (
 	"errors"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
+	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 

@@ -1,6 +1,7 @@
 package datatransferobject
 
 import (
+	"github.com/google/uuid"
 	"io"
 	"net/http"
 	"strconv"
@@ -12,10 +13,15 @@ import (
 )
 
 type (
-	Product struct {
+	ProductDTO struct {
 		Name     string  `json:"name"`
 		Price    float64 `json:"price"`
 		Quantity uint64  `json:"quantity"`
+	}
+
+	Product struct {
+		ID string `json:"id"`
+		ProductDTO
 	}
 
 	HttpErrorResponse struct {
@@ -38,7 +44,7 @@ func createAppWithMiddleware2Body() *fiber.App {
 	app.Use(New(Config{
 		ContextKey: contextKey,
 		OnLookup:   Body,
-		Model:      &Product{},
+		Model:      &ProductDTO{},
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			return ctx.Status(fiber.StatusBadRequest).JSON(&HttpErrorResponse{
 				Code:    fiber.StatusBadRequest,
@@ -49,7 +55,7 @@ func createAppWithMiddleware2Body() *fiber.App {
 
 	// Create a handler to path "/product"
 	app.Post(endpoint, func(c *fiber.Ctx) error {
-		product := c.Locals(contextKey).(*Product)
+		var product = &Product{ID: uuid.New().String(), ProductDTO: *c.Locals(contextKey).(*ProductDTO)}
 		return c.Status(fiber.StatusCreated).JSON(product)
 	})
 
@@ -100,7 +106,7 @@ func Test_WithCorrectBodyDTO(t *testing.T) {
 
 	// Check that the response has the expected status code and body
 	require.Equal(t, http.StatusCreated, res.StatusCode)
-	require.Equal(t, payload, string(body))
+	require.Contains(t, string(body), payload[1:])
 }
 
 // go test -run Test_WithInvalidDataDTO

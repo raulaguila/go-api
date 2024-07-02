@@ -90,7 +90,7 @@ func (s *DepartmentTestSuite) TestGetDepartmentByID() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.Id, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.Id)
 
 	item, err = s.service.GetDepartmentByID(s.ctx, 7)
 
@@ -106,7 +106,7 @@ func (s *DepartmentTestSuite) TestCreateDepartment() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.CreateDepartment(s.ctx, nil)
 
@@ -122,7 +122,7 @@ func (s *DepartmentTestSuite) TestUpdateDepartment() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.UpdateDepartment(s.ctx, 7, data)
 

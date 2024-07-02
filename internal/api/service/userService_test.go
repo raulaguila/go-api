@@ -98,7 +98,7 @@ func (s *UserTestSuite) TestGetUserByID() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.Id, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.Id)
 
 	item, err = s.service.GetUserByID(s.ctx, 7)
 
@@ -114,7 +114,7 @@ func (s *UserTestSuite) TestCreateUser() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.CreateUser(s.ctx, nil)
 
@@ -130,7 +130,7 @@ func (s *UserTestSuite) TestUpdateUser() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.UpdateUser(s.ctx, 7, data)
 

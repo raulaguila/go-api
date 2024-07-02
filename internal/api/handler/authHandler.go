@@ -4,9 +4,6 @@ import (
 	"errors"
 	"log"
 
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"github.com/raulaguila/go-api/pkg/helper"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -14,6 +11,8 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
+	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 type AuthHandler struct {

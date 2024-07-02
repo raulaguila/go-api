@@ -85,7 +85,7 @@ func (s *ProfileTestSuite) TestGetProfileByID() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.Id, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.Id)
 
 	item, err = s.service.GetProfileByID(s.ctx, 7)
 
@@ -101,7 +101,7 @@ func (s *ProfileTestSuite) TestCreateProfile() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.CreateProfile(s.ctx, nil)
 
@@ -117,7 +117,7 @@ func (s *ProfileTestSuite) TestUpdateProfile() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.Id)
 
 	item, err = s.service.UpdateProfile(s.ctx, 7, data)
 

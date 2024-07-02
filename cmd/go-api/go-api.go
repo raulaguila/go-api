@@ -86,7 +86,6 @@ func main() {
 			AllowHeaders:  "*",
 			ExposeHeaders: "*",
 			MaxAge:        1,
-			// AllowCredentials: true,
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,

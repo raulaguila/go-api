@@ -5,9 +5,9 @@ import (
 	"slices"
 	"strings"
 
-	myi18n "github.com/raulaguila/go-api/internal/pkg/i18n"
-
 	"github.com/gofiber/fiber/v2"
+
+	myi18n "github.com/raulaguila/go-api/internal/pkg/i18n"
 )
 
 type Config struct {
