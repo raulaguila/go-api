@@ -33,6 +33,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
     networks:
       - go_api_network
+    profiles: [ all, prod, dev ]
 
   minio:
 
@@ -53,6 +54,7 @@ services:
       - MINIO_CONSOLE_PORT_NUMBER=${MINIO_WEB_PORT}
     networks:
       - go_api_network
+    profiles: [ all, prod, dev ]
 
   backend:
 
@@ -69,3 +71,4 @@ services:
       - TZ=${TZ}
     networks:
       - go_api_network
+    profiles: [ all, prod ]

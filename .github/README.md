@@ -20,10 +20,9 @@
   </a>
 </p>
 
-## Requirements
+## Prerequisites
 
 - Docker
-- Docker compose
 
 ## Getting Started
 
@@ -38,9 +37,10 @@ Commands:
 
 init                           Create environment file
 compose-up                     Run 'docker compose up -d' to create and start containers
-compose-build                  Run 'docker compose up -d --build' to create and start containers
-compose-down                   Run 'docker compose down' to stop and remove containers and networks
-compose-remove                 Run 'docker compose down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-build-dev              Run 'docker compose --profile dev up -d --build' to create and start containers
+compose-build-prod             Run 'docker compose --profile prod up -d --build' to create and start containers
+compose-down                   Run 'docker compose --profile all down' to stop and remove containers and networks
+compose-remove                 Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
 compose-exec                   Run 'docker compose exec -it backend bash' to access container bash
 compose-log                    Run 'docker compose logs -f backend' to show container logger
 compose-top                    Run 'docker compose top' to display containers processes
@@ -118,13 +118,13 @@ Authorization: Bearer <token>
 
 [Department module](../api/department.http):
 
-| Endpoint           | HTTP Method |      Description       |
-|:-------------------|:-----------:|:----------------------:|
-| `/department`      |    `GET`    |   `Get all products`   |
-| `/department`      |   `POST`    |  `Insert new product`  |
-| `/department`      |  `DELETE`   |    `Delete product`    |
-| `/department/{id}` |    `GET`    |  `Get product by ID`   |
-| `/department/{id}` |    `PUT`    | `Update product by ID` |
+| Endpoint           | HTTP Method |        Description        |
+|:-------------------|:-----------:|:-------------------------:|
+| `/department`      |    `GET`    |   `Get all departments`   |
+| `/department`      |   `POST`    |  `Insert new department`  |
+| `/department`      |  `DELETE`   |   `Delete departments`    |
+| `/department/{id}` |    `GET`    |  `Get department by ID`   |
+| `/department/{id}` |    `PUT`    | `Update department by ID` |
 
 ## Code status
 

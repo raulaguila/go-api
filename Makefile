@@ -17,18 +17,22 @@ init: ## Create environment file
 compose-up: ## Run 'docker compose up -d' to create and start containers
 	@${COMPOSE_COMMAND} up -d
 
-.PHONY: compose-build
-compose-build: ## Run 'docker compose up -d --build' to create and start containers
-	@${COMPOSE_COMMAND} up -d --build
+.PHONY: compose-build-dev
+compose-build-dev: ## Run 'docker compose --profile dev up -d --build' to create and start containers
+	@${COMPOSE_COMMAND} --profile dev up -d --build
+
+.PHONY: compose-build-prod
+compose-build-prod: ## Run 'docker compose --profile prod up -d --build' to create and start containers
+	@${COMPOSE_COMMAND} --profile prod up -d --build
 
 .PHONY: compose-down
-compose-down: ## Run 'docker compose down' to stop and remove containers and networks
-	@${COMPOSE_COMMAND} down
+compose-down: ## Run 'docker compose --profile all down' to stop and remove containers and networks
+	@${COMPOSE_COMMAND} --profile all down
 
 .PHONY: compose-remove
-compose-remove: ## Run 'docker compose down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-remove: ## Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@${COMPOSE_COMMAND} down -v --remove-orphans
+	@${COMPOSE_COMMAND} --profile all down -v --remove-orphans
 
 .PHONY: compose-exec
 compose-exec: ## Run 'docker compose exec -it backend bash' to access container bash
