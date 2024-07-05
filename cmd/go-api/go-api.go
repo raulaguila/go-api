@@ -91,7 +91,7 @@ func main() {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+				var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
 				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, messages.ErrManyRequest)
 			},
 		}),
