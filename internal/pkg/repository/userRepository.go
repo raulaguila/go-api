@@ -85,7 +85,7 @@ func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*dom
 	}
 
 	user := new(domain.User)
-	return user, s.db.WithContext(ctx).Preload(postgre.AuthProfile).First(user, "auth_id = ?", auth.Id).Error
+	return user, s.db.WithContext(ctx).Preload(postgre.AuthProfile).First(user, "auth_id = ?", auth.ID).Error
 }
 
 func (s *userRepository) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*domain.User, error) {
@@ -159,7 +159,7 @@ func (s *userRepository) SetUserPhoto(ctx context.Context, user *domain.User, p 
 			return err
 		}
 
-		*user.PhotoPath = fmt.Sprintf("photos/%v%v", user.Id, p.Extension)
+		*user.PhotoPath = fmt.Sprintf("photos/%v%v", user.ID, p.Extension)
 		if err := s.minio.PutObject(ctx, os.Getenv("MINIO_BUCKET_FILES"), *user.PhotoPath, p.File); err != nil {
 			return err
 		}

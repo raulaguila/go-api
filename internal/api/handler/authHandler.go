@@ -52,8 +52,8 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        credentials body dto.AuthInputDTO true "Credentials model"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        credentials	body	dto.AuthInputDTO	true	"Credentials model"
 // @Success      200  {object}  dto.AuthOutputDTO
 // @Failure      401  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse
@@ -79,8 +79,8 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization header string false "User token"
-// @Param        lang query string false "Language responses"
+// @Param        Authorization	header	string				false	"User token"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
 // @Success      200  {object}  dto.UserOutputDTO
 // @Failure      401  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse
@@ -97,8 +97,8 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization header string false "User token"
-// @Param        lang query string false "Language responses"
+// @Param        Authorization	header	string				false	"User token"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
 // @Success      200  {object}  dto.AuthOutputDTO
 // @Failure      401  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse

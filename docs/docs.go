@@ -67,8 +67,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -114,8 +118,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -155,8 +163,12 @@ const docTemplate = `{
                 "summary": "User authentication",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -212,26 +224,36 @@ const docTemplate = `{
                 "summary": "List departments",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -243,7 +265,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -285,8 +308,12 @@ const docTemplate = `{
                 "summary": "Insert department",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -346,8 +373,12 @@ const docTemplate = `{
                 "summary": "Delete departments by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -400,14 +431,19 @@ const docTemplate = `{
                 "summary": "Get department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -459,14 +495,19 @@ const docTemplate = `{
                 "summary": "Update department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -529,26 +570,36 @@ const docTemplate = `{
                 "summary": "Get profiles",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -560,7 +611,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -602,8 +654,12 @@ const docTemplate = `{
                 "summary": "Insert profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -663,8 +719,12 @@ const docTemplate = `{
                 "summary": "Delete profiles by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -717,14 +777,19 @@ const docTemplate = `{
                 "summary": "Get profile by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -776,14 +841,19 @@ const docTemplate = `{
                 "summary": "Update profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -846,26 +916,36 @@ const docTemplate = `{
                 "summary": "Get users",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -883,7 +963,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -925,8 +1006,12 @@ const docTemplate = `{
                 "summary": "Insert user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -986,8 +1071,12 @@ const docTemplate = `{
                 "summary": "Delete user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1035,13 +1124,18 @@ const docTemplate = `{
                 "summary": "Set user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "User email",
                         "name": "email",
                         "in": "query",
@@ -1094,8 +1188,12 @@ const docTemplate = `{
                 "summary": "Reset user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1146,14 +1244,19 @@ const docTemplate = `{
                 "summary": "Get user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1205,14 +1308,19 @@ const docTemplate = `{
                 "summary": "Update user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1275,14 +1383,19 @@ const docTemplate = `{
                 "summary": "Get user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1308,7 +1421,7 @@ const docTemplate = `{
                 ],
                 "description": "Set user photo",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1319,14 +1432,19 @@ const docTemplate = `{
                 "summary": "Set user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true

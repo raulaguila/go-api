@@ -45,7 +45,7 @@ func createDefaults(db *gorm.DB) {
 		Email: os.Getenv("ADM_MAIL"),
 		Auth: &domain.Auth{
 			Status:    true,
-			ProfileID: profile.Id,
+			ProfileID: profile.ID,
 			Token:     &token,
 			Password:  &pass,
 		},

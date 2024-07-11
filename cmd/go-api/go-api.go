@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"os"
 	"strings"
 	"time"
@@ -15,7 +16,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	_ "github.com/raulaguila/go-api/configs"
-	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
@@ -55,13 +55,7 @@ func main() {
 		BodyLimit: 50 * 1024 * 1024, // this is the default limit of 50MB
 	})
 
-	app.Use(
-		recover.New(),
-		language.New(language.Config{
-			KeyLookup:  "lang",
-			ContextKey: helper.LocalLang,
-		}),
-	)
+	app.Use(recover.New())
 
 	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
 		app.Use(logger.New(logger.Config{
@@ -86,6 +80,10 @@ func main() {
 			AllowHeaders:  "*",
 			ExposeHeaders: "*",
 			MaxAge:        1,
+		}),
+		language.New(language.Config{
+			KeyLookup:  "lang",
+			ContextKey: helper.LocalLang,
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,

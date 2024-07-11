@@ -59,8 +59,12 @@
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -106,8 +110,12 @@
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -147,8 +155,12 @@
                 "summary": "User authentication",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -204,26 +216,36 @@
                 "summary": "List departments",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -235,7 +257,8 @@
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -277,8 +300,12 @@
                 "summary": "Insert department",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -338,8 +365,12 @@
                 "summary": "Delete departments by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -392,14 +423,19 @@
                 "summary": "Get department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -451,14 +487,19 @@
                 "summary": "Update department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -521,26 +562,36 @@
                 "summary": "Get profiles",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -552,7 +603,8 @@
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -594,8 +646,12 @@
                 "summary": "Insert profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -655,8 +711,12 @@
                 "summary": "Delete profiles by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -709,14 +769,19 @@
                 "summary": "Get profile by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -768,14 +833,19 @@
                 "summary": "Update profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -838,26 +908,36 @@
                 "summary": "Get users",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -875,7 +955,8 @@
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -917,8 +998,12 @@
                 "summary": "Insert user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -978,8 +1063,12 @@
                 "summary": "Delete user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1027,13 +1116,18 @@
                 "summary": "Set user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "User email",
                         "name": "email",
                         "in": "query",
@@ -1086,8 +1180,12 @@
                 "summary": "Reset user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1138,14 +1236,19 @@
                 "summary": "Get user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1197,14 +1300,19 @@
                 "summary": "Update user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1267,14 +1375,19 @@
                 "summary": "Get user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1300,7 +1413,7 @@
                 ],
                 "description": "Set user photo",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1311,14 +1424,19 @@
                 "summary": "Set user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true

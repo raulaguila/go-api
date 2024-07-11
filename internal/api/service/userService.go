@@ -21,12 +21,12 @@ type userService struct {
 
 func (s *userService) GenerateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
 	return &dto.UserOutputDTO{
-		ID:     &user.Id,
+		ID:     &user.ID,
 		Name:   &user.Name,
 		Email:  &user.Email,
 		Status: &user.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
-			ID:   &user.Auth.Profile.Id,
+			ID:   &user.Auth.Profile.ID,
 			Name: &user.Auth.Profile.Name,
 		},
 	}
@@ -73,7 +73,7 @@ func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.Id)
+	user, err = s.userRepository.GetUserByID(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.Use
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.Id)
+	user, err = s.userRepository.GetUserByID(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}

@@ -81,8 +81,8 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        filter query filter.Filter false "Optional Filter"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        filter			query	filter.Filter		false	"Optional Filter"
 // @Success      200  {array}   dto.ItemsOutputDTO[dto.ProfileOutputDTO]
 // @Failure      500  {object}  helper.HTTPResponse
 // @Router       /profile [get]
@@ -102,8 +102,8 @@ func (h *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        profile body dto.ProfileInputDTO true "Profile model"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        profile		body	dto.ProfileInputDTO	true	"Profile model"
 // @Success      201  {object}  dto.ProfileOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      409  {object}  helper.HTTPResponse
@@ -126,8 +126,8 @@ func (h *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "Profile ID"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path    filters.IDFilter	true	"Profile ID"
 // @Success      200  {object}  dto.ProfileOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      404  {object}  helper.HTTPResponse
@@ -150,9 +150,9 @@ func (h *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "Profile ID"
-// @Param        profile body dto.ProfileInputDTO true "Profile model"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path    filters.IDFilter	true	"Profile ID"
+// @Param        profile		body	dto.ProfileInputDTO true	"Profile model"
 // @Success      200  {object}  dto.ProfileOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      404  {object}  helper.HTTPResponse
@@ -176,8 +176,8 @@ func (h *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id   body      dto.IDsInputDTO     true        "Profile ID"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				body	dto.IDsInputDTO     true	"Profile ID"
 // @Success      204  {object}  nil
 // @Failure      404  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse

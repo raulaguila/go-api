@@ -11,6 +11,6 @@ type (
 	}
 
 	IDFilter struct {
-		ID uint `query:"id" form:"id" example:"1"`
+		ID uint `query:"id" form:"id" minimum:"1" example:"1" binding:"required"`
 	}
 )

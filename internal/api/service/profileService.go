@@ -20,7 +20,7 @@ type profileService struct {
 
 func (s *profileService) GenerateProfileOutputDTO(profile *domain.Profile) *dto.ProfileOutputDTO {
 	return &dto.ProfileOutputDTO{
-		ID:          &profile.Id,
+		ID:          &profile.ID,
 		Name:        &profile.Name,
 		Permissions: profile.Permissions,
 	}

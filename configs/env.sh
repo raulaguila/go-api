@@ -14,8 +14,8 @@ for ((i = 0; i < 2; i++)); do
 done
 
 echo "TZ='America/Manaus'                             # Set system time zone
-SYS_LANGUAGE='en'                               # Default system language
-SYS_LANGUAGES='en,pt'                            # System languages
+SYS_LANGUAGE='en-us'                            # Default system language
+SYS_LANGUAGES='en-us,pt-br'                     # System languages
 SYS_PREFORK='true'                              # Enable Fiber Prefork
 
 API_PORT='9000'                                 # API Container PORT

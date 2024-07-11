@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-// JSONB Interface for JSONB Field of yourTableName Table
+// JSONB Interface for JSONB field of your Table
 type JSONB map[string]any
 
 // Value Marshal

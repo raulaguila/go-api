@@ -33,7 +33,7 @@ func New(config ...Config) fiber.Handler {
 	}
 
 	return func(c *fiber.Ctx) error {
-		lang := strings.ToLower(c.Query(cfg.KeyLookup, os.Getenv("SYS_LANGUAGE")))[:2]
+		lang := strings.ToLower(c.Query(cfg.KeyLookup, os.Getenv("SYS_LANGUAGE")))
 
 		if !slices.Contains(strings.Split(os.Getenv("SYS_LANGUAGES"), ","), lang) {
 			lang = os.Getenv("SYS_LANGUAGE")

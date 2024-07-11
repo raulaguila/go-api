@@ -100,8 +100,8 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "User ID"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path	filters.IDFilter	true	"User ID"
 // @Success      200  {object}  nil
 // @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id}/photo [get]
@@ -120,11 +120,11 @@ func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
 // @Summary      Set user photo
 // @Description  Set user photo
 // @Tags         User
-// @Accept       json
+// @Accept       mpfd
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "User ID"
-// @Param		 photo formData	file			true	"profile photo"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path    	filters.IDFilter	true	"User ID"
+// @Param		 photo			formData	file				true	"profile photo"
 // @Success      200  {object}  nil
 // @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user/{id}/photo [put]
@@ -145,8 +145,8 @@ func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        filter query filters.UserFilter false "Optional Filter"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        filter			query		filters.UserFilter	false	"Optional Filter"
 // @Success      200  {array}   dto.ItemsOutputDTO[dto.UserOutputDTO]
 // @Failure      500  {object}  helper.HTTPResponse
 // @Router       /user [get]
@@ -166,8 +166,8 @@ func (h *UserHandler) getUsers(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        user body dto.UserInputDTO true "User model"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        user			body		dto.UserInputDTO	true	"User model"
 // @Success      201  {object}  dto.UserOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      409  {object}  helper.HTTPResponse
@@ -190,8 +190,8 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "User ID"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path		filters.IDFilter	true	"User ID"
 // @Success      200  {object}  dto.UserOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      404  {object}  helper.HTTPResponse
@@ -214,9 +214,9 @@ func (h *UserHandler) getUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "User ID"
-// @Param        user body dto.UserInputDTO true "User model"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				path		filters.IDFilter	true	"User ID"
+// @Param        user			body		dto.UserInputDTO	true	"User model"
 // @Success      200  {object}  dto.UserOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
 // @Failure      404  {object}  helper.HTTPResponse
@@ -240,8 +240,8 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id   body      dto.IDsInputDTO     true        "User ID"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id				body		dto.IDsInputDTO		true	"User ID"
 // @Success      204  {object}  nil
 // @Failure      404  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse
@@ -266,8 +266,8 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        email     query    string     true        "User email"
+// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR)
+// @Param        email			query		string				true 	"User email"
 // @Success      200  {object}  nil
 // @Failure      404  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse
@@ -288,9 +288,9 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        email     query    string     true        "User email"
-// @Param        password body dto.PasswordInputDTO true "Password model"
+// @Param        lang			query		string					false	"Response language" enums(en-US,pt-BR)
+// @Param        email			query		string					true	"User email" Format(email)
+// @Param        password		body		dto.PasswordInputDTO	true	"Password model"
 // @Success      200  {object}  nil
 // @Failure      404  {object}  helper.HTTPResponse
 // @Failure      500  {object}  helper.HTTPResponse
