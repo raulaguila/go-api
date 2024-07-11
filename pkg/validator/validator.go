@@ -1,6 +1,10 @@
 package validator
 
-import "github.com/go-playground/validator/v10"
+import (
+	"errors"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type validatorStruct struct {
 	validator *validator.Validate
@@ -14,10 +18,13 @@ func init() {
 	}
 }
 
-func (v validatorStruct) Validate(data interface{}) error {
-	if errs := v.validator.Struct(data); errs != nil {
-		for _, err := range errs.(validator.ValidationErrors) {
-			return &ErrorValidator{err.Field(), err.Tag(), err.Param(), err.Value()}
+func (v validatorStruct) Validate(data any) error {
+	if result := v.validator.Struct(data); result != nil {
+		var errs validator.ValidationErrors
+		if errors.As(result, &errs) {
+			for _, err := range errs {
+				return &ValidateError{err.Field(), err.Tag(), err.Param(), err.Value()}
+			}
 		}
 	}
 

@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"os"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 )
 
 func NewAuthService(r domain.UserRepository) domain.AuthService {
@@ -25,12 +25,12 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 	}
 
 	return &dto.UserOutputDTO{
-		Id:     &user.Id,
+		ID:     &user.ID,
 		Name:   &user.Name,
 		Email:  &user.Email,
 		Status: &user.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
-			Id:          &user.Auth.Profile.Id,
+			ID:          &user.Auth.Profile.ID,
 			Name:        &user.Auth.Profile.Name,
 			Permissions: user.Auth.Profile.Permissions,
 		},

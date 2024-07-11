@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/stretchr/testify/suite"
-	"testing"
-	"time"
 )
 
 func TestProfileSuit(t *testing.T) {
@@ -30,13 +31,13 @@ type ProfileTestSuite struct {
 func (s *ProfileTestSuite) SetupTest() {
 	s.ctx = context.Background()
 	s.f = filter.New("name", "desc")
-	s.firstItem = domain.Profile{Base: domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 1", Permissions: map[string]interface{}{"profile": true}}
+	s.firstItem = domain.Profile{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 1", Permissions: map[string]any{"profile": true}}
 	s.items = []domain.Profile{
 		s.firstItem,
-		{Base: domain.Base{Id: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 2", Permissions: map[string]interface{}{"profile": true}},
-		{Base: domain.Base{Id: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 3", Permissions: map[string]interface{}{"profile": true}},
+		{Base: domain.Base{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 2", Permissions: map[string]any{"profile": true}},
+		{Base: domain.Base{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 3", Permissions: map[string]any{"profile": true}},
 	}
-	s.newItem = domain.Profile{Base: domain.Base{Id: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 4", Permissions: map[string]interface{}{"profile": true}}
+	s.newItem = domain.Profile{Base: domain.Base{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 4", Permissions: map[string]any{"profile": true}}
 
 	var nilFilter *filter.Filter = nil
 	var nilDTO *dto.ProfileInputDTO = nil
@@ -52,12 +53,12 @@ func (s *ProfileTestSuite) SetupTest() {
 	repo.On("GetProfileByID", s.ctx, uint(4)).Return(&s.newItem, nil)
 	repo.On("GetProfileByID", s.ctx, uint(7)).Return(nil, ErrItemNotFound)
 
-	repo.On("CreateProfile", s.ctx, &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]interface{}{"profile": true}}).Return(&s.newItem, nil)
+	repo.On("CreateProfile", s.ctx, &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]any{"profile": true}}).Return(&s.newItem, nil)
 	repo.On("CreateProfile", s.ctx, nilDTO).Return(nil, errors.New("error to create item"))
 
-	repo.On("UpdateProfile", s.ctx, &s.newItem, &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]interface{}{"profile": true}}).Return(nil)
+	repo.On("UpdateProfile", s.ctx, &s.newItem, &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]any{"profile": true}}).Return(nil)
 	invalidName := "."
-	repo.On("UpdateProfile", s.ctx, &s.newItem, &dto.ProfileInputDTO{Name: &invalidName, Permissions: map[string]interface{}{"profile": true}}).Return(ErrInvalidValue)
+	repo.On("UpdateProfile", s.ctx, &s.newItem, &dto.ProfileInputDTO{Name: &invalidName, Permissions: map[string]any{"profile": true}}).Return(ErrInvalidValue)
 
 	repo.On("DeleteProfiles", s.ctx, []uint{1}).Return(nil)
 	repo.On("DeleteProfiles", s.ctx, []uint{7}).Return(ErrItemNotFound)
@@ -84,7 +85,7 @@ func (s *ProfileTestSuite) TestGetProfileByID() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.Id, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.ID)
 
 	item, err = s.service.GetProfileByID(s.ctx, 7)
 
@@ -94,13 +95,13 @@ func (s *ProfileTestSuite) TestGetProfileByID() {
 }
 
 func (s *ProfileTestSuite) TestCreateProfile() {
-	data := &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]interface{}{"profile": true}}
+	data := &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]any{"profile": true}}
 	item, err := s.service.CreateProfile(s.ctx, data)
 
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.CreateProfile(s.ctx, nil)
 
@@ -110,13 +111,13 @@ func (s *ProfileTestSuite) TestCreateProfile() {
 }
 
 func (s *ProfileTestSuite) TestUpdateProfile() {
-	data := &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]interface{}{"profile": true}}
+	data := &dto.ProfileInputDTO{Name: &s.newItem.Name, Permissions: map[string]any{"profile": true}}
 	item, err := s.service.UpdateProfile(s.ctx, 4, data)
 
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.UpdateProfile(s.ctx, 7, data)
 
@@ -125,7 +126,7 @@ func (s *ProfileTestSuite) TestUpdateProfile() {
 	s.Nil(item)
 
 	invalidName := "."
-	data = &dto.ProfileInputDTO{Name: &invalidName, Permissions: map[string]interface{}{"profile": true}}
+	data = &dto.ProfileInputDTO{Name: &invalidName, Permissions: map[string]any{"profile": true}}
 	item, err = s.service.UpdateProfile(s.ctx, 4, data)
 
 	s.Error(err)

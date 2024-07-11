@@ -2,8 +2,6 @@ package handler
 
 import (
 	"errors"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,6 +11,8 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
+	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 type AuthHandler struct {
@@ -52,11 +52,11 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        credentials body dto.AuthInputDTO true "Credentials model"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        credentials	body	dto.AuthInputDTO	true	"Credentials model"
 // @Success      200  {object}  dto.AuthOutputDTO
-// @Failure      401  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      401  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /auth [post]
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := &dto.AuthInputDTO{}
@@ -79,11 +79,11 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization header string false "User token"
-// @Param        lang query string false "Language responses"
+// @Param        Authorization	header	string				false	"User token"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
 // @Success      200  {object}  dto.UserOutputDTO
-// @Failure      401  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      401  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
@@ -97,11 +97,11 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization header string false "User token"
-// @Param        lang query string false "Language responses"
+// @Param        Authorization	header	string				false	"User token"
+// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR)
 // @Success      200  {object}  dto.AuthOutputDTO
-// @Failure      401  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      401  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
 	user := c.Locals(helper.LocalUser).(*domain.User)

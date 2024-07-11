@@ -20,10 +20,9 @@
   </a>
 </p>
 
-## Requirements
+## Prerequisites
 
 - Docker
-- Docker compose
 
 ## Getting Started
 
@@ -36,21 +35,25 @@ Usage:
 
 Commands: 
 
-help                           Display help screen
-init                           Create environment variables
-run                            Run application
-swag                           Update swagger files
-build                          Build the application from source code
-compose-up                     Run docker compose up to create and start containers
-compose-build                  Run docker compose up --build to create and start containers
-compose-down                   Run docker compose down to stop and remove containers and networks
-compose-remove                 Run docker compose down to stop and remove containers, networks and volumes
-compose-exec                   Run docker compose exec to access container bash 
-compose-log                    Run docker compose logs to show logger container
-compose-top                    Run docker compose top to display the running containers processes
-compose-stats                  Run docker compose stats to display stats from the containers
-go-test                        Run the tests and extract coverage data
-go-lint                        Run golang lint
+init                           Create environment file
+compose-up                     Run 'docker compose up -d' to create and start containers
+compose-build-dev              Run 'docker compose --profile dev up -d --build' to create and start containers
+compose-build-prod             Run 'docker compose --profile prod up -d --build' to create and start containers
+compose-down                   Run 'docker compose --profile all down' to stop and remove containers and networks
+compose-remove                 Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-exec                   Run 'docker compose exec -it backend bash' to access container bash
+compose-log                    Run 'docker compose logs -f backend' to show container logger
+compose-top                    Run 'docker compose top' to display containers processes
+compose-stats                  Run 'docker compose stats' to display containers stats
+go-run                         Run application from source code
+go-test                        Run tests and generate coverage report
+go-build                       Build the application from source code
+go-benchmark                   Benchmark code performance
+go-lint                        Run lint checks
+go-audit                       Conduct quality checks
+go-swag                        Update swagger files
+go-format                      Fix code format issues
+go-tidy                        Clean and tidy dependencies
 ```
 
 - Run project
@@ -115,13 +118,13 @@ Authorization: Bearer <token>
 
 [Department module](../api/department.http):
 
-| Endpoint           | HTTP Method |      Description       |
-|:-------------------|:-----------:|:----------------------:|
-| `/department`      |    `GET`    |   `Get all products`   |
-| `/department`      |   `POST`    |  `Insert new product`  |
-| `/department`      |  `DELETE`   |    `Delete product`    |
-| `/department/{id}` |    `GET`    |  `Get product by ID`   |
-| `/department/{id}` |    `PUT`    | `Update product by ID` |
+| Endpoint           | HTTP Method |        Description        |
+|:-------------------|:-----------:|:-------------------------:|
+| `/department`      |    `GET`    |   `Get all departments`   |
+| `/department`      |   `POST`    |  `Insert new department`  |
+| `/department`      |  `DELETE`   |   `Delete departments`    |
+| `/department/{id}` |    `GET`    |  `Get department by ID`   |
+| `/department/{id}` |    `PUT`    | `Update department by ID` |
 
 ## Code status
 

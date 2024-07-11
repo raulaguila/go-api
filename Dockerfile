@@ -1,4 +1,4 @@
-FROM alpine:3.18.4
+FROM alpine:3.20.1
 
 RUN apk add --no-cache bash
 RUN apk add --no-cache tzdata

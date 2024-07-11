@@ -45,8 +45,8 @@ func (s *Department) Bind(p *dto.DepartmentInputDTO) error {
 	return validator.StructValidator.Validate(s)
 }
 
-func (s *Department) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+func (s *Department) ToMap() map[string]any {
+	return map[string]any{
 		"name": s.Name,
 	}
 }

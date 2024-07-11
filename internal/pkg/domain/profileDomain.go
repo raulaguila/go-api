@@ -2,7 +2,8 @@ package domain
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/pkg/pg-utils"
+
+	"github.com/raulaguila/go-api/pkg/pgutils"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
@@ -14,8 +15,8 @@ const ProfileTableName string = "users_profile"
 type (
 	Profile struct {
 		Base
-		Name        string         `gorm:"column:name;type:varchar(100);unique;not null;" validate:"required,min=4"`
-		Permissions pg_utils.JSONB `gorm:"column:permissions;type:jsonb;not null;" validate:"required"`
+		Name        string        `gorm:"column:name;type:varchar(100);unique;not null;" validate:"required,min=4"`
+		Permissions pgutils.JSONB `gorm:"column:permissions;type:jsonb;not null;" validate:"required"`
 	}
 
 	ProfileRepository interface {
@@ -41,8 +42,8 @@ func (s *Profile) TableName() string {
 	return ProfileTableName
 }
 
-func (s *Profile) ToMap() *map[string]interface{} {
-	return &map[string]interface{}{
+func (s *Profile) ToMap() *map[string]any {
+	return &map[string]any{
 		"name":        s.Name,
 		"permissions": s.Permissions,
 	}

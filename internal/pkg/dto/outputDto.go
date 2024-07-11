@@ -2,18 +2,18 @@ package dto
 
 type (
 	DepartmentOutputDTO struct {
-		Id   *uint   `json:"id,omitempty" example:"1"`
+		ID   *uint   `json:"id,omitempty" example:"1"`
 		Name *string `json:"name,omitempty" example:"Automation"`
 	}
 
 	ProfileOutputDTO struct {
-		Id          *uint                  `json:"id" example:"1"`
-		Name        *string                `json:"name" example:"ADMIN"`
-		Permissions map[string]interface{} `json:"permissions,omitempty"`
+		ID          *uint          `json:"id" example:"1"`
+		Name        *string        `json:"name" example:"ADMIN"`
+		Permissions map[string]any `json:"permissions,omitempty"`
 	}
 
 	UserOutputDTO struct {
-		Id      *uint             `json:"id" example:"1"`
+		ID      *uint             `json:"id" example:"1"`
 		Name    *string           `json:"name" example:"John Cena"`
 		Email   *string           `json:"email" example:"john.cena@email.com"`
 		Status  *bool             `json:"status" example:"true"`

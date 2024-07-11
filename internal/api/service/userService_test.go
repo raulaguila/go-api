@@ -3,14 +3,15 @@ package service
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/stretchr/testify/suite"
-	"testing"
-	"time"
 )
 
 func TestUserSuit(t *testing.T) {
@@ -30,26 +31,26 @@ type UserTestSuite struct {
 
 func (s *UserTestSuite) SetupTest() {
 	auth := &domain.Auth{
-		Base:      domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		Base:      domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		Status:    true,
 		ProfileID: 1,
 		Profile: &domain.Profile{
-			Base:        domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
+			Base:        domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
 			Name:        "ADMIN",
-			Permissions: map[string]interface{}{"user": true},
+			Permissions: map[string]any{"user": true},
 		},
 		Token: nil,
 	}
 
 	s.ctx = context.Background()
 	s.f = &filters.UserFilter{Filter: *filter.New("name", "desc"), ProfileID: 0}
-	s.firstItem = domain.User{Base: domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 1", Email: "email1@email.com", AuthID: 1, Auth: auth}
+	s.firstItem = domain.User{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 1", Email: "email1@email.com", AuthID: 1, Auth: auth}
 	s.items = []domain.User{
 		s.firstItem,
-		{Base: domain.Base{Id: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 2", Email: "email2@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{Id: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 3", Email: "email3@email.com", AuthID: 1, Auth: auth},
+		{Base: domain.Base{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 2", Email: "email2@email.com", AuthID: 1, Auth: auth},
+		{Base: domain.Base{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 3", Email: "email3@email.com", AuthID: 1, Auth: auth},
 	}
-	s.newItem = domain.User{Base: domain.Base{Id: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 4", Email: "email4@email.com", AuthID: 1, Auth: auth}
+	s.newItem = domain.User{Base: domain.Base{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 4", Email: "email4@email.com", AuthID: 1, Auth: auth}
 
 	var nilFilter *filters.UserFilter = nil
 	var nilDTO *dto.UserInputDTO = nil
@@ -97,7 +98,7 @@ func (s *UserTestSuite) TestGetUserByID() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.Id, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.ID)
 
 	item, err = s.service.GetUserByID(s.ctx, 7)
 
@@ -113,7 +114,7 @@ func (s *UserTestSuite) TestCreateUser() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.CreateUser(s.ctx, nil)
 
@@ -129,7 +130,7 @@ func (s *UserTestSuite) TestUpdateUser() {
 	s.NoError(err)
 	s.IsType(&dto.UserOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.Id, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.UpdateUser(s.ctx, 7, data)
 

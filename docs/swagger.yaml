@@ -88,7 +88,7 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: true
+        additionalProperties: {}
         type: object
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
@@ -100,7 +100,7 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: true
+        additionalProperties: {}
         type: object
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
@@ -135,7 +135,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse:
+  github_com_raulaguila_go-api_pkg_helper.HTTPResponse:
     properties:
       code:
         example: 400
@@ -148,9 +148,9 @@ info:
   contact:
     email: email@email.com
     name: Raul del Aguila
-  description: This API template is a user-friendly solution designed to serve as
-    the foundation for more complex APIs.
-  title: Go API Template
+  description: This API is a user-friendly solution designed to serve as the foundation
+    for more complex APIs.
+  title: Go API
 paths:
   /:
     get:
@@ -177,7 +177,10 @@ paths:
         in: header
         name: Authorization
         type: string
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -191,11 +194,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: User authenticated
@@ -206,7 +209,10 @@ paths:
       - application/json
       description: User authentication
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -226,11 +232,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       summary: User authentication
       tags:
       - Auth
@@ -243,7 +249,10 @@ paths:
         in: header
         name: Authorization
         type: string
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -257,11 +266,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       summary: User refresh
       tags:
       - Auth
@@ -271,7 +280,10 @@ paths:
       - application/json
       description: Delete departments by IDs
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -289,11 +301,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete departments by IDs
@@ -304,28 +316,37 @@ paths:
       - application/json
       description: List departments
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - example: 10
+      - default: 10
         in: query
+        minimum: 1
         name: limit
         type: integer
-      - example: descending order 'desc' or ascending order 'asc'
+      - default: desc
+        enum:
+        - asc
+        - desc
         in: query
         name: order
         type: string
-      - example: 1
+      - default: 1
         in: query
+        minimum: 1
         name: page
         type: integer
       - example: name
         in: query
         name: search
         type: string
-      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
-          the response object'
+      - default: updated_at
+        example: '''updated_at'', ''created_at'', ''name'' or some other field from
+          response object'
         in: query
         name: sort
         type: string
@@ -341,7 +362,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: List departments
@@ -352,7 +373,10 @@ paths:
       - application/json
       description: Insert department
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -372,15 +396,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert department
@@ -392,12 +416,16 @@ paths:
       - application/json
       description: Get department by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: Department ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -411,15 +439,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get department by ID
@@ -430,12 +458,16 @@ paths:
       - application/json
       description: Update department by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: Department ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -455,15 +487,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Update department by ID
@@ -475,7 +507,10 @@ paths:
       - application/json
       description: Delete profiles by IDs
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -493,11 +528,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete profiles by IDs
@@ -508,28 +543,37 @@ paths:
       - application/json
       description: Get profiles
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - example: 10
+      - default: 10
         in: query
+        minimum: 1
         name: limit
         type: integer
-      - example: descending order 'desc' or ascending order 'asc'
+      - default: desc
+        enum:
+        - asc
+        - desc
         in: query
         name: order
         type: string
-      - example: 1
+      - default: 1
         in: query
+        minimum: 1
         name: page
         type: integer
       - example: name
         in: query
         name: search
         type: string
-      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
-          the response object'
+      - default: updated_at
+        example: '''updated_at'', ''created_at'', ''name'' or some other field from
+          response object'
         in: query
         name: sort
         type: string
@@ -545,7 +589,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profiles
@@ -556,7 +600,10 @@ paths:
       - application/json
       description: Insert profile
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -576,15 +623,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert profile
@@ -596,12 +643,16 @@ paths:
       - application/json
       description: Get profile by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: Profile ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -615,15 +666,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profile by ID
@@ -634,12 +685,16 @@ paths:
       - application/json
       description: Update profile by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: Profile ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -659,15 +714,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Update profile
@@ -679,7 +734,10 @@ paths:
       - application/json
       description: Delete user by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -697,11 +755,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete user
@@ -712,20 +770,28 @@ paths:
       - application/json
       description: Get all users
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - example: 10
+      - default: 10
         in: query
+        minimum: 1
         name: limit
         type: integer
-      - example: descending order 'desc' or ascending order 'asc'
+      - default: desc
+        enum:
+        - asc
+        - desc
         in: query
         name: order
         type: string
-      - example: 1
+      - default: 1
         in: query
+        minimum: 1
         name: page
         type: integer
       - example: 1
@@ -736,8 +802,9 @@ paths:
         in: query
         name: search
         type: string
-      - example: '''updated_at'', ''created_at'', ''name'' or some other field of
-          the response object'
+      - default: updated_at
+        example: '''updated_at'', ''created_at'', ''name'' or some other field from
+          response object'
         in: query
         name: sort
         type: string
@@ -753,7 +820,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get users
@@ -764,7 +831,10 @@ paths:
       - application/json
       description: Insert user
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -784,15 +854,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert user
@@ -804,12 +874,16 @@ paths:
       - application/json
       description: Get user by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: User ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -823,15 +897,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get user
@@ -842,12 +916,16 @@ paths:
       - application/json
       description: Update user by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: User ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -867,15 +945,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Update user
@@ -887,12 +965,16 @@ paths:
       - application/json
       description: Get user photo
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: User ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -904,7 +986,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Get user photo
@@ -912,15 +994,19 @@ paths:
       - User
     put:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Set user photo
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
-      - description: User ID
+      - example: 1
         in: path
+        minimum: 1
         name: id
         required: true
         type: integer
@@ -937,7 +1023,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Set user photo
@@ -949,7 +1035,10 @@ paths:
       - application/json
       description: Reset user password by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
@@ -966,11 +1055,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
       summary: Reset user password
@@ -981,11 +1070,15 @@ paths:
       - application/json
       description: Set user password by ID
       parameters:
-      - description: Language responses
+      - description: Response language
+        enum:
+        - en-US
+        - pt-BR
         in: query
         name: lang
         type: string
       - description: User email
+        format: email
         in: query
         name: email
         required: true
@@ -1004,11 +1097,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       summary: Set user password
       tags:
       - User

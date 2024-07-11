@@ -1,6 +1,8 @@
 package filters
 
-import "github.com/raulaguila/go-api/pkg/filter"
+import (
+	"github.com/raulaguila/go-api/pkg/filter"
+)
 
 type (
 	UserFilter struct {
@@ -9,6 +11,6 @@ type (
 	}
 
 	IDFilter struct {
-		ID uint `query:"id" form:"id" example:"1"`
+		ID uint `query:"id" form:"id" minimum:"1" example:"1" binding:"required"`
 	}
 )

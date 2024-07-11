@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -20,12 +21,12 @@ type userService struct {
 
 func (s *userService) GenerateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
 	return &dto.UserOutputDTO{
-		Id:     &user.Id,
+		ID:     &user.ID,
 		Name:   &user.Name,
 		Email:  &user.Email,
 		Status: &user.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
-			Id:   &user.Auth.Profile.Id,
+			ID:   &user.Auth.Profile.ID,
 			Name: &user.Auth.Profile.Name,
 		},
 	}
@@ -65,17 +66,6 @@ func (s *userService) GetUsers(ctx context.Context, filter *filters.UserFilter) 
 	}, nil
 }
 
-//
-//// GetUserByMail Implementation of 'GetUserByMail'.
-//func (s *userService) GetUserByMail(ctx context.Context, userMail string) (*domain.User, error) {
-//	return s.userRepository.GetUserByMail(ctx, userMail)
-//}
-//
-//// GetUserByToken Implementation of 'GetUserByToken'.
-//func (s *userService) GetUserByToken(ctx context.Context, token string) (*domain.User, error) {
-//	return s.userRepository.GetUserByToken(ctx, token)
-//}
-
 // CreateUser Implementation of 'CreateUser'.
 func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
 	user, err := s.userRepository.CreateUser(ctx, data)
@@ -83,7 +73,7 @@ func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.Id)
+	user, err = s.userRepository.GetUserByID(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +92,7 @@ func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.Use
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.Id)
+	user, err = s.userRepository.GetUserByID(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}

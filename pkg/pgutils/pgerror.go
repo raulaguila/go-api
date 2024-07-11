@@ -1,8 +1,8 @@
-package pg_utils
+package pgutils
 
 import (
 	"errors"
-	"log"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -31,7 +31,7 @@ func HandlerError(err error) error {
 		case "42P04":
 			return ErrDatabaseAlreadyExists
 		default:
-			log.Printf("PostgreSQL error not detected: %v\n", err)
+			fmt.Printf("PostgreSQL error not detected: %v\n", err)
 		}
 	}
 

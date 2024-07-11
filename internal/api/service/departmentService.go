@@ -20,7 +20,7 @@ type departmentService struct {
 
 func (s *departmentService) GenerateDepartmentOutputDTO(department *domain.Department) *dto.DepartmentOutputDTO {
 	return &dto.DepartmentOutputDTO{
-		Id:   &department.Id,
+		ID:   &department.ID,
 		Name: &department.Name,
 	}
 }

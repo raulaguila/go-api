@@ -1,6 +1,8 @@
 package helper
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type HTTPResponse struct {
 	Code    int    `json:"code" example:"400"`

@@ -1,4 +1,4 @@
-package pg_utils
+package pgutils
 
 import (
 	"database/sql/driver"
@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-// JSONB Interface for JSONB Field of yourTableName Table
-type JSONB map[string]interface{}
+// JSONB Interface for JSONB field of your Table
+type JSONB map[string]any
 
 // Value Marshal
 func (a *JSONB) Value() (driver.Value, error) {
@@ -15,7 +15,7 @@ func (a *JSONB) Value() (driver.Value, error) {
 }
 
 // Scan Unmarshal
-func (a *JSONB) Scan(value interface{}) error {
+func (a *JSONB) Scan(value any) error {
 	b, ok := value.([]byte)
 	if !ok {
 		return errors.New("type assertion to []byte failed")

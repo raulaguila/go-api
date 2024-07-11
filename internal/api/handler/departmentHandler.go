@@ -3,19 +3,19 @@ package handler
 import (
 	"errors"
 	"github.com/raulaguila/go-api/internal/api/middleware"
-	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/helper"
-	"gorm.io/gorm"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/pg-utils"
+	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -43,12 +43,12 @@ func (h *DepartmentHandler) foreignKeyViolatedMethod(c *fiber.Ctx, translation *
 func (h *DepartmentHandler) handlerError(c *fiber.Ctx, err error) error {
 	translation := c.Locals(helper.LocalLang).(*i18n.Translation)
 
-	switch pgErr := pg_utils.HandlerError(err); {
-	case errors.Is(pgErr, pg_utils.ErrDuplicatedKey):
+	switch pgErr := pgutils.HandlerError(err); {
+	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
 		return helper.NewHTTPResponse(c, fiber.StatusConflict, translation.ErrDepartmentRegistered)
-	case errors.Is(pgErr, pg_utils.ErrForeignKeyViolated):
+	case errors.Is(pgErr, pgutils.ErrForeignKeyViolated):
 		return h.foreignKeyViolatedMethod(c, translation)
-	case errors.Is(pgErr, pg_utils.ErrUndefinedColumn):
+	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
 		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, translation.ErrUndefinedColumn)
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, translation.ErrDepartmentNotFound)
@@ -81,10 +81,10 @@ func NewDepartmentHandler(route fiber.Router, ps domain.DepartmentService) {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        filter query filter.Filter false "Optional Filter"
+// @Param        lang		query	string			false	"Response language" enums(en-US,pt-BR)
+// @Param        filter		query	filter.Filter	false	"Optional Filter"
 // @Success      200  {array}   dto.ItemsOutputDTO[dto.DepartmentOutputDTO]
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /department [get]
 // @Security	 Bearer
 func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
@@ -102,12 +102,12 @@ func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id   path			int			true        "Department ID"
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id			path	filters.IDFilter	true	"Department ID"
 // @Success      200  {object}  dto.DepartmentOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /department/{id} [get]
 // @Security	 Bearer
 func (h *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
@@ -126,12 +126,12 @@ func (h *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        department body dto.DepartmentInputDTO true "Department model"
+// @Param        lang		query	string					false	"Response language" enums(en-US,pt-BR)
+// @Param        department body	dto.DepartmentInputDTO	true	"Department model"
 // @Success      201  {object}  dto.DepartmentOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      409  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      409  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /department [post]
 // @Security	 Bearer
 func (h *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
@@ -150,13 +150,13 @@ func (h *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id     path    int     true        "Department ID"
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id			path    filters.IDFilter	true	"Department ID"
 // @Param        department body dto.DepartmentInputDTO true "Department model"
 // @Success      200  {object}  dto.DepartmentOutputDTO
-// @Failure      400  {object}  http_helper.HTTPResponse
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      400  {object}  helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /department/{id} [put]
 // @Security	 Bearer
 func (h *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
@@ -176,11 +176,11 @@ func (h *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang query string false "Language responses"
-// @Param        id   body      dto.IDsInputDTO     true        "Department ID"
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        id			body	dto.IDsInputDTO		true	"Department ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  http_helper.HTTPResponse
-// @Failure      500  {object}  http_helper.HTTPResponse
+// @Failure      404  {object}  helper.HTTPResponse
+// @Failure      500  {object}  helper.HTTPResponse
 // @Router       /department [delete]
 // @Security	 Bearer
 func (h *DepartmentHandler) deleteDepartments(c *fiber.Ctx) error {

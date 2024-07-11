@@ -3,14 +3,15 @@ package middleware
 import (
 	"encoding/base64"
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
+	"github.com/golang-jwt/jwt/v5"
+
+	"github.com/raulaguila/go-api/internal/pkg/domain"
+	"github.com/raulaguila/go-api/internal/pkg/i18n"
+	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 var (
@@ -29,7 +30,7 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
 		AuthScheme: "Bearer",
 		ContextKey: "token",
-		Next: func(c *fiber.Ctx) bool {
+		Next: func(_ *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
 			return false
@@ -41,8 +42,8 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err)
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
-			messages := c.Locals(helper.LocalLang).(*i18n.Translation)
-			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (interface{}, error) {
+			var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
+			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 					return nil, err
 				}
@@ -64,12 +65,6 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 				log.Println(err)
 				return false, messages.ErrGeneric
 			}
-			//if val, ok := claims["ip"]; !ok || val.(string) != c.IP() {
-			//	return false, domain.ErrInvalidIpAssociation
-			//}
-			//if val, ok := claims["expire"]; ok {
-			//	user.Expire = val.(bool)
-			//}
 
 			if !user.Auth.Status {
 				return false, messages.ErrDisabledUser

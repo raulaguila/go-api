@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/raulaguila/go-api/internal/api/middleware/language"
-	"github.com/raulaguila/go-api/pkg/minio-client"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/raulaguila/go-api/pkg/minioutils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -21,8 +22,8 @@ import (
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
-// @title 							Go API Template
-// @description 					This API template is a user-friendly solution designed to serve as the foundation for more complex APIs.
+// @title 							Go API
+// @description 					This API is a user-friendly solution designed to serve as the foundation for more complex APIs.
 
 // @contact.name					Raul del Aguila
 // @contact.email					email@email.com
@@ -37,7 +38,7 @@ func main() {
 	db, err := database.ConnectPostgresDB()
 	helper.PanicIfErr(err)
 
-	minioClient := minio_client.NewMinioClient()
+	minioClient := minioutils.NewMinioClient()
 	helper.PanicIfErr(minioClient.InitBucket(context.Background(), os.Getenv("MINIO_BUCKET_FILES"), "*"))
 
 	app := fiber.New(fiber.Config{
@@ -54,21 +55,15 @@ func main() {
 		BodyLimit: 50 * 1024 * 1024, // this is the default limit of 50MB
 	})
 
-	app.Use(
-		recover.New(),
-		language.New(language.Config{
-			KeyLookup:  "lang",
-			ContextKey: helper.LocalLang,
-		}),
-	)
+	app.Use(recover.New())
 
 	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
 		app.Use(logger.New(logger.Config{
 			CustomTags: map[string]logger.LogFunc{
-				"xip": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
-				"fullPath": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"fullPath": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(string(c.Request().RequestURI()))
 				},
 			},
@@ -85,13 +80,16 @@ func main() {
 			AllowHeaders:  "*",
 			ExposeHeaders: "*",
 			MaxAge:        1,
-			// AllowCredentials: true,
+		}),
+		language.New(language.Config{
+			KeyLookup:  "lang",
+			ContextKey: helper.LocalLang,
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+				var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
 				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, messages.ErrManyRequest)
 			},
 		}),

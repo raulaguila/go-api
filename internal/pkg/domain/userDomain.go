@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"io"
 	"time"
+
+	"github.com/raulaguila/go-api/internal/pkg/filters"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -67,13 +68,13 @@ func (u *User) TableName() string {
 	return UserTableName
 }
 
-func (u *User) ToMap() *map[string]interface{} {
-	mapped := &map[string]interface{}{
+func (u *User) ToMap() *map[string]any {
+	mapped := &map[string]any{
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
 		"photo":   nil,
-		"Auth": map[string]interface{}{
+		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
 			"token":      nil,
@@ -86,8 +87,8 @@ func (u *User) ToMap() *map[string]interface{} {
 	}
 
 	if u.Auth.Password != nil {
-		(*mapped)["Auth"].(map[string]interface{})["token"] = *u.Auth.Token
-		(*mapped)["Auth"].(map[string]interface{})["password"] = *u.Auth.Password
+		(*mapped)["Auth"].(map[string]any)["token"] = *u.Auth.Token
+		(*mapped)["Auth"].(map[string]any)["password"] = *u.Auth.Password
 	}
 
 	return mapped

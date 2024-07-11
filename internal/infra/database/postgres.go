@@ -5,12 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"gorm.io/gorm/logger"
 	"os"
 	"time"
 
+	"gorm.io/gorm/logger"
+
 	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/pg-utils"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,10 +19,8 @@ import (
 func pgConnect(dbName string) *gorm.DB {
 	uri := fmt.Sprintf("host=%s user=%s password=%s dbname=%v port=%s sslmode=disable TimeZone=%v", os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASS"), dbName, os.Getenv("POSTGRES_PORT"), time.Local.String())
 	db, err := gorm.Open(postgres.Open(uri), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
-		NowFunc: func() time.Time {
-			return time.Now()
-		},
+		Logger:      logger.Default.LogMode(logger.Silent),
+		NowFunc:     time.Now,
 		PrepareStmt: true,
 	})
 	helper.PanicIfErr(err)
@@ -41,7 +40,7 @@ func createDataBase() {
 
 	if err := db.Exec(fmt.Sprintf("CREATE DATABASE %v;", os.Getenv("POSTGRES_BASE"))).Error; err != nil {
 		switch {
-		case errors.Is(pg_utils.HandlerError(err), pg_utils.ErrDatabaseAlreadyExists):
+		case errors.Is(pgutils.HandlerError(err), pgutils.ErrDatabaseAlreadyExists):
 		default:
 			helper.PanicIfErr(err)
 		}

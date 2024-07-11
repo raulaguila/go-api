@@ -67,8 +67,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -83,13 +87,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -114,8 +118,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     }
@@ -130,13 +138,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -155,8 +163,12 @@ const docTemplate = `{
                 "summary": "User authentication",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -180,13 +192,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -212,26 +224,36 @@ const docTemplate = `{
                 "summary": "List departments",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -243,7 +265,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -261,7 +284,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -285,8 +308,12 @@ const docTemplate = `{
                 "summary": "Insert department",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -310,19 +337,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -346,8 +373,12 @@ const docTemplate = `{
                 "summary": "Delete departments by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -368,13 +399,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -400,14 +431,19 @@ const docTemplate = `{
                 "summary": "Get department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -423,19 +459,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -459,14 +495,19 @@ const docTemplate = `{
                 "summary": "Update department by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Department ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -491,19 +532,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -529,26 +570,36 @@ const docTemplate = `{
                 "summary": "Get profiles",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -560,7 +611,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -578,7 +630,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -602,8 +654,12 @@ const docTemplate = `{
                 "summary": "Insert profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -627,19 +683,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -663,8 +719,12 @@ const docTemplate = `{
                 "summary": "Delete profiles by IDs",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -685,13 +745,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -717,14 +777,19 @@ const docTemplate = `{
                 "summary": "Get profile by ID",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -740,19 +805,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -776,14 +841,19 @@ const docTemplate = `{
                 "summary": "Update profile",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "Profile ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -808,19 +878,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -846,26 +916,36 @@ const docTemplate = `{
                 "summary": "Get users",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 10,
+                        "default": 10,
                         "name": "limit",
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
                         "type": "string",
-                        "example": "descending order 'desc' or ascending order 'asc'",
+                        "default": "desc",
                         "name": "order",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "example": 1,
+                        "default": 1,
                         "name": "page",
                         "in": "query"
                     },
@@ -883,7 +963,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "example": "'updated_at', 'created_at', 'name' or some other field of the response object",
+                        "default": "updated_at",
+                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
                         "name": "sort",
                         "in": "query"
                     }
@@ -901,7 +982,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -925,8 +1006,12 @@ const docTemplate = `{
                 "summary": "Insert user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -950,19 +1035,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -986,8 +1071,12 @@ const docTemplate = `{
                 "summary": "Delete user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1008,13 +1097,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1035,13 +1124,18 @@ const docTemplate = `{
                 "summary": "Set user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "User email",
                         "name": "email",
                         "in": "query",
@@ -1064,13 +1158,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1094,8 +1188,12 @@ const docTemplate = `{
                 "summary": "Reset user password",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
@@ -1114,13 +1212,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1146,14 +1244,19 @@ const docTemplate = `{
                 "summary": "Get user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1169,19 +1272,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1205,14 +1308,19 @@ const docTemplate = `{
                 "summary": "Update user",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1237,19 +1345,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1275,14 +1383,19 @@ const docTemplate = `{
                 "summary": "Get user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1295,7 +1408,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1308,7 +1421,7 @@ const docTemplate = `{
                 ],
                 "description": "Set user photo",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1319,14 +1432,19 @@ const docTemplate = `{
                 "summary": "Set user photo",
                 "parameters": [
                     {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
                         "type": "string",
-                        "description": "Language responses",
+                        "description": "Response language",
                         "name": "lang",
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
-                        "description": "User ID",
+                        "example": 1,
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1346,7 +1464,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
                     }
                 }
@@ -1487,7 +1605,7 @@ const docTemplate = `{
                 },
                 "permissions": {
                     "type": "object",
-                    "additionalProperties": true
+                    "additionalProperties": {}
                 }
             }
         },
@@ -1504,7 +1622,7 @@ const docTemplate = `{
                 },
                 "permissions": {
                     "type": "object",
-                    "additionalProperties": true
+                    "additionalProperties": {}
                 }
             }
         },
@@ -1553,7 +1671,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_pkg_http-helper.HTTPResponse": {
+        "github_com_raulaguila_go-api_pkg_helper.HTTPResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1583,8 +1701,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Go API Template",
-	Description:      "This API template is a user-friendly solution designed to serve as the foundation for more complex APIs.",
+	Title:            "Go API",
+	Description:      "This API is a user-friendly solution designed to serve as the foundation for more complex APIs.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

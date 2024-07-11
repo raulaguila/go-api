@@ -24,7 +24,7 @@ func autoMigrate(db *gorm.DB) {
 func createDefaults(db *gorm.DB) {
 	profile := &domain.Profile{
 		Name: "ROOT",
-		Permissions: map[string]interface{}{
+		Permissions: map[string]any{
 			"user":       true,
 			"department": true,
 			"profile":    true,
@@ -45,7 +45,7 @@ func createDefaults(db *gorm.DB) {
 		Email: os.Getenv("ADM_MAIL"),
 		Auth: &domain.Auth{
 			Status:    true,
-			ProfileID: profile.Id,
+			ProfileID: profile.ID,
 			Token:     &token,
 			Password:  &pass,
 		},

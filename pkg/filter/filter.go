@@ -24,10 +24,10 @@ func New(sort, order string) *Filter {
 
 type Filter struct {
 	Search string `query:"search" form:"search" example:"name"`
-	Page   int    `query:"page" form:"page" example:"1"`
-	Limit  int    `query:"limit" form:"limit" example:"10"`
-	Sort   string `query:"sort" form:"sort" example:"'updated_at', 'created_at', 'name' or some other field of the response object"`
-	Order  string `query:"order" form:"order" example:"descending order 'desc' or ascending order 'asc'"`
+	Page   int    `query:"page" form:"page" minimum:"1" default:"1"`
+	Limit  int    `query:"limit" form:"limit" minimum:"1" default:"10"`
+	Sort   string `query:"sort" form:"sort" default:"updated_at" example:"'updated_at', 'created_at', 'name' or some other field from response object"`
+	Order  string `query:"order" form:"order" enums:"asc,desc" default:"desc"`
 }
 
 func (s *Filter) ApplySearchLike(db *gorm.DB, columns ...string) *gorm.DB {
@@ -39,9 +39,9 @@ func (s *Filter) ApplySearchLike(db *gorm.DB, columns ...string) *gorm.DB {
 		where := ""
 		for i, column := range columns {
 			if i > 0 {
-				where = where + " or "
+				where += " or "
 			}
-			where = where + whereLike(column, s.Search)
+			where += whereLike(column, s.Search)
 		}
 
 		if where != "" {

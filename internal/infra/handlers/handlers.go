@@ -1,15 +1,11 @@
 package handlers
 
 import (
-	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/minio-client"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
-
 	"github.com/raulaguila/go-api/docs"
 	"github.com/raulaguila/go-api/internal/api/handler"
 	"github.com/raulaguila/go-api/internal/api/middleware"
@@ -17,6 +13,8 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
+	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/minioutils"
 	"gorm.io/gorm"
 )
 
@@ -32,7 +30,7 @@ var (
 )
 
 // initRepositories Initialize all repositories.
-func initRepositories(db *gorm.DB, minioClient *minio_client.Minio) {
+func initRepositories(db *gorm.DB, minioClient *minioutils.Minio) {
 	profileRepository = repository.NewProfileRepository(db)
 	userRepository = repository.NewUserRepository(db, minioClient)
 	departmentRepository = repository.NewDepartmentRepository(db)
@@ -40,7 +38,6 @@ func initRepositories(db *gorm.DB, minioClient *minio_client.Minio) {
 
 // initServices Initialize all services.
 func initServices() {
-
 	profileService = service.NewProfileService(profileRepository)
 	userService = service.NewUserService(userRepository)
 	authService = service.NewAuthService(userRepository)
@@ -61,12 +58,12 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+		var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrorNonexistentRoute)
 	})
 }
 
-func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minio_client.Minio) {
+func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "true" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 
@@ -82,5 +79,5 @@ func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minio_client.Minio
 	initServices()
 	initHandlers(app)
 
-	log.Fatal(app.Listen(":" + os.Getenv("API_PORT")))
+	panic(app.Listen(":" + os.Getenv("API_PORT")))
 }
