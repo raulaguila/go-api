@@ -31,13 +31,13 @@ type ProfileTestSuite struct {
 func (s *ProfileTestSuite) SetupTest() {
 	s.ctx = context.Background()
 	s.f = filter.New("name", "desc")
-	s.firstItem = domain.Profile{Base: domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 1", Permissions: map[string]any{"profile": true}}
+	s.firstItem = domain.Profile{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 1", Permissions: map[string]any{"profile": true}}
 	s.items = []domain.Profile{
 		s.firstItem,
-		{Base: domain.Base{Id: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 2", Permissions: map[string]any{"profile": true}},
-		{Base: domain.Base{Id: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 3", Permissions: map[string]any{"profile": true}},
+		{Base: domain.Base{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 2", Permissions: map[string]any{"profile": true}},
+		{Base: domain.Base{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 3", Permissions: map[string]any{"profile": true}},
 	}
-	s.newItem = domain.Profile{Base: domain.Base{Id: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 4", Permissions: map[string]any{"profile": true}}
+	s.newItem = domain.Profile{Base: domain.Base{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Profile 4", Permissions: map[string]any{"profile": true}}
 
 	var nilFilter *filter.Filter = nil
 	var nilDTO *dto.ProfileInputDTO = nil
@@ -85,7 +85,7 @@ func (s *ProfileTestSuite) TestGetProfileByID() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.ID, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.ID)
 
 	item, err = s.service.GetProfileByID(s.ctx, 7)
 
@@ -101,7 +101,7 @@ func (s *ProfileTestSuite) TestCreateProfile() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.ID, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.CreateProfile(s.ctx, nil)
 
@@ -117,7 +117,7 @@ func (s *ProfileTestSuite) TestUpdateProfile() {
 	s.NoError(err)
 	s.IsType(&dto.ProfileOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.ID, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.UpdateProfile(s.ctx, 7, data)
 

@@ -36,13 +36,13 @@ type DepartmentTestSuite struct {
 func (s *DepartmentTestSuite) SetupTest() {
 	s.ctx = context.Background()
 	s.f = filter.New("name", "desc")
-	s.firstItem = domain.Department{Base: domain.Base{Id: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 1"}
+	s.firstItem = domain.Department{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 1"}
 	s.items = []domain.Department{
 		s.firstItem,
-		{Base: domain.Base{Id: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 2"},
-		{Base: domain.Base{Id: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 3"},
+		{Base: domain.Base{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 2"},
+		{Base: domain.Base{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 3"},
 	}
-	s.newItem = domain.Department{Base: domain.Base{Id: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 4"}
+	s.newItem = domain.Department{Base: domain.Base{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Department 4"}
 
 	var nilFilter *filter.Filter = nil
 	var nilDTO *dto.DepartmentInputDTO = nil
@@ -90,7 +90,7 @@ func (s *DepartmentTestSuite) TestGetDepartmentByID() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.firstItem.Name)
-	s.Equal(*item.ID, s.firstItem.Id)
+	s.Equal(*item.ID, s.firstItem.ID)
 
 	item, err = s.service.GetDepartmentByID(s.ctx, 7)
 
@@ -106,7 +106,7 @@ func (s *DepartmentTestSuite) TestCreateDepartment() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.ID, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.CreateDepartment(s.ctx, nil)
 
@@ -122,7 +122,7 @@ func (s *DepartmentTestSuite) TestUpdateDepartment() {
 	s.NoError(err)
 	s.IsType(&dto.DepartmentOutputDTO{}, item)
 	s.Equal(*item.Name, s.newItem.Name)
-	s.Equal(*item.ID, s.newItem.Id)
+	s.Equal(*item.ID, s.newItem.ID)
 
 	item, err = s.service.UpdateDepartment(s.ctx, 7, data)
 
