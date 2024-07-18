@@ -46,5 +46,6 @@ translate.*.toml
 backend
 qodana.yaml
 .golangci.yml
+*.puml
 
 # End of https://www.toptal.com/developers/gitignore/api/go
