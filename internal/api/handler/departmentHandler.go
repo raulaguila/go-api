@@ -2,12 +2,12 @@ package handler
 
 import (
 	"errors"
-	"github.com/raulaguila/go-api/internal/api/middleware"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -81,7 +81,7 @@ func NewDepartmentHandler(route fiber.Router, ps domain.DepartmentService) {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang		query	string			false	"Response language" enums(en-US,pt-BR)
+// @Param        lang		query	string			false	"Response language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter		query	filter.Filter	false	"Optional Filter"
 // @Success      200  {array}   dto.ItemsOutputDTO[dto.DepartmentOutputDTO]
 // @Failure      500  {object}  helper.HTTPResponse
@@ -102,7 +102,7 @@ func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
 // @Param        id			path	filters.IDFilter	true	"Department ID"
 // @Success      200  {object}  dto.DepartmentOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
@@ -126,7 +126,7 @@ func (h *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang		query	string					false	"Response language" enums(en-US,pt-BR)
+// @Param        lang		query	string					false	"Response language" enums(en-US,pt-BR) default(en-US)
 // @Param        department body	dto.DepartmentInputDTO	true	"Department model"
 // @Success      201  {object}  dto.DepartmentOutputDTO
 // @Failure      400  {object}  helper.HTTPResponse
@@ -150,7 +150,7 @@ func (h *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
 // @Param        id			path    filters.IDFilter	true	"Department ID"
 // @Param        department body dto.DepartmentInputDTO true "Department model"
 // @Success      200  {object}  dto.DepartmentOutputDTO
@@ -176,7 +176,7 @@ func (h *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
 // @Tags         Department
 // @Accept       json
 // @Produce      json
-// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR)
+// @Param        lang		query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
 // @Param        id			body	dto.IDsInputDTO		true	"Department ID"
 // @Success      204  {object}  nil
 // @Failure      404  {object}  helper.HTTPResponse
