@@ -13,6 +13,7 @@
 *.so
 *.dylib
 .DS_Store
+Build
 
 # Test binary, built with `go api -c`
 *.test
@@ -46,5 +47,6 @@ translate.*.toml
 backend
 qodana.yaml
 .golangci.yml
+*.puml
 
 # End of https://www.toptal.com/developers/gitignore/api/go

@@ -177,7 +177,8 @@ paths:
         in: header
         name: Authorization
         type: string
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -209,7 +210,8 @@ paths:
       - application/json
       description: User authentication
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -249,7 +251,8 @@ paths:
         in: header
         name: Authorization
         type: string
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -280,7 +283,8 @@ paths:
       - application/json
       description: Delete departments by IDs
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -316,7 +320,8 @@ paths:
       - application/json
       description: List departments
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -373,7 +378,8 @@ paths:
       - application/json
       description: Insert department
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -416,7 +422,8 @@ paths:
       - application/json
       description: Get department by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -458,7 +465,8 @@ paths:
       - application/json
       description: Update department by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -507,7 +515,8 @@ paths:
       - application/json
       description: Delete profiles by IDs
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -543,7 +552,8 @@ paths:
       - application/json
       description: Get profiles
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -600,7 +610,8 @@ paths:
       - application/json
       description: Insert profile
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -643,7 +654,8 @@ paths:
       - application/json
       description: Get profile by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -685,7 +697,8 @@ paths:
       - application/json
       description: Update profile by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -734,7 +747,8 @@ paths:
       - application/json
       description: Delete user by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -770,7 +784,8 @@ paths:
       - application/json
       description: Get all users
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -831,7 +846,8 @@ paths:
       - application/json
       description: Insert user
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -874,7 +890,8 @@ paths:
       - application/json
       description: Get user by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -916,7 +933,8 @@ paths:
       - application/json
       description: Update user by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -965,7 +983,8 @@ paths:
       - application/json
       description: Get user photo
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -997,7 +1016,8 @@ paths:
       - multipart/form-data
       description: Set user photo
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -1035,7 +1055,8 @@ paths:
       - application/json
       description: Reset user password by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR
@@ -1070,7 +1091,8 @@ paths:
       - application/json
       description: Set user password by ID
       parameters:
-      - description: Response language
+      - default: en-US
+        description: Response language
         enum:
         - en-US
         - pt-BR

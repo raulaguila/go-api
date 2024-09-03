@@ -72,6 +72,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -123,6 +124,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -168,6 +170,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -229,6 +232,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -313,6 +317,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -378,6 +383,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -436,6 +442,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -500,6 +507,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -575,6 +583,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -659,6 +668,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -724,6 +734,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -782,6 +793,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -846,6 +858,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -921,6 +934,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1011,6 +1025,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1076,6 +1091,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1129,6 +1145,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1193,6 +1210,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1249,6 +1267,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1313,6 +1332,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1388,6 +1408,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
@@ -1437,6 +1458,7 @@ const docTemplate = `{
                             "pt-BR"
                         ],
                         "type": "string",
+                        "default": "en-US",
                         "description": "Response language",
                         "name": "lang",
                         "in": "query"
