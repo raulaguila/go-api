@@ -24,10 +24,16 @@ type (
 		ProfileOutputDTO | UserOutputDTO | DepartmentOutputDTO
 	}
 
+	PaginationDTO struct {
+		CurrentPage uint `json:"current_page"`
+		PageSize    uint `json:"page_size"`
+		TotalItems  uint `json:"total_items"`
+		TotalPages  uint `json:"total_pages"`
+	}
+
 	ItemsOutputDTO[T outputDTO] struct {
-		Items []T   `json:"items"`
-		Count int64 `json:"count"`
-		Pages int64 `json:"pages"`
+		Items      []T           `json:"items"`
+		Pagination PaginationDTO `json:"pagination"`
 	}
 
 	AuthOutputDTO struct {

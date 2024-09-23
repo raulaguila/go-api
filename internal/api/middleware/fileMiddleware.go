@@ -15,7 +15,7 @@ import (
 
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
+		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
 		file, err := c.FormFile(formKey)
 		if err != nil || (extensions != nil && !slices.Contains(*extensions, filepath.Ext(file.Filename))) {
 			if err != nil {

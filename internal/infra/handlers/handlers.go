@@ -58,7 +58,7 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
+		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrorNonexistentRoute)
 	})
 }

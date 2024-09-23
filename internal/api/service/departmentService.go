@@ -54,8 +54,12 @@ func (s *departmentService) GetDepartments(ctx context.Context, filter *filter.F
 
 	return &dto.ItemsOutputDTO[dto.DepartmentOutputDTO]{
 		Items: outputDepartments,
-		Count: count,
-		Pages: filter.CalcPages(count),
+		Pagination: dto.PaginationDTO{
+			CurrentPage: uint(max(filter.Page, 1)),
+			PageSize:    uint(max(filter.Limit, len(outputDepartments))),
+			TotalItems:  uint(count),
+			TotalPages:  uint(filter.CalcPages(count)),
+		},
 	}, nil
 }
 

@@ -53,9 +53,13 @@ func (s *profileService) GetProfiles(ctx context.Context, filter *filter.Filter)
 		outputProfiles = append(outputProfiles, *s.GenerateProfileOutputDTO(&profile))
 	}
 	return &dto.ItemsOutputDTO[dto.ProfileOutputDTO]{
-		Count: count,
 		Items: outputProfiles,
-		Pages: filter.CalcPages(count),
+		Pagination: dto.PaginationDTO{
+			CurrentPage: uint(max(filter.Page, 1)),
+			PageSize:    uint(max(filter.Limit, len(outputProfiles))),
+			TotalItems:  uint(count),
+			TotalPages:  uint(filter.CalcPages(count)),
+		},
 	}, nil
 }
 

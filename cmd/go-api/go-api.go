@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/raulaguila/go-api/internal/api/middleware/language"
 
 	"github.com/raulaguila/go-api/pkg/minioutils"
 
@@ -89,7 +90,7 @@ func main() {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				var messages = c.Locals(helper.LocalLang).(*i18n.Translation)
+				messages := c.Locals(helper.LocalLang).(*i18n.Translation)
 				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, messages.ErrManyRequest)
 			},
 		}),

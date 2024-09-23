@@ -60,9 +60,13 @@ func (s *userService) GetUsers(ctx context.Context, filter *filters.UserFilter) 
 	}
 
 	return &dto.ItemsOutputDTO[dto.UserOutputDTO]{
-		Count: count,
 		Items: outputUsers,
-		Pages: filter.CalcPages(count),
+		Pagination: dto.PaginationDTO{
+			CurrentPage: uint(max(filter.Page, 1)),
+			PageSize:    uint(max(filter.Limit, len(outputUsers))),
+			TotalItems:  uint(count),
+			TotalPages:  uint(filter.CalcPages(count)),
+		},
 	}, nil
 }
 
