@@ -1,12 +1,13 @@
 package datatransferobject
 
 import (
-	"github.com/google/uuid"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/google/uuid"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
@@ -55,7 +56,7 @@ func createAppWithMiddleware2Body() *fiber.App {
 
 	// Create a handler to path "/product"
 	app.Post(endpoint, func(c *fiber.Ctx) error {
-		var product = &Product{ID: uuid.New().String(), ProductDTO: *c.Locals(contextKey).(*ProductDTO)}
+		product := &Product{ID: uuid.New().String(), ProductDTO: *c.Locals(contextKey).(*ProductDTO)}
 		return c.Status(fiber.StatusCreated).JSON(product)
 	})
 

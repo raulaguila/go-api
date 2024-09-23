@@ -23,7 +23,7 @@ func (s *DepartmentServiceMock) GetDepartmentByID(ctx context.Context, departmen
 	return nil, nil
 }
 
-//GetDepartments(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.DepartmentOutputDTO], error)
-//CreateDepartment(context.Context, *dto.DepartmentInputDTO) (*dto.DepartmentOutputDTO, error)
-//UpdateDepartment(context.Context, uint, *dto.DepartmentInputDTO) (*dto.DepartmentOutputDTO, error)
-//DeleteDepartments(context.Context, []uint) error
+// GetDepartments(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.DepartmentOutputDTO], error)
+// CreateDepartment(context.Context, *dto.DepartmentInputDTO) (*dto.DepartmentOutputDTO, error)
+// UpdateDepartment(context.Context, uint, *dto.DepartmentInputDTO) (*dto.DepartmentOutputDTO, error)
+// DeleteDepartments(context.Context, []uint) error

@@ -3,10 +3,11 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/raulaguila/go-api/pkg/minioutils"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/raulaguila/go-api/pkg/minioutils"
 
 	"github.com/google/uuid"
 	"github.com/raulaguila/go-api/internal/pkg/filters"

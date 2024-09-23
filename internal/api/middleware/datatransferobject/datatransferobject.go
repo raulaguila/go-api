@@ -7,7 +7,7 @@ import (
 )
 
 func New(config ...Config) fiber.Handler {
-	var cfg = configDefault(config...)
+	cfg := configDefault(config...)
 
 	parser := func(c *fiber.Ctx, obj any) (any, error) {
 		switch cfg.OnLookup {
