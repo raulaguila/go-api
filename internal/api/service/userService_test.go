@@ -84,7 +84,7 @@ func (s *UserTestSuite) TestGetUsers() {
 
 	s.NoError(err)
 	s.IsType(&dto.ItemsOutputDTO[dto.UserOutputDTO]{}, items)
-	s.Equal(items.Count, int64(len(s.items)))
+	s.Equal(items.Pagination.TotalItems, uint(len(s.items)))
 
 	items, err = s.service.GetUsers(s.ctx, nil)
 
