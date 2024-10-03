@@ -60,7 +60,7 @@ func main() {
 	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
 		app.Use(logger.New(logger.Config{
 			CustomTags: map[string]logger.LogFunc{
-				"xid": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"xid": func(output logger.Buffer, _ *fiber.Ctx, data *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%6s", data.Pid))
 				},
 				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
