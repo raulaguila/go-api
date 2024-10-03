@@ -36,13 +36,13 @@ Usage:
 Commands: 
 
 init                           Create environment file
-compose-up                     Run 'docker compose up -d' to create and start containers
-compose-build-dev              Run 'docker compose --profile dev up -d --build' to create and start containers
-compose-build-prod             Run 'docker compose --profile prod up -d --build' to create and start containers
+compose-build-services         Run 'docker compose --profile services up -d --build' to create and start containers
+compose-build-source           Run 'docker compose --profile services --profile source up -d --build' to create and start containers from source code
+compose-build-binary           Run 'docker compose --profile services --profile binary up -d --build' to create and start containers from binary
 compose-down                   Run 'docker compose --profile all down' to stop and remove containers and networks
 compose-remove                 Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
-compose-exec                   Run 'docker compose exec -it backend bash' to access container bash
-compose-log                    Run 'docker compose logs -f backend' to show container logger
+compose-exec                   Run 'docker compose exec -it backend_binary bash' to access container bash
+compose-log                    Run 'docker compose logs -f backend_binary' to show container logger
 compose-top                    Run 'docker compose top' to display containers processes
 compose-stats                  Run 'docker compose stats' to display containers stats
 go-run                         Run application from source code
@@ -63,7 +63,7 @@ go-tidy                        Clean and tidy dependencies
 3. Run:
 
 ```sh
-make compose-build
+make compose-build-binary
 ```
 
 - Remove project

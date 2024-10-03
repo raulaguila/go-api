@@ -7,12 +7,11 @@ import (
 	"io"
 	"time"
 
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/validator"
 )

@@ -7,20 +7,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/raulaguila/go-api/internal/api/middleware/language"
-
-	"github.com/raulaguila/go-api/pkg/minioutils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+
 	_ "github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/minioutils"
 )
 
 // @title 							Go API

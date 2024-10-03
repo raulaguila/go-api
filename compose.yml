@@ -33,7 +33,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
     networks:
       - go_api_network
-    profiles: [ all, prod, dev ]
+    profiles: [ all, services ]
 
   minio:
 
@@ -54,13 +54,15 @@ services:
       - MINIO_CONSOLE_PORT_NUMBER=${MINIO_WEB_PORT}
     networks:
       - go_api_network
-    profiles: [ all, prod, dev ]
+    profiles: [ all, services ]
 
-  backend:
+  backend_binary:
 
-    container_name: api_backend
-    build: .
-    image: api_backend
+    container_name: api_backend_binary
+    build:
+      context: .
+      dockerfile: ./build/package/binary.Dockerfile
+    image: api_backend_binary
     restart: always
     depends_on:
       - postgres
@@ -72,4 +74,24 @@ services:
       - TZ=${TZ}
     networks:
       - go_api_network
-    profiles: [ all, prod ]
+    profiles: [ all, binary ]
+
+  backend_source:
+
+    container_name: api_backend_source
+    build:
+      context: .
+      dockerfile: ./build/package/source.Dockerfile
+    image: api_backend_source
+    restart: always
+    depends_on:
+      - postgres
+      - minio
+    ports:
+      - ${API_PORT}:${API_PORT}
+    tty: true
+    environment:
+      - TZ=${TZ}
+    networks:
+      - go_api_network
+    profiles: [ all, source ]

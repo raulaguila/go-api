@@ -13,17 +13,17 @@ help:
 init: ## Create environment file
 	@chmod +x configs/env.sh && configs/env.sh && mv .env configs/
 
-.PHONY: compose-up
-compose-up: ## Run 'docker compose up -d' to create and start containers
-	@${COMPOSE_COMMAND} up -d
+.PHONY: compose-build-services
+compose-build-services: ## Run 'docker compose --profile services up -d --build' to create and start containers
+	@${COMPOSE_COMMAND} --profile services up -d --build
 
-.PHONY: compose-build-dev
-compose-build-dev: ## Run 'docker compose --profile dev up -d --build' to create and start containers
-	@${COMPOSE_COMMAND} --profile dev up -d --build
+.PHONY: compose-build-source
+compose-build-source: ## Run 'docker compose --profile services --profile source up -d --build' to create and start containers from source code
+	@${COMPOSE_COMMAND} --profile services --profile source up -d --build
 
-.PHONY: compose-build-prod
-compose-build-prod: ## Run 'docker compose --profile prod up -d --build' to create and start containers
-	@${COMPOSE_COMMAND} --profile prod up -d --build
+.PHONY: compose-build-binary
+compose-build-binary: ## Run 'docker compose --profile services --profile binary up -d --build' to create and start containers from binary
+	@${COMPOSE_COMMAND} --profile services --profile binary up -d --build
 
 .PHONY: compose-down
 compose-down: ## Run 'docker compose --profile all down' to stop and remove containers and networks
@@ -35,12 +35,12 @@ compose-remove: ## Run 'docker compose --profile all down -v --remove-orphans' t
 	@${COMPOSE_COMMAND} --profile all down -v --remove-orphans
 
 .PHONY: compose-exec
-compose-exec: ## Run 'docker compose exec -it backend bash' to access container bash
-	@${COMPOSE_COMMAND} exec -it backend bash
+compose-exec: ## Run 'docker compose exec -it backend_binary bash' to access container bash
+	@${COMPOSE_COMMAND} exec -it backend_binary bash
 
 .PHONY: compose-log
-compose-log: ## Run 'docker compose logs -f backend' to show container logger
-	@${COMPOSE_COMMAND} logs -f backend
+compose-log: ## Run 'docker compose logs -f backend_binary' to show container logger
+	@${COMPOSE_COMMAND} logs -f backend_binary
 
 .PHONY: compose-top
 compose-top: ## Run 'docker compose top' to display containers processes

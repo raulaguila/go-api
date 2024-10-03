@@ -31,7 +31,7 @@ coverage.html
 .docker/
 .vscode/
 .run/
-build/
+!build/
 bin/
 docker/
 

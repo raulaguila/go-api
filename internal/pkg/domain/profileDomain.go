@@ -3,10 +3,9 @@ package domain
 import (
 	"context"
 
-	"github.com/raulaguila/go-api/pkg/pgutils"
-
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 

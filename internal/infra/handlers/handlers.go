@@ -6,6 +6,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"gorm.io/gorm"
+
 	"github.com/raulaguila/go-api/docs"
 	"github.com/raulaguila/go-api/internal/api/handler"
 	"github.com/raulaguila/go-api/internal/api/middleware"
@@ -15,7 +17,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/minioutils"
-	"gorm.io/gorm"
 )
 
 var (

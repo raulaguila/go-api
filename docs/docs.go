@@ -1557,50 +1557,58 @@ const docTemplate = `{
         "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
-                },
                 "items": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
                     }
                 },
-                "pages": {
-                    "type": "integer"
+                "pagination": {
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
                 }
             }
         },
         "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
-                },
                 "items": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
                     }
                 },
-                "pages": {
-                    "type": "integer"
+                "pagination": {
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
                 }
             }
         },
         "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
-                },
                 "items": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                     }
                 },
-                "pages": {
+                "pagination": {
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO": {
+            "type": "object",
+            "properties": {
+                "current_page": {
+                    "type": "integer"
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total_items": {
+                    "type": "integer"
+                },
+                "total_pages": {
                     "type": "integer"
                 }
             }
