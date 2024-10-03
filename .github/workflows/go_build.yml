@@ -38,7 +38,7 @@ jobs:
           name: go_api_${{ steps.getVersion.outputs.version }}
           path: |
             configs/.env
-            docker-compose.yml
+            compose.yml
             backend
             README.md
             Makefile
