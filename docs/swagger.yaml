@@ -42,35 +42,40 @@ definitions:
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO:
     properties:
-      count:
-        type: integer
       items:
         items:
           $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
         type: array
-      pages:
-        type: integer
+      pagination:
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO:
     properties:
-      count:
-        type: integer
       items:
         items:
           $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
         type: array
-      pages:
-        type: integer
+      pagination:
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO:
     properties:
-      count:
-        type: integer
       items:
         items:
           $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
         type: array
-      pages:
+      pagination:
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO:
+    properties:
+      current_page:
+        type: integer
+      page_size:
+        type: integer
+      total_items:
+        type: integer
+      total_pages:
         type: integer
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO:

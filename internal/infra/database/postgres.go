@@ -8,12 +8,12 @@ import (
 	"os"
 	"time"
 
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func pgConnect(dbName string) *gorm.DB {

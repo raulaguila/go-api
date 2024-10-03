@@ -1,8 +1,6 @@
 FROM alpine:3.20.1
 
-RUN apk add --no-cache bash
-RUN apk add --no-cache tzdata
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache bash tzdata dumb-init
 
 WORKDIR /opt/app
 

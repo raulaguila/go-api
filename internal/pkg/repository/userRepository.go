@@ -7,17 +7,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/raulaguila/go-api/pkg/minioutils"
-
 	"github.com/google/uuid"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/internal/pkg/postgre"
+	"github.com/raulaguila/go-api/pkg/minioutils"
 )
 
 func NewUserRepository(db *gorm.DB, minioClient *minioutils.Minio) domain.UserRepository {
