@@ -60,6 +60,9 @@ func main() {
 	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
 		app.Use(logger.New(logger.Config{
 			CustomTags: map[string]logger.LogFunc{
+				"xid": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+					return output.WriteString(fmt.Sprintf("%6s", data.Pid))
+				},
 				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
@@ -67,7 +70,7 @@ func main() {
 					return output.WriteString(string(c.Request().RequestURI()))
 				},
 			},
-			Format:     "[FIBER:${magenta}${pid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${magenta}${error}${reset}\n",
+			Format:     "[FIBER:${magenta}${xid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${magenta}${error}${reset}\n",
 			TimeFormat: "2006-01-02 15:04:05",
 			TimeZone:   time.Local.String(),
 		}))
