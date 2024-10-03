@@ -37,12 +37,12 @@ jobs:
         with:
           name: go_api_${{ steps.getVersion.outputs.version }}
           path: |
-            api/
-            build/
             configs/.env
             docker-compose.yml
             backend
             README.md
             Makefile
+            api/
+            build/
           if-no-files-found: error
           overwrite: true
