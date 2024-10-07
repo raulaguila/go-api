@@ -29,19 +29,19 @@ type ProfileHandler struct {
 	profileService domain.ProfileService
 }
 
-func (h *ProfileHandler) foreignKeyViolatedMethod(c *fiber.Ctx, translation *i18n.Translation) error {
+func (h *ProfileHandler) foreignKeyViolatedMethod(c *fiber.Ctx, messages *i18n.Translation) error {
 	switch c.Method() {
 	case fiber.MethodPut, fiber.MethodPost, fiber.MethodPatch:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, translation.ErrProfileNotFound)
+		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrProfileNotFound)
 	case fiber.MethodDelete:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, translation.ErrProfileUsed)
+		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrProfileUsed)
 	default:
-		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, translation.ErrGeneric)
+		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
 	}
 }
 
 func (h *ProfileHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 
 	switch pgErr := pgutils.HandlerError(err); {
 	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
@@ -81,10 +81,10 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        filter			query	filter.Filter		false	"Optional Filter"
-// @Success      200  {array}   dto.ItemsOutputDTO[dto.ProfileOutputDTO]
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        filter				query	filter.Filter		false	"Optional Filter"
+// @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [get]
 // @Security	 Bearer
 func (h *ProfileHandler) getProfiles(c *fiber.Ctx) error {
@@ -102,12 +102,12 @@ func (h *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        profile		body	dto.ProfileInputDTO	true	"Profile model"
-// @Success      201  {object}  dto.ProfileOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      409  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
+// @Success      201  {object}  	dto.ProfileOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      409  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [post]
 // @Security	 Bearer
 func (h *ProfileHandler) createProfile(c *fiber.Ctx) error {
@@ -126,12 +126,12 @@ func (h *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path    filters.IDFilter	true	"Profile ID"
-// @Success      200  {object}  dto.ProfileOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path    filters.IDFilter	true	"Profile ID"
+// @Success      200  {object}  	dto.ProfileOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile/{id} [get]
 // @Security	 Bearer
 func (h *ProfileHandler) getProfile(c *fiber.Ctx) error {
@@ -150,13 +150,13 @@ func (h *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path    filters.IDFilter	true	"Profile ID"
-// @Param        profile		body	dto.ProfileInputDTO true	"Profile model"
-// @Success      200  {object}  dto.ProfileOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path    filters.IDFilter	true	"Profile ID"
+// @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
+// @Success      200  {object}  	dto.ProfileOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
 func (h *ProfileHandler) updateProfile(c *fiber.Ctx) error {
@@ -176,11 +176,11 @@ func (h *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				body	dto.IDsInputDTO     true	"Profile ID"
-// @Success      204  {object}  nil
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					body	dto.IDsInputDTO     true	"Profile ID"
+// @Success      204  {object}  	nil
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (h *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {

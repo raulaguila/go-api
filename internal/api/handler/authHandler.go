@@ -20,7 +20,7 @@ type AuthHandler struct {
 }
 
 func (s *AuthHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
@@ -52,11 +52,11 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        credentials	body	dto.AuthInputDTO	true	"Credentials model"
-// @Success      200  {object}  dto.AuthOutputDTO
-// @Failure      401  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        credentials		body	dto.AuthInputDTO	true	"Credentials model"
+// @Success      200  {object}  	dto.AuthOutputDTO
+// @Failure      401  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /auth [post]
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := &dto.AuthInputDTO{}
@@ -79,11 +79,11 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization	header	string				false	"User token"
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Success      200  {object}  dto.UserOutputDTO
-// @Failure      401  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Authorization		header	string				false	"User token"
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Success      200  {object}  	dto.UserOutputDTO
+// @Failure      401  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
@@ -97,11 +97,11 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        Authorization	header	string				false	"User token"
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Success      200  {object}  dto.AuthOutputDTO
-// @Failure      401  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Authorization		header	string				false	"User token"
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Success      200  {object}  	dto.AuthOutputDTO
+// @Failure      401  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
 	user := c.Locals(helper.LocalUser).(*domain.User)

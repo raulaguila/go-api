@@ -73,9 +73,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -125,9 +125,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -171,9 +171,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Credentials model",
@@ -233,9 +233,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -318,9 +318,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Department model",
@@ -384,9 +384,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Department ID",
@@ -443,9 +443,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -508,9 +508,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -584,9 +584,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -669,9 +669,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Profile model",
@@ -735,9 +735,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Profile ID",
@@ -794,9 +794,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -859,9 +859,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -935,9 +935,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1026,9 +1026,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "User model",
@@ -1092,9 +1092,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "User ID",
@@ -1146,9 +1146,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1211,9 +1211,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1268,9 +1268,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1333,9 +1333,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1409,9 +1409,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1442,7 +1442,7 @@ const docTemplate = `{
                 ],
                 "description": "Set user photo",
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1459,9 +1459,9 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,

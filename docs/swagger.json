@@ -65,9 +65,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -117,9 +117,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -163,9 +163,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Credentials model",
@@ -225,9 +225,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -310,9 +310,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Department model",
@@ -376,9 +376,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Department ID",
@@ -435,9 +435,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -500,9 +500,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -576,9 +576,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -661,9 +661,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Profile model",
@@ -727,9 +727,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "Profile ID",
@@ -786,9 +786,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -851,9 +851,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -927,9 +927,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1018,9 +1018,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "User model",
@@ -1084,9 +1084,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "description": "User ID",
@@ -1138,9 +1138,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1203,9 +1203,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "type": "string",
@@ -1260,9 +1260,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1325,9 +1325,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1401,9 +1401,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,
@@ -1434,7 +1434,7 @@
                 ],
                 "description": "Set user photo",
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1451,9 +1451,9 @@
                         ],
                         "type": "string",
                         "default": "en-US",
-                        "description": "Response language",
-                        "name": "lang",
-                        "in": "query"
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
                     },
                     {
                         "minimum": 1,

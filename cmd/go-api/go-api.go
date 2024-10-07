@@ -43,7 +43,7 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
-		Prefork:               os.Getenv("SYS_PREFORK") == "true",
+		Prefork:               os.Getenv("SYS_PREFORK") == "1",
 		CaseSensitive:         true,
 		StrictRouting:         true,
 		DisableStartupMessage: false,
@@ -52,25 +52,25 @@ func main() {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, err)
 		},
-		BodyLimit: 50 * 1024 * 1024, // this is the default limit of 50MB
+		BodyLimit: 50 * 1024 * 1024,
 	})
 
 	app.Use(recover.New())
 
-	if strings.ToLower(os.Getenv("API_LOGGER")) == "true" {
+	if strings.ToLower(os.Getenv("API_LOGGER")) == "1" {
 		app.Use(logger.New(logger.Config{
 			CustomTags: map[string]logger.LogFunc{
-				"xid": func(output logger.Buffer, c *fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+				"xid": func(output logger.Buffer, _ *fiber.Ctx, data *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%6s", data.Pid))
+				},
+				"fullPath": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
+					return output.WriteString(c.OriginalURL())
 				},
 				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
-				"fullPath": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
-					return output.WriteString(string(c.Request().RequestURI()))
-				},
 			},
-			Format:     "[FIBER:${magenta}${xid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${magenta}${error}${reset}\n",
+			Format:     "[FIBER:${magenta}${xid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${yellow}\"${reqHeader:Accept-Language}\"${reset} ${magenta}${error}${reset}\n",
 			TimeFormat: "2006-01-02 15:04:05",
 			TimeZone:   time.Local.String(),
 		}))
@@ -85,14 +85,16 @@ func main() {
 			MaxAge:        1,
 		}),
 		language.New(language.Config{
-			KeyLookup:  "lang",
-			ContextKey: helper.LocalLang,
+			Languages:       strings.Split(os.Getenv("SYS_LANGUAGES"), ";"),
+			DefaultLanguage: os.Getenv("SYS_LANGUAGE"),
+			KeyLookup:       "Accept-Language",
+			ContextKey:      helper.LocalLang,
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+				messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, messages.ErrManyRequest)
 			},
 		}),

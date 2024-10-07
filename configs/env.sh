@@ -15,12 +15,12 @@ done
 
 echo "TZ='America/Manaus'                             # Set system time zone
 SYS_LANGUAGE='en-us'                            # Default system language
-SYS_LANGUAGES='en-us,pt-br'                     # System languages
-SYS_PREFORK='true'                              # Enable Fiber Prefork
+SYS_LANGUAGES='en-us;pt-br;'                    # System languages
+SYS_PREFORK='1'                                 # Enable Fiber Prefork
 
 API_PORT='9000'                                 # API Container PORT
-API_LOGGER='true'                               # API Logger enable
-API_SWAGGO='true'                               # API Swagger enable
+API_LOGGER='1'                                  # API Logger enable
+API_SWAGGO='1'                                  # API Swagger enable
 API_DEFAULT_SORT='updated_at'                   # API default column sort
 API_DEFAULT_ORDER='desc'                        # API default order
 

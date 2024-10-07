@@ -1,11 +1,12 @@
 @host = http://127.0.0.1:9000
-@lang = pt
+@lang = pt-BR
 
 ###
 
 # @name login
-POST {{host}}/auth?lang={{lang}} HTTP/1.1
+POST {{host}}/auth HTTP/1.1
 Content-Type: application/json
+Accept-Language: {{lang}}
 
 {
   "login": "admin@admin.com",
@@ -15,15 +16,16 @@ Content-Type: application/json
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
-        client.global.set("accesstoken", response.body.accesstoken);
+        client.global.set("accessToken", response.body.accesstoken);
     });
 %}
 
 ### List all users
 
 # @name getAll
-GET {{host}}/user?lang={{lang}}&page=1&limit=5&order=desc&sort=updated_at HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/user?page=1&limit=5&order=desc&sort=updated_at HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {
@@ -34,8 +36,9 @@ Authorization: Bearer {{accesstoken}}
 ###
 
 # @name create
-POST {{host}}/user?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+POST {{host}}/user HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -56,8 +59,9 @@ Content-Type: application/json
 ###
 
 # @name getCreatedByID
-GET {{host}}/user/{{id}}?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/user/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {
@@ -70,8 +74,9 @@ Authorization: Bearer {{accesstoken}}
 ###
 
 # @name updateByID
-PUT {{host}}/user/{{id}}?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+PUT {{host}}/user/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -90,8 +95,9 @@ Content-Type: application/json
 ###
 
 # @name getUpdatedByID
-GET {{host}}/user/{{id}}?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/user/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {
@@ -105,8 +111,9 @@ Authorization: Bearer {{accesstoken}}
 ###
 
 # @name setUserPassword
-PUT {{host}}/user/pass?email={{mail}}&lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+PUT {{host}}/user/pass?email={{mail}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -123,8 +130,9 @@ Content-Type: application/json
 ###
 
 # @name resetUserPassword
-DELETE {{host}}/user/pass?email={{mail}}&lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+DELETE {{host}}/user/pass?email={{mail}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {
@@ -135,8 +143,9 @@ Authorization: Bearer {{accesstoken}}
 ###
 
 # @name deleteByID
-DELETE {{host}}/user?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+DELETE {{host}}/user HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -152,8 +161,9 @@ Content-Type: application/json
 ###
 
 # @name getDeletedByID
-GET {{host}}/user/{{id}}?lang={{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/user/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {

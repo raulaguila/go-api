@@ -59,13 +59,13 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+		messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrorNonexistentRoute)
 	})
 }
 
 func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) {
-	if strings.ToLower(os.Getenv("API_SWAGGO")) == "true" {
+	if strings.ToLower(os.Getenv("API_SWAGGO")) == "1" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 
 		// Config swagger
