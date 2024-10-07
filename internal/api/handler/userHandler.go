@@ -57,6 +57,8 @@ func (h *UserHandler) handlerError(c *fiber.Ctx, err error) error {
 		return h.foreignKeyViolatedFrom(c, messages)
 	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
 		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUndefinedColumn)
+	case errors.Is(pgErr, myerrors.ErrPasswordsDoNotMatch):
+		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrPassUnmatch)
 	case errors.Is(pgErr, myerrors.ErrUserHasNoPhoto):
 		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrUserHasNoPhoto)
 	case errors.Is(err, myerrors.ErrUserHasPass):
@@ -297,9 +299,8 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Router       /user/pass [put]
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 	pass := c.Locals(helper.LocalDTO).(*dto.PasswordInputDTO)
-	if pass.Password == nil || *pass.Password != *pass.PasswordConfirm {
-		messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrPassUnmatch)
+	if pass.Password == nil || pass.PasswordConfirm == nil || *pass.Password != *pass.PasswordConfirm {
+		return h.handlerError(c, myerrors.ErrPasswordsDoNotMatch)
 	}
 
 	mail := strings.ReplaceAll(c.Query(helper.ParamMail), "%40", "@")

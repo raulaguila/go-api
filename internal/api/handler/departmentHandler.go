@@ -83,8 +83,8 @@ func NewDepartmentHandler(route fiber.Router, ps domain.DepartmentService) {
 // @Produce      json
 // @Param        Accept-Language	header	string			false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter				query	filter.Filter	false	"Optional Filter"
-// @Success      200  {array}   dto.ItemsOutputDTO[dto.DepartmentOutputDTO]
-// @Failure      500  {object}  helper.HTTPResponse
+// @Success      200  {array}   	dto.ItemsOutputDTO[dto.DepartmentOutputDTO]
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department [get]
 // @Security	 Bearer
 func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {

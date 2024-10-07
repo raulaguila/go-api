@@ -52,6 +52,7 @@ func (s *profileService) GetProfiles(ctx context.Context, filter *filter.Filter)
 	for _, profile := range *profiles {
 		outputProfiles = append(outputProfiles, *s.GenerateProfileOutputDTO(&profile))
 	}
+
 	return &dto.ItemsOutputDTO[dto.ProfileOutputDTO]{
 		Items: outputProfiles,
 		Pagination: dto.PaginationDTO{

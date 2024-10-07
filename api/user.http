@@ -110,6 +110,25 @@ Accept-Language: {{lang}}
 
 ###
 
+# @name setUserPasswordWrong
+PUT {{host}}/user/pass?email={{mail}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
+Content-Type: application/json
+
+{
+  "password": "secret",
+  "password_confirm": "secret2"
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 400, "Wrong status code");
+    });
+%}
+
+###
+
 # @name setUserPassword
 PUT {{host}}/user/pass?email={{mail}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
