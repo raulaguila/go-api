@@ -1,13 +1,12 @@
 @host = http://127.0.0.1:9000
-@lang = lang=en
-@endpoint = /department
-@filter = {{lang}}&page=1&limit=5&order=asc&sort=name
+@lang = en-US
 
 ###
 
 # @name login
-POST {{host}}/auth?lang={{lang}} HTTP/1.1
+POST {{host}}/auth HTTP/1.1
 Content-Type: application/json
+Accept-Language: {{lang}}
 
 {
   "login": "admin@admin.com",
@@ -17,15 +16,16 @@ Content-Type: application/json
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
-        client.global.set("accesstoken", response.body.accesstoken);
+        client.global.set("accessToken", response.body.accesstoken);
     });
 %}
 
 ###
 
 # @name getAll
-GET {{host}}{{endpoint}}?{{filter}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/department?page=1&limit=5&order=asc&sort=name HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 > {%
@@ -37,8 +37,9 @@ Content-Type: application/json
 ###
 
 # @name createItem
-POST {{host}}/{{endpoint}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+POST {{host}}/department HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -56,8 +57,9 @@ Content-Type: application/json
 ###
 
 # @name getCreatedItemByID
-GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/department/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 > {%
@@ -74,8 +76,9 @@ Content-Type: application/json
 ###
 
 # @name updateItemByID
-PUT {{host}}/{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+PUT {{host}}//department/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -93,8 +96,9 @@ Content-Type: application/json
 ###
 
 # @name getUpdatedItemByID
-GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/department/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 > {%
@@ -111,8 +115,9 @@ Content-Type: application/json
 ###
 
 # @name deleteItemByID
-DELETE {{host}}{{endpoint}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+DELETE {{host}}/department HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
@@ -128,8 +133,9 @@ Content-Type: application/json
 ###
 
 # @name getDeletedItemByID
-GET {{host}}{{endpoint}}/{{id}}?{{lang}} HTTP/1.1
-Authorization: Bearer {{accesstoken}}
+GET {{host}}/department/{{id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Accept-Language: {{lang}}
 
 > {%
     client.test("Request executed successfully", function () {

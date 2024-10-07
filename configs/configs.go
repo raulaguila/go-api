@@ -37,7 +37,11 @@ func LoadMessages() error {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 
-	for _, lang := range strings.Split(os.Getenv("SYS_LANGUAGES"), ",") {
+	for _, lang := range strings.Split(os.Getenv("SYS_LANGUAGES"), ";") {
+		if lang == "" {
+			continue
+		}
+
 		if _, err := bundle.LoadMessageFileFS(translations, path.Join("i18n", "active."+lang+".toml")); err != nil {
 			return err
 		}

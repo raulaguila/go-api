@@ -48,7 +48,7 @@ func (h *UserHandler) foreignKeyViolatedFrom(c *fiber.Ctx, messages *i18n.Transl
 }
 
 func (h *UserHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 
 	switch pgErr := pgutils.HandlerError(err); {
 	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
@@ -100,10 +100,10 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query	string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path	filters.IDFilter	true	"User ID"
-// @Success      200  {object}  nil
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path	filters.IDFilter	true	"User ID"
+// @Success      200  {object}  	nil
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/{id}/photo [get]
 // @Security	 Bearer
 func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
@@ -120,13 +120,13 @@ func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
 // @Summary      Set user photo
 // @Description  Set user photo
 // @Tags         User
-// @Accept       mpfd
+// @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path    	filters.IDFilter	true	"User ID"
-// @Param		 photo			formData	file				true	"profile photo"
-// @Success      200  {object}  nil
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path    	filters.IDFilter	true	"User ID"
+// @Param		 photo				formData	file				true	"profile photo"
+// @Success      200  {object}  	nil
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/{id}/photo [put]
 // @Security	 Bearer
 func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
@@ -145,10 +145,10 @@ func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        filter			query		filters.UserFilter	false	"Optional Filter"
-// @Success      200  {array}   dto.ItemsOutputDTO[dto.UserOutputDTO]
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        filter				query		filters.UserFilter	false	"Optional Filter"
+// @Success      200  {array}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user [get]
 // @Security	 Bearer
 func (h *UserHandler) getUsers(c *fiber.Ctx) error {
@@ -166,12 +166,12 @@ func (h *UserHandler) getUsers(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        user			body		dto.UserInputDTO	true	"User model"
-// @Success      201  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      409  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        user				body		dto.UserInputDTO	true	"User model"
+// @Success      201  {object}  	dto.UserOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      409  {object}  	helper.HTTPResponse
+// @Failure      500  {object} 		helper.HTTPResponse
 // @Router       /user [post]
 // @Security	 Bearer
 func (h *UserHandler) createUser(c *fiber.Ctx) error {
@@ -190,12 +190,12 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path		filters.IDFilter	true	"User ID"
-// @Success      200  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path		filters.IDFilter	true	"User ID"
+// @Success      200  {object}  	dto.UserOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/{id} [get]
 // @Security	 Bearer
 func (h *UserHandler) getUser(c *fiber.Ctx) error {
@@ -214,13 +214,13 @@ func (h *UserHandler) getUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				path		filters.IDFilter	true	"User ID"
-// @Param        user			body		dto.UserInputDTO	true	"User model"
-// @Success      200  {object}  dto.UserOutputDTO
-// @Failure      400  {object}  helper.HTTPResponse
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					path		filters.IDFilter	true	"User ID"
+// @Param        user				body		dto.UserInputDTO	true	"User model"
+// @Success      200  {object}  	dto.UserOutputDTO
+// @Failure      400  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/{id} [put]
 // @Security	 Bearer
 func (h *UserHandler) updateUser(c *fiber.Ctx) error {
@@ -240,11 +240,11 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        id				body		dto.IDsInputDTO		true	"User ID"
-// @Success      204  {object}  nil
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					body		dto.IDsInputDTO		true	"User ID"
+// @Success      204  {object}  	nil
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
@@ -266,11 +266,11 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string				false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        email			query		string				true 	"User email"
-// @Success      200  {object}  nil
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        email				query		string				true 	"User email"
+// @Success      200  {object}  	nil
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/pass [delete]
 // @Security	 Bearer
 func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
@@ -288,17 +288,17 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        lang			query		string					false	"Response language" enums(en-US,pt-BR) default(en-US)
-// @Param        email			query		string					true	"User email" Format(email)
-// @Param        password		body		dto.PasswordInputDTO	true	"Password model"
-// @Success      200  {object}  nil
-// @Failure      404  {object}  helper.HTTPResponse
-// @Failure      500  {object}  helper.HTTPResponse
+// @Param        Accept-Language	header		string					false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        email				query		string					true	"User email" Format(email)
+// @Param        password			body		dto.PasswordInputDTO	true	"Password model"
+// @Success      200  {object}  	nil
+// @Failure      404  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /user/pass [put]
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 	pass := c.Locals(helper.LocalDTO).(*dto.PasswordInputDTO)
 	if pass.Password == nil || *pass.Password != *pass.PasswordConfirm {
-		messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+		messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrPassUnmatch)
 	}
 

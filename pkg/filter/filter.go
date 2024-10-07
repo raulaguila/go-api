@@ -82,6 +82,7 @@ func (s *Filter) CalcPages(count int64) int64 {
 	if count == 0 {
 		return 0
 	}
+
 	if s.Limit == 0 || s.Page == 0 {
 		return 1
 	}

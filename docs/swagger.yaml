@@ -183,12 +183,12 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       produces:
       - application/json
@@ -216,12 +216,12 @@ paths:
       description: User authentication
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: Credentials model
         in: body
@@ -257,12 +257,12 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       produces:
       - application/json
@@ -289,12 +289,12 @@ paths:
       description: Delete departments by IDs
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: Department ID
         in: body
@@ -326,12 +326,12 @@ paths:
       description: List departments
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - default: 10
         in: query
@@ -384,12 +384,12 @@ paths:
       description: Insert department
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: Department model
         in: body
@@ -428,12 +428,12 @@ paths:
       description: Get department by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -471,12 +471,12 @@ paths:
       description: Update department by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -521,12 +521,12 @@ paths:
       description: Delete profiles by IDs
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: Profile ID
         in: body
@@ -558,12 +558,12 @@ paths:
       description: Get profiles
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - default: 10
         in: query
@@ -616,12 +616,12 @@ paths:
       description: Insert profile
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: Profile model
         in: body
@@ -660,12 +660,12 @@ paths:
       description: Get profile by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -703,12 +703,12 @@ paths:
       description: Update profile by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -753,12 +753,12 @@ paths:
       description: Delete user by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: User ID
         in: body
@@ -790,12 +790,12 @@ paths:
       description: Get all users
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - default: 10
         in: query
@@ -852,12 +852,12 @@ paths:
       description: Insert user
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: User model
         in: body
@@ -896,12 +896,12 @@ paths:
       description: Get user by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -939,12 +939,12 @@ paths:
       description: Update user by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -989,12 +989,12 @@ paths:
       description: Get user photo
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -1018,16 +1018,16 @@ paths:
       - User
     put:
       consumes:
-      - multipart/form-data
+      - application/json
       description: Set user photo
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - example: 1
         in: path
@@ -1061,12 +1061,12 @@ paths:
       description: Reset user password by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: User email
         in: query
@@ -1097,12 +1097,12 @@ paths:
       description: Set user password by ID
       parameters:
       - default: en-US
-        description: Response language
+        description: Request language
         enum:
         - en-US
         - pt-BR
-        in: query
-        name: lang
+        in: header
+        name: Accept-Language
         type: string
       - description: User email
         format: email

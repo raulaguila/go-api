@@ -42,7 +42,8 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err)
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
-			messages := c.Locals(helper.LocalLang).(*i18n.Translation)
+			messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
+
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 					return nil, err

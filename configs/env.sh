@@ -15,7 +15,7 @@ done
 
 echo "TZ='America/Manaus'                             # Set system time zone
 SYS_LANGUAGE='en-us'                            # Default system language
-SYS_LANGUAGES='en-us,pt-br'                     # System languages
+SYS_LANGUAGES='en-us;pt-br;'                    # System languages
 SYS_PREFORK='1'                                 # Enable Fiber Prefork
 
 API_PORT='9000'                                 # API Container PORT
