@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
@@ -36,13 +35,13 @@ func (s *departmentService) GetDepartmentByID(ctx context.Context, departmentID 
 }
 
 // GetDepartments Implementation of 'GetDepartments'.
-func (s *departmentService) GetDepartments(ctx context.Context, filter *filter.Filter) (*dto.ItemsOutputDTO[dto.DepartmentOutputDTO], error) {
-	departments, err := s.departmentRepository.GetDepartments(ctx, filter)
+func (s *departmentService) GetDepartments(ctx context.Context, departmentFilter *filter.Filter) (*dto.ItemsOutputDTO[dto.DepartmentOutputDTO], error) {
+	departments, err := s.departmentRepository.GetDepartments(ctx, departmentFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	count, err := s.departmentRepository.CountDepartments(ctx, filter)
+	count, err := s.departmentRepository.CountDepartments(ctx, departmentFilter)
 	if err != nil {
 		return nil, err
 	}
@@ -55,18 +54,22 @@ func (s *departmentService) GetDepartments(ctx context.Context, filter *filter.F
 	return &dto.ItemsOutputDTO[dto.DepartmentOutputDTO]{
 		Items: outputDepartments,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(filter.Page, 1)),
-			PageSize:    uint(max(filter.Limit, len(outputDepartments))),
+			CurrentPage: uint(max(departmentFilter.Page, 1)),
+			PageSize:    uint(max(departmentFilter.Limit, len(outputDepartments))),
 			TotalItems:  uint(count),
-			TotalPages:  uint(filter.CalcPages(count)),
+			TotalPages:  uint(departmentFilter.CalcPages(count)),
 		},
 	}, nil
 }
 
 // CreateDepartment Implementation of 'CreateDepartment'.
 func (s *departmentService) CreateDepartment(ctx context.Context, data *dto.DepartmentInputDTO) (*dto.DepartmentOutputDTO, error) {
-	department, err := s.departmentRepository.CreateDepartment(ctx, data)
-	if err != nil {
+	department := &domain.Department{}
+	if err := department.Bind(data); err != nil {
+		return nil, err
+	}
+
+	if err := s.departmentRepository.CreateDepartment(ctx, department); err != nil {
 		return nil, err
 	}
 
@@ -80,7 +83,11 @@ func (s *departmentService) UpdateDepartment(ctx context.Context, departmentID u
 		return nil, err
 	}
 
-	if err := s.departmentRepository.UpdateDepartment(ctx, department, data); err != nil {
+	if err := department.Bind(data); err != nil {
+		return nil, err
+	}
+
+	if err := s.departmentRepository.UpdateDepartment(ctx, department); err != nil {
 		return nil, err
 	}
 
@@ -89,5 +96,9 @@ func (s *departmentService) UpdateDepartment(ctx context.Context, departmentID u
 
 // DeleteDepartments Implementation of 'DeleteDepartments'.
 func (s *departmentService) DeleteDepartments(ctx context.Context, ids []uint) error {
+	if len(ids) == 0 {
+		return nil
+	}
+
 	return s.departmentRepository.DeleteDepartments(ctx, ids)
 }

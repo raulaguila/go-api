@@ -40,8 +40,8 @@ type (
 		GetUserByID(context.Context, uint) (*User, error)
 		GetUserByMail(context.Context, string) (*User, error)
 		GetUserByToken(context.Context, string) (*User, error)
-		CreateUser(context.Context, *dto.UserInputDTO) (*User, error)
-		UpdateUser(context.Context, *User, *dto.UserInputDTO) error
+		CreateUser(context.Context, *User) error
+		UpdateUser(context.Context, *User) error
 		DeleteUsers(context.Context, []uint) error
 		ResetUserPassword(context.Context, *User) error
 		SetUserPassword(context.Context, *User, *dto.PasswordInputDTO) error
@@ -94,17 +94,19 @@ func (u *User) ToMap() *map[string]any {
 }
 
 func (u *User) Bind(userDTO *dto.UserInputDTO) error {
-	if userDTO.Name != nil {
-		u.Name = *userDTO.Name
-	}
-	if userDTO.Email != nil {
-		u.Email = *userDTO.Email
-	}
-	if userDTO.Status != nil {
-		u.Auth.Status = *userDTO.Status
-	}
-	if userDTO.ProfileID != nil {
-		u.Auth.ProfileID = *userDTO.ProfileID
+	if userDTO != nil {
+		if userDTO.Name != nil {
+			u.Name = *userDTO.Name
+		}
+		if userDTO.Email != nil {
+			u.Email = *userDTO.Email
+		}
+		if userDTO.Status != nil {
+			u.Auth.Status = *userDTO.Status
+		}
+		if userDTO.ProfileID != nil {
+			u.Auth.ProfileID = *userDTO.ProfileID
+		}
 	}
 
 	return validator.StructValidator.Validate(u)

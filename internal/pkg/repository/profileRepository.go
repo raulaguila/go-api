@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
 )
 
@@ -51,28 +50,15 @@ func (s *profileRepository) GetProfileByID(ctx context.Context, profileID uint) 
 	return profile, s.db.WithContext(ctx).First(profile, profileID).Error
 }
 
-func (s *profileRepository) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*domain.Profile, error) {
-	profile := &domain.Profile{Permissions: map[string]any{}}
-	if err := profile.Bind(data); err != nil {
-		return nil, err
-	}
-
-	return profile, s.db.WithContext(ctx).Create(profile).Error
+func (s *profileRepository) CreateProfile(ctx context.Context, profile *domain.Profile) error {
+	return s.db.WithContext(ctx).Create(profile).Error
 }
 
-func (s *profileRepository) UpdateProfile(ctx context.Context, profile *domain.Profile, data *dto.ProfileInputDTO) error {
-	if err := profile.Bind(data); err != nil {
-		return err
-	}
-
+func (s *profileRepository) UpdateProfile(ctx context.Context, profile *domain.Profile) error {
 	return s.db.WithContext(ctx).Model(profile).Updates(profile.ToMap()).Error
 }
 
 func (s *profileRepository) DeleteProfiles(ctx context.Context, toDelete []uint) error {
-	if len(toDelete) == 0 {
-		return nil
-	}
-
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		return tx.Delete(&domain.Profile{}, toDelete).Error
 	})

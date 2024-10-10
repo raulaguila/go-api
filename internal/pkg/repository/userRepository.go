@@ -88,19 +88,14 @@ func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*dom
 	return user, s.db.WithContext(ctx).Preload(postgre.AuthProfile).First(user, "auth_id = ?", auth.ID).Error
 }
 
-func (s *userRepository) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*domain.User, error) {
-	user := &domain.User{Auth: &domain.Auth{}}
-	if err := user.Bind(data); err != nil {
-		return nil, err
-	}
-
-	return user, s.db.Session(&gorm.Session{FullSaveAssociations: true}).WithContext(ctx).Create(user).Error
+func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) error {
+	return s.db.Session(&gorm.Session{FullSaveAssociations: true}).WithContext(ctx).Create(user).Error
 }
 
-func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User, data *dto.UserInputDTO) error {
-	if err := user.Bind(data); err != nil {
-		return err
-	}
+func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) error {
+	//if err := user.Bind(data); err != nil {
+	//	return err
+	//}
 
 	return s.db.Session(&gorm.Session{FullSaveAssociations: true}).WithContext(ctx).Model(user).Updates(user.ToMap()).Error
 }
@@ -133,7 +128,7 @@ func (s *userRepository) ResetUserPassword(ctx context.Context, user *domain.Use
 	user.Auth.Password = nil
 	user.Auth.Token = nil
 
-	return s.UpdateUser(ctx, user, &dto.UserInputDTO{})
+	return s.UpdateUser(ctx, user)
 }
 
 func (s *userRepository) SetUserPassword(ctx context.Context, user *domain.User, pass *dto.PasswordInputDTO) error {
@@ -148,7 +143,7 @@ func (s *userRepository) SetUserPassword(ctx context.Context, user *domain.User,
 	*user.Auth.Token = uuid.New().String()
 	*user.Auth.Password = string(hash)
 
-	return s.UpdateUser(ctx, user, &dto.UserInputDTO{})
+	return s.UpdateUser(ctx, user)
 }
 
 func (s *userRepository) SetUserPhoto(ctx context.Context, user *domain.User, p *domain.File) error {
@@ -164,7 +159,7 @@ func (s *userRepository) SetUserPhoto(ctx context.Context, user *domain.User, p 
 			return err
 		}
 
-		return s.UpdateUser(ctx, user, &dto.UserInputDTO{})
+		return s.UpdateUser(ctx, user)
 	})
 }
 

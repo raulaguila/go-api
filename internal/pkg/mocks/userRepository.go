@@ -35,16 +35,13 @@ func (s *UserRepositoryMock) GetUsers(ctx context.Context, f *filters.UserFilter
 	return ret.Get(0).(*[]domain.User), ret.Error(1)
 }
 
-func (s *UserRepositoryMock) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*domain.User, error) {
-	ret := s.Called(ctx, data)
-	if ret.Get(0) == nil {
-		return nil, ret.Error(1)
-	}
-	return ret.Get(0).(*domain.User), ret.Error(1)
+func (s *UserRepositoryMock) CreateUser(ctx context.Context, user *domain.User) error {
+	ret := s.Called(ctx, user)
+	return ret.Error(0)
 }
 
-func (s *UserRepositoryMock) UpdateUser(ctx context.Context, user *domain.User, data *dto.UserInputDTO) error {
-	ret := s.Called(ctx, user, data)
+func (s *UserRepositoryMock) UpdateUser(ctx context.Context, user *domain.User) error {
+	ret := s.Called(ctx, user)
 	return ret.Error(0)
 }
 

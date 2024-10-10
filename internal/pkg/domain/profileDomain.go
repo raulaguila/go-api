@@ -22,8 +22,8 @@ type (
 		CountProfiles(context.Context, *filter.Filter) (int64, error)
 		GetProfileByID(context.Context, uint) (*Profile, error)
 		GetProfiles(context.Context, *filter.Filter) (*[]Profile, error)
-		CreateProfile(context.Context, *dto.ProfileInputDTO) (*Profile, error)
-		UpdateProfile(context.Context, *Profile, *dto.ProfileInputDTO) error
+		CreateProfile(context.Context, *Profile) error
+		UpdateProfile(context.Context, *Profile) error
 		DeleteProfiles(context.Context, []uint) error
 	}
 
@@ -49,13 +49,13 @@ func (s *Profile) ToMap() *map[string]any {
 }
 
 func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
-	if p.Name != nil {
-		s.Name = *p.Name
-	}
+	if p != nil {
+		if p.Name != nil {
+			s.Name = *p.Name
+		}
 
-	if p.Permissions != nil {
-		for key, value := range p.Permissions {
-			s.Permissions[key] = value
+		if p.Permissions != nil {
+			s.Permissions = p.Permissions
 		}
 	}
 
