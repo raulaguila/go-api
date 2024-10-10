@@ -89,7 +89,7 @@ func (s *ProfileTestSuite) TestGetProfiles() {
 	s.IsType(&dto.ItemsOutputDTO[dto.ProfileOutputDTO]{}, items)
 	s.Equal(items.Pagination.TotalItems, uint(len(s.items)))
 
-	items, err = s.service.GetProfiles(s.ctx, nil)
+	_, err = s.service.GetProfiles(s.ctx, nil)
 
 	s.Error(err)
 }

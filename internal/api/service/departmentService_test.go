@@ -94,7 +94,7 @@ func (s *DepartmentTestSuite) TestGetDepartments() {
 	s.IsType(&dto.ItemsOutputDTO[dto.DepartmentOutputDTO]{}, items)
 	s.Equal(items.Pagination.TotalItems, uint(len(s.items)))
 
-	items, err = s.service.GetDepartments(s.ctx, nil)
+	_, err = s.service.GetDepartments(s.ctx, nil)
 
 	s.Error(err)
 }
