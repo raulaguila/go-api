@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -43,13 +42,13 @@ func (s *userService) GetUserByID(ctx context.Context, userID uint) (*dto.UserOu
 }
 
 // GetUsers Implementation of 'GetUsers'.
-func (s *userService) GetUsers(ctx context.Context, filter *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
-	users, err := s.userRepository.GetUsers(ctx, filter)
+func (s *userService) GetUsers(ctx context.Context, userFilter *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
+	users, err := s.userRepository.GetUsers(ctx, userFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	count, err := s.userRepository.CountUsers(ctx, filter)
+	count, err := s.userRepository.CountUsers(ctx, userFilter)
 	if err != nil {
 		return nil, err
 	}
@@ -62,22 +61,26 @@ func (s *userService) GetUsers(ctx context.Context, filter *filters.UserFilter) 
 	return &dto.ItemsOutputDTO[dto.UserOutputDTO]{
 		Items: outputUsers,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(filter.Page, 1)),
-			PageSize:    uint(max(filter.Limit, len(outputUsers))),
+			CurrentPage: uint(max(userFilter.Page, 1)),
+			PageSize:    uint(max(userFilter.Limit, len(outputUsers))),
 			TotalItems:  uint(count),
-			TotalPages:  uint(filter.CalcPages(count)),
+			TotalPages:  uint(userFilter.CalcPages(count)),
 		},
 	}, nil
 }
 
 // CreateUser Implementation of 'CreateUser'.
 func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
-	user, err := s.userRepository.CreateUser(ctx, data)
-	if err != nil {
+	user := &domain.User{Auth: &domain.Auth{}}
+	if err := user.Bind(data); err != nil {
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.ID)
+	if err := s.userRepository.CreateUser(ctx, user); err != nil {
+		return nil, err
+	}
+
+	user, err := s.userRepository.GetUserByID(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +95,11 @@ func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.Use
 		return nil, err
 	}
 
-	if err := s.userRepository.UpdateUser(ctx, user, data); err != nil {
+	if err := user.Bind(data); err != nil {
+		return nil, err
+	}
+
+	if err := s.userRepository.UpdateUser(ctx, user); err != nil {
 		return nil, err
 	}
 

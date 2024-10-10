@@ -37,13 +37,13 @@ func (s *profileService) GetProfileByID(ctx context.Context, profileID uint) (*d
 }
 
 // GetProfiles Implementation of 'GetProfiles'.
-func (s *profileService) GetProfiles(ctx context.Context, filter *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
-	profiles, err := s.profileRepository.GetProfiles(ctx, filter)
+func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
+	profiles, err := s.profileRepository.GetProfiles(ctx, profileFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	count, err := s.profileRepository.CountProfiles(ctx, filter)
+	count, err := s.profileRepository.CountProfiles(ctx, profileFilter)
 	if err != nil {
 		return nil, err
 	}
@@ -56,18 +56,22 @@ func (s *profileService) GetProfiles(ctx context.Context, filter *filter.Filter)
 	return &dto.ItemsOutputDTO[dto.ProfileOutputDTO]{
 		Items: outputProfiles,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(filter.Page, 1)),
-			PageSize:    uint(max(filter.Limit, len(outputProfiles))),
+			CurrentPage: uint(max(profileFilter.Page, 1)),
+			PageSize:    uint(max(profileFilter.Limit, len(outputProfiles))),
 			TotalItems:  uint(count),
-			TotalPages:  uint(filter.CalcPages(count)),
+			TotalPages:  uint(profileFilter.CalcPages(count)),
 		},
 	}, nil
 }
 
 // CreateProfile Implementation of 'CreateProfile'.
 func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
-	profile, err := s.profileRepository.CreateProfile(ctx, data)
-	if err != nil {
+	profile := &domain.Profile{Permissions: map[string]any{}}
+	if err := profile.Bind(data); err != nil {
+		return nil, err
+	}
+
+	if err := s.profileRepository.CreateProfile(ctx, profile); err != nil {
 		return nil, err
 	}
 
@@ -81,7 +85,11 @@ func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data
 		return nil, err
 	}
 
-	if err := s.profileRepository.UpdateProfile(ctx, profile, data); err != nil {
+	if err := profile.Bind(data); err != nil {
+		return nil, err
+	}
+
+	if err := s.profileRepository.UpdateProfile(ctx, profile); err != nil {
 		return nil, err
 	}
 
@@ -90,5 +98,9 @@ func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data
 
 // DeleteProfiles Implementation of 'DeleteProfiles'.
 func (s *profileService) DeleteProfiles(ctx context.Context, ids []uint) error {
+	if len(ids) == 0 {
+		return nil
+	}
+
 	return s.profileRepository.DeleteProfiles(ctx, ids)
 }

@@ -20,8 +20,8 @@ type (
 		CountDepartments(context.Context, *filter.Filter) (int64, error)
 		GetDepartmentByID(context.Context, uint) (*Department, error)
 		GetDepartments(context.Context, *filter.Filter) (*[]Department, error)
-		CreateDepartment(context.Context, *dto.DepartmentInputDTO) (*Department, error)
-		UpdateDepartment(context.Context, *Department, *dto.DepartmentInputDTO) error
+		CreateDepartment(context.Context, *Department) error
+		UpdateDepartment(context.Context, *Department) error
 		DeleteDepartments(context.Context, []uint) error
 	}
 
@@ -38,8 +38,10 @@ type (
 func (s *Department) TableName() string { return DepartmentTableName }
 
 func (s *Department) Bind(p *dto.DepartmentInputDTO) error {
-	if p.Name != nil {
-		s.Name = *p.Name
+	if p != nil {
+		if p.Name != nil {
+			s.Name = *p.Name
+		}
 	}
 
 	return validator.StructValidator.Validate(s)

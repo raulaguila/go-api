@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/mock"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
 )
 
@@ -35,16 +34,13 @@ func (s *ProfileRepositoryMock) GetProfiles(ctx context.Context, f *filter.Filte
 	return ret.Get(0).(*[]domain.Profile), ret.Error(1)
 }
 
-func (s *ProfileRepositoryMock) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*domain.Profile, error) {
-	ret := s.Called(ctx, data)
-	if ret.Get(0) == nil {
-		return nil, ret.Error(1)
-	}
-	return ret.Get(0).(*domain.Profile), ret.Error(1)
+func (s *ProfileRepositoryMock) CreateProfile(ctx context.Context, profile *domain.Profile) error {
+	ret := s.Called(ctx, profile)
+	return ret.Error(0)
 }
 
-func (s *ProfileRepositoryMock) UpdateProfile(ctx context.Context, profile *domain.Profile, data *dto.ProfileInputDTO) error {
-	ret := s.Called(ctx, profile, data)
+func (s *ProfileRepositoryMock) UpdateProfile(ctx context.Context, profile *domain.Profile) error {
+	ret := s.Called(ctx, profile)
 	return ret.Error(0)
 }
 
