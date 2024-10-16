@@ -3,6 +3,7 @@ package middleware
 import (
 	"encoding/base64"
 	"errors"
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +11,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
@@ -39,11 +39,9 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 			return c.Next()
 		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err)
+			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error())
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
-			messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 					return nil, err
@@ -53,7 +51,7 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 			})
 			if err != nil {
 				log.Println(err)
-				return false, messages.ErrGeneric
+				return false, errors.New(fiberi18n.MustLocalize(c, "errGeneric"))
 			}
 
 			claims, ok := parsedToken.Claims.(jwt.MapClaims)
@@ -64,11 +62,11 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 			user, err := repo.GetUserByToken(c.Context(), claims["token"].(string))
 			if err != nil {
 				log.Println(err)
-				return false, messages.ErrGeneric
+				return false, errors.New(fiberi18n.MustLocalize(c, "errGeneric"))
 			}
 
 			if !user.Auth.Status {
-				return false, messages.ErrDisabledUser
+				return false, errors.New(fiberi18n.MustLocalize(c, "disabledUser"))
 			}
 
 			c.Locals(helper.LocalUser, user)

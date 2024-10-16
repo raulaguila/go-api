@@ -183,7 +183,7 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -216,7 +216,7 @@ paths:
       description: User authentication
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -257,7 +257,7 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -289,7 +289,7 @@ paths:
       description: Delete departments by IDs
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -326,7 +326,7 @@ paths:
       description: List departments
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -384,7 +384,7 @@ paths:
       description: Insert department
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -428,7 +428,7 @@ paths:
       description: Get department by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -471,7 +471,7 @@ paths:
       description: Update department by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -521,7 +521,7 @@ paths:
       description: Delete profiles by IDs
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -558,7 +558,7 @@ paths:
       description: Get profiles
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -616,7 +616,7 @@ paths:
       description: Insert profile
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -660,7 +660,7 @@ paths:
       description: Get profile by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -703,7 +703,7 @@ paths:
       description: Update profile by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -753,7 +753,7 @@ paths:
       description: Delete user by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -790,7 +790,7 @@ paths:
       description: Get all users
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -852,7 +852,7 @@ paths:
       description: Insert user
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -896,7 +896,7 @@ paths:
       description: Get user by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -939,7 +939,7 @@ paths:
       description: Update user by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -989,7 +989,7 @@ paths:
       description: Get user photo
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -1022,7 +1022,7 @@ paths:
       description: Set user photo
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -1061,7 +1061,7 @@ paths:
       description: Reset user password by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR
@@ -1097,7 +1097,7 @@ paths:
       description: Set user password by ID
       parameters:
       - default: en-US
-        description: Request language
+        description: Request i18nmiddleware
         enum:
         - en-US
         - pt-BR

@@ -68,7 +68,7 @@ func (u *User) TableName() string {
 }
 
 func (u *User) ToMap() *map[string]any {
-	mapped := &map[string]any{
+	mapped := map[string]any{
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
@@ -82,15 +82,16 @@ func (u *User) ToMap() *map[string]any {
 	}
 
 	if u.PhotoPath != nil {
-		(*mapped)["photo"] = *u.PhotoPath
+		mapped["photo"] = *u.PhotoPath
 	}
 
 	if u.Auth.Password != nil {
-		(*mapped)["Auth"].(map[string]any)["token"] = *u.Auth.Token
-		(*mapped)["Auth"].(map[string]any)["password"] = *u.Auth.Password
+		mapped["Auth"].(map[string]any)["token"] = *u.Auth.Token
+		mapped["Auth"].(map[string]any)["password"] = *u.Auth.Password
 	}
 
-	return mapped
+	fmt.Println(mapped)
+	return &mapped
 }
 
 func (u *User) Bind(userDTO *dto.UserInputDTO) error {

@@ -9,9 +9,16 @@ type HTTPResponse struct {
 	Message string `json:"message" example:"status bad request"`
 }
 
-func NewHTTPResponse(c *fiber.Ctx, status int, err error) error {
+//func NewHTTPResponse(c *fiber.Ctx, status int, err error) error {
+//	return c.Status(status).JSON(&HTTPResponse{
+//		Code:    status,
+//		Message: err.Error(),
+//	})
+//}
+
+func NewHTTPResponse(c *fiber.Ctx, status int, message string) error {
 	return c.Status(status).JSON(&HTTPResponse{
 		Code:    status,
-		Message: err.Error(),
+		Message: message,
 	})
 }

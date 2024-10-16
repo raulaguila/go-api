@@ -1,0 +1,23 @@
+departmentNotFound: Department not found.
+departmentRegistered: Department already registered.
+departmentUsed: Department is being used.
+
+profileNotFound: Profile not found.
+profileRegistered: Profile already registered.
+profileUsed: Profile is being used.
+
+userNotFound: User not found.
+userRegistered: User already registered.
+userUsed: User is being used.
+
+itemNotFound: Item not found.
+passNotMatch: Passwords does not match.
+hasNoPhoto: User has no profile photo.
+hasPass: User already has registered password.
+errGeneric: An unexpected error occurred, try again later.
+undefinedColumn: Undefined column or parameter name.
+disabledUser: Disabled user.
+invalidData: Invalid data, please specify valid data.
+incorrectCredentials: Incorrect credentials.
+nonExistentRoute: Route does not exist in this API.
+manyRequest: You have completed many requests in a short period of time! Please wait a minute!

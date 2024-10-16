@@ -1,22 +1,17 @@
 package handler
 
 import (
-	"errors"
-	"log"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"gorm.io/gorm"
 
-	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
-	"github.com/raulaguila/go-api/pkg/validator"
 )
 
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
@@ -27,43 +22,25 @@ var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
 
 type ProfileHandler struct {
 	profileService domain.ProfileService
-}
-
-func (h *ProfileHandler) foreignKeyViolatedMethod(c *fiber.Ctx, messages *i18n.Translation) error {
-	switch c.Method() {
-	case fiber.MethodPut, fiber.MethodPost, fiber.MethodPatch:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrProfileNotFound)
-	case fiber.MethodDelete:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrProfileUsed)
-	default:
-		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
-	}
-}
-
-func (h *ProfileHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-
-	switch pgErr := pgutils.HandlerError(err); {
-	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
-		return helper.NewHTTPResponse(c, fiber.StatusConflict, messages.ErrProfileRegistered)
-	case errors.Is(pgErr, pgutils.ErrForeignKeyViolated):
-		return h.foreignKeyViolatedMethod(c, messages)
-	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUndefinedColumn)
-	case errors.Is(err, gorm.ErrRecordNotFound):
-		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrProfileNotFound)
-	case errors.As(err, &validator.ErrValidator):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, err)
-	}
-
-	log.Println(err.Error())
-	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
+	handlerError   func(*fiber.Ctx, error) error
 }
 
 // NewProfileHandler Creates a new profile handler.
 func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
+	localErrors := map[string]map[error][]any{
+		"*": {
+			pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
+			pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
+			gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
+		},
+		fiber.MethodDelete: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
+		},
+	}
+
 	handler := &ProfileHandler{
 		profileService: ps,
+		handlerError:   NewErrorHandler(localErrors),
 	}
 
 	route.Use(middleware.MidAccess)
@@ -87,10 +64,10 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [get]
 // @Security	 Bearer
-func (h *ProfileHandler) getProfiles(c *fiber.Ctx) error {
-	response, err := h.profileService.GetProfiles(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
+func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
+	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
@@ -110,11 +87,11 @@ func (h *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [post]
 // @Security	 Bearer
-func (h *ProfileHandler) createProfile(c *fiber.Ctx) error {
+func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
-	profile, err := h.profileService.CreateProfile(c.Context(), profileDTO)
+	profile, err := s.profileService.CreateProfile(c.Context(), profileDTO)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(profile)
@@ -134,11 +111,11 @@ func (h *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile/{id} [get]
 // @Security	 Bearer
-func (h *ProfileHandler) getProfile(c *fiber.Ctx) error {
+func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	profile, err := h.profileService.GetProfileByID(c.Context(), id.ID)
+	profile, err := s.profileService.GetProfileByID(c.Context(), id.ID)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(profile)
@@ -159,12 +136,12 @@ func (h *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
-func (h *ProfileHandler) updateProfile(c *fiber.Ctx) error {
+func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
 	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
-	profile, err := h.profileService.UpdateProfile(c.Context(), id.ID, profileDTO)
+	profile, err := s.profileService.UpdateProfile(c.Context(), id.ID, profileDTO)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(profile)
@@ -183,14 +160,14 @@ func (h *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /profile [delete]
 // @Security	 Bearer
-func (h *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
+func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
 	toDelete := &dto.IDsInputDTO{}
 	if err := c.BodyParser(toDelete); err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
-	if err := h.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
-		return h.handlerError(c, err)
+	if err := s.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
+		return s.handlerError(c, err)
 	}
 
 	return c.SendStatus(fiber.StatusNoContent)

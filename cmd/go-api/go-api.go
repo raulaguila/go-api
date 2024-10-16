@@ -3,10 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/raulaguila/go-api/configs"
+	"golang.org/x/text/language"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -14,10 +17,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
 	_ "github.com/raulaguila/go-api/configs"
-	"github.com/raulaguila/go-api/internal/api/middleware/language"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/minioutils"
 )
@@ -50,7 +51,7 @@ func main() {
 		AppName:               "Golang template",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, err)
+			return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
 		},
 		BodyLimit: 50 * 1024 * 1024,
 	})
@@ -84,18 +85,20 @@ func main() {
 			ExposeHeaders: "*",
 			MaxAge:        1,
 		}),
-		language.New(language.Config{
-			Languages:       strings.Split(os.Getenv("SYS_LANGUAGES"), ";"),
-			DefaultLanguage: os.Getenv("SYS_LANGUAGE"),
-			KeyLookup:       "Accept-Language",
-			ContextKey:      helper.LocalLang,
+		fiberi18n.New(&fiberi18n.Config{
+			Next: func(c *fiber.Ctx) bool {
+				return false
+			},
+			RootPath:        "./locales",
+			AcceptLanguages: []language.Tag{language.AmericanEnglish, language.BrazilianPortuguese},
+			DefaultLanguage: language.AmericanEnglish,
+			Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, messages.ErrManyRequest)
+				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequest"))
 			},
 		}),
 	)

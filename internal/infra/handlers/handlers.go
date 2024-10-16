@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"os"
 	"strings"
 
@@ -13,7 +14,6 @@ import (
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/service"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/minioutils"
@@ -59,8 +59,7 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrorNonexistentRoute)
+		return helper.NewHTTPResponse(c, fiber.StatusNotFound, fiberi18n.MustLocalize(c, "nonExistentRoute"))
 	})
 }
 
