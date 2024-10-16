@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/raulaguila/go-api/configs"
 	"golang.org/x/text/language"
 	"os"
 	"strings"
@@ -16,7 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
-	_ "github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/pkg/helper"

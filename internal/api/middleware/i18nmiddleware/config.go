@@ -13,7 +13,7 @@ var defaultConfig = &Config{
 	Languages:       []language.Tag{language.AmericanEnglish, language.BrazilianPortuguese},
 	DefaultLanguage: language.AmericanEnglish,
 	KeyLookup:       "Accept-Language",
-	ContextKey:      "localLang",
+	ContextKey:      "contextLang",
 }
 
 func configDefault(config ...*Config) *Config {
