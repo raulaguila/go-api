@@ -1,22 +1,17 @@
 package handler
 
 import (
-	"errors"
-	"log"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"gorm.io/gorm"
 
-	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
-	"github.com/raulaguila/go-api/pkg/validator"
 )
 
 var middlewareDepartmentDTO = datatransferobject.New(datatransferobject.Config{
@@ -27,43 +22,25 @@ var middlewareDepartmentDTO = datatransferobject.New(datatransferobject.Config{
 
 type DepartmentHandler struct {
 	departmentService domain.DepartmentService
-}
-
-func (h *DepartmentHandler) foreignKeyViolatedMethod(c *fiber.Ctx, messages *i18n.Translation) error {
-	switch c.Method() {
-	case fiber.MethodPut, fiber.MethodPost, fiber.MethodPatch:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrDepartmentNotFound)
-	case fiber.MethodDelete:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrDepartmentUsed)
-	default:
-		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
-	}
-}
-
-func (h *DepartmentHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-
-	switch pgErr := pgutils.HandlerError(err); {
-	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
-		return helper.NewHTTPResponse(c, fiber.StatusConflict, messages.ErrDepartmentRegistered)
-	case errors.Is(pgErr, pgutils.ErrForeignKeyViolated):
-		return h.foreignKeyViolatedMethod(c, messages)
-	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUndefinedColumn)
-	case errors.Is(err, gorm.ErrRecordNotFound):
-		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrDepartmentNotFound)
-	case errors.As(err, &validator.ErrValidator):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, err)
-	}
-
-	log.Println(err.Error())
-	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
+	handlerError      func(*fiber.Ctx, error) error
 }
 
 // NewDepartmentHandler Creates a new department handler.
 func NewDepartmentHandler(route fiber.Router, ps domain.DepartmentService) {
+	localErrors := map[string]map[error][]any{
+		"*": {
+			pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
+			pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "departmentRegistered"},
+			gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "departmentNotFound"},
+		},
+		fiber.MethodDelete: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "departmentUsed"},
+		},
+	}
+
 	handler := &DepartmentHandler{
 		departmentService: ps,
+		handlerError:      NewErrorHandler(localErrors),
 	}
 
 	route.Use(middleware.MidAccess)
@@ -87,10 +64,10 @@ func NewDepartmentHandler(route fiber.Router, ps domain.DepartmentService) {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department [get]
 // @Security	 Bearer
-func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
-	response, err := h.departmentService.GetDepartments(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
+func (s *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
+	response, err := s.departmentService.GetDepartments(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
@@ -110,11 +87,11 @@ func (h *DepartmentHandler) getDepartments(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department/{id} [get]
 // @Security	 Bearer
-func (h *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
+func (s *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	department, err := h.departmentService.GetDepartmentByID(c.Context(), id.ID)
+	department, err := s.departmentService.GetDepartmentByID(c.Context(), id.ID)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(department)
@@ -134,11 +111,11 @@ func (h *DepartmentHandler) getDepartmentByID(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department [post]
 // @Security	 Bearer
-func (h *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
+func (s *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
 	departmentDTO := c.Locals(helper.LocalDTO).(*dto.DepartmentInputDTO)
-	department, err := h.departmentService.CreateDepartment(c.Context(), departmentDTO)
+	department, err := s.departmentService.CreateDepartment(c.Context(), departmentDTO)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(department)
@@ -159,12 +136,12 @@ func (h *DepartmentHandler) createDepartment(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department/{id} [put]
 // @Security	 Bearer
-func (h *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
+func (s *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
 	departmentDTO := c.Locals(helper.LocalDTO).(*dto.DepartmentInputDTO)
-	department, err := h.departmentService.UpdateDepartment(c.Context(), id.ID, departmentDTO)
+	department, err := s.departmentService.UpdateDepartment(c.Context(), id.ID, departmentDTO)
 	if err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(department)
@@ -183,14 +160,14 @@ func (h *DepartmentHandler) updateDepartment(c *fiber.Ctx) error {
 // @Failure      500  {object}  	helper.HTTPResponse
 // @Router       /department [delete]
 // @Security	 Bearer
-func (h *DepartmentHandler) deleteDepartments(c *fiber.Ctx) error {
+func (s *DepartmentHandler) deleteDepartments(c *fiber.Ctx) error {
 	toDelete := &dto.IDsInputDTO{}
 	if err := c.BodyParser(toDelete); err != nil {
-		return h.handlerError(c, err)
+		return s.handlerError(c, err)
 	}
 
-	if err := h.departmentService.DeleteDepartments(c.Context(), toDelete.IDs); err != nil {
-		return h.handlerError(c, err)
+	if err := s.departmentService.DeleteDepartments(c.Context(), toDelete.IDs); err != nil {
+		return s.handlerError(c, err)
 	}
 
 	return c.SendStatus(fiber.StatusNoContent)

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"

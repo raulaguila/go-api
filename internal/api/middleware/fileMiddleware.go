@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/gofiber/contrib/fiberi18n/v2"
 
 	"log"
 	"mime/multipart"
@@ -10,25 +11,22 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-
 		file, err := c.FormFile(formKey)
 		if err != nil || (extensions != nil && !slices.Contains(*extensions, filepath.Ext(file.Filename))) {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrInvalidData)
+			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 		}
 
 		f, err := file.Open()
 		if err != nil {
-			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrInvalidData)
+			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 		}
 		defer func(f multipart.File) {
 			if err := f.Close(); err != nil {

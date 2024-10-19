@@ -93,11 +93,13 @@ func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) erro
 }
 
 func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) error {
-	//if err := user.Bind(data); err != nil {
-	//	return err
-	//}
+	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
+			return err
+		}
 
-	return s.db.Session(&gorm.Session{FullSaveAssociations: true}).WithContext(ctx).Model(user).Updates(user.ToMap()).Error
+		return s.db.Model(user).Updates(user.ToMap()).Error
+	})
 }
 
 func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error {

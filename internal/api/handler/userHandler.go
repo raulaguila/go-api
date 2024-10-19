@@ -1,23 +1,19 @@
 package handler
 
 import (
-	"errors"
-	"log"
+	"gorm.io/gorm"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
-	"github.com/raulaguila/go-api/pkg/validator"
 )
 
 var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
@@ -33,50 +29,35 @@ var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
 })
 
 type UserHandler struct {
-	userService domain.UserService
-}
-
-func (h *UserHandler) foreignKeyViolatedFrom(c *fiber.Ctx, messages *i18n.Translation) error {
-	switch c.Method() {
-	case fiber.MethodPut, fiber.MethodPost, fiber.MethodPatch:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrProfileNotFound)
-	case fiber.MethodDelete:
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUserUsed)
-	default:
-		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
-	}
-}
-
-func (h *UserHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
-
-	switch pgErr := pgutils.HandlerError(err); {
-	case errors.Is(pgErr, pgutils.ErrDuplicatedKey):
-		return helper.NewHTTPResponse(c, fiber.StatusConflict, messages.ErrUserRegistered)
-	case errors.Is(pgErr, pgutils.ErrForeignKeyViolated):
-		return h.foreignKeyViolatedFrom(c, messages)
-	case errors.Is(pgErr, pgutils.ErrUndefinedColumn):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUndefinedColumn)
-	case errors.Is(pgErr, myerrors.ErrPasswordsDoNotMatch):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrPassUnmatch)
-	case errors.Is(pgErr, myerrors.ErrUserHasNoPhoto):
-		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrUserHasNoPhoto)
-	case errors.Is(err, myerrors.ErrUserHasPass):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, messages.ErrUserHasPass)
-	case errors.Is(err, gorm.ErrRecordNotFound):
-		return helper.NewHTTPResponse(c, fiber.StatusNotFound, messages.ErrUserNotFound)
-	case errors.As(err, &validator.ErrValidator):
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, err)
-	}
-
-	log.Println(err.Error())
-	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
+	userService  domain.UserService
+	handlerError func(*fiber.Ctx, error) error
 }
 
 // NewUserHandler Creates a new user handler.
 func NewUserHandler(route fiber.Router, us domain.UserService) {
+	localErrors := map[string]map[error][]any{
+		"*": {
+			pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
+			pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
+			myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
+			myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
+			myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
+			gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
+		},
+		fiber.MethodPost: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
+		},
+		fiber.MethodPut: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
+		},
+		fiber.MethodDelete: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
+		},
+	}
+
 	handler := &UserHandler{
-		userService: us,
+		userService:  us,
+		handlerError: NewErrorHandler(localErrors),
 	}
 	extensions := []string{".jpg", ".jpeg", ".png"}
 

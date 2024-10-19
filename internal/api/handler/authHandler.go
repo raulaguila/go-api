@@ -4,13 +4,13 @@ import (
 	"errors"
 	"log"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/i18n"
 	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/helper"
 )
@@ -20,19 +20,18 @@ type AuthHandler struct {
 }
 
 func (s *AuthHandler) handlerError(c *fiber.Ctx, err error) error {
-	messages := i18n.TranslationsI18n[c.Locals(helper.LocalLang).(string)]
 
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, messages.ErrUserNotFound)
+		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "userNotFound"))
 	case errors.Is(err, myerrors.ErrInvalidCredentials):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, messages.ErrIncorrectCredentials)
+		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "incorrectCredentials"))
 	case errors.Is(err, myerrors.ErrDisabledUser):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, messages.ErrDisabledUser)
+		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "disabledUser"))
 	}
 
 	log.Println(err.Error())
-	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, messages.ErrGeneric)
+	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, fiberi18n.MustLocalize(c, "errGeneric"))
 }
 
 // NewAuthHandler Creates a new authenticator handler.
@@ -61,8 +60,7 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := &dto.AuthInputDTO{}
 	if err := c.BodyParser(credentials); err != nil {
-		translation := c.Locals(helper.LocalLang).(*i18n.Translation)
-		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, translation.ErrInvalidData)
+		return helper.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 	}
 
 	authResponse, err := s.authService.Login(c.Context(), credentials, c.IP())
