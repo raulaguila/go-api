@@ -12,9 +12,10 @@ import (
 )
 
 // NewErrorHandler Generic function that receives a map with the http methods, errors, status code and the message for each error.
-func NewErrorHandler(possibleErrors map[string]map[error][]any) func(*fiber.Ctx, error) error {
+// possiblesErrors: [method][error][]any{status_code, message}
+func NewErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx, error) error {
 	return func(c *fiber.Ctx, err error) error {
-		for method, mapper := range possibleErrors {
+		for method, mapper := range possiblesErrors {
 			if method == c.Method() || method == "*" {
 				for key, value := range mapper {
 					switch pgErr := pgutils.HandlerError(err); {
