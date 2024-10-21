@@ -1,6 +1,6 @@
-departmentNotFound: Department not found.
-departmentRegistered: Department already registered.
-departmentUsed: Department is being used.
+productNotFound: Product not found.
+productRegistered: Product already registered.
+productUsed: Product is being used.
 
 profileNotFound: Profile not found.
 profileRegistered: Profile already registered.

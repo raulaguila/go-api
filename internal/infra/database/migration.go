@@ -18,16 +18,16 @@ func autoMigrate(db *gorm.DB) {
 	helper.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 	helper.PanicIfErr(db.AutoMigrate(&domain.User{}))
 
-	helper.PanicIfErr(db.AutoMigrate(&domain.Department{}))
+	helper.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 }
 
 func createDefaults(db *gorm.DB) {
 	profile := &domain.Profile{
 		Name: "ROOT",
 		Permissions: map[string]any{
-			"user":       true,
-			"department": true,
-			"profile":    true,
+			"user":    true,
+			"product": true,
+			"profile": true,
 		},
 	}
 

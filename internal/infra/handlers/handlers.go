@@ -20,21 +20,21 @@ import (
 )
 
 var (
-	profileRepository    domain.ProfileRepository
-	userRepository       domain.UserRepository
-	departmentRepository domain.DepartmentRepository
+	profileRepository domain.ProfileRepository
+	userRepository    domain.UserRepository
+	productRepository domain.ProductRepository
 
-	profileService    domain.ProfileService
-	userService       domain.UserService
-	authService       domain.AuthService
-	departmentService domain.DepartmentService
+	profileService domain.ProfileService
+	userService    domain.UserService
+	authService    domain.AuthService
+	productService domain.ProductService
 )
 
 // initRepositories Initialize all repositories.
 func initRepositories(db *gorm.DB, minioClient *minioutils.Minio) {
 	profileRepository = repository.NewProfileRepository(db)
 	userRepository = repository.NewUserRepository(db, minioClient)
-	departmentRepository = repository.NewDepartmentRepository(db)
+	productRepository = repository.NewProductRepository(db)
 }
 
 // initServices Initialize all services.
@@ -42,7 +42,7 @@ func initServices() {
 	profileService = service.NewProfileService(profileRepository)
 	userService = service.NewUserService(userRepository)
 	authService = service.NewAuthService(userRepository)
-	departmentService = service.NewDepartmentService(departmentRepository)
+	productService = service.NewProductService(productRepository)
 }
 
 func initHandlers(app *fiber.App) {
@@ -55,7 +55,7 @@ func initHandlers(app *fiber.App) {
 	handler.NewAuthHandler(app.Group("/auth"), authService)
 	handler.NewProfileHandler(app.Group("/profile"), profileService)
 	handler.NewUserHandler(app.Group("/user"), userService)
-	handler.NewDepartmentHandler(app.Group("/department"), departmentService)
+	handler.NewProductHandler(app.Group("/product"), productService)
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {

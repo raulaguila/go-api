@@ -27,7 +27,7 @@ type (
 		Password string `json:"password" example:"12345678"`
 	}
 
-	DepartmentInputDTO struct {
+	ProductInputDTO struct {
 		Name *string `json:"name" example:"Automation"`
 	}
 )

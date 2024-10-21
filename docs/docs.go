@@ -207,14 +207,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/department": {
+        "/product": {
             "get": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "List departments",
+                "description": "List products",
                 "consumes": [
                     "application/json"
                 ],
@@ -222,9 +222,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Department"
+                    "Product"
                 ],
-                "summary": "List departments",
+                "summary": "List products",
                 "parameters": [
                     {
                         "enum": [
@@ -281,7 +281,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO"
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO"
                             }
                         }
                     },
@@ -299,7 +299,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Insert department",
+                "description": "Insert product",
                 "consumes": [
                     "application/json"
                 ],
@@ -307,9 +307,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Department"
+                    "Product"
                 ],
-                "summary": "Insert department",
+                "summary": "Insert product",
                 "parameters": [
                     {
                         "enum": [
@@ -323,12 +323,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
-                        "description": "Department model",
-                        "name": "department",
+                        "description": "Product model",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO"
                         }
                     }
                 ],
@@ -336,7 +336,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
                         }
                     },
                     "400": {
@@ -365,7 +365,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Delete departments by IDs",
+                "description": "Delete products by IDs",
                 "consumes": [
                     "application/json"
                 ],
@@ -373,9 +373,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Department"
+                    "Product"
                 ],
-                "summary": "Delete departments by IDs",
+                "summary": "Delete products by IDs",
                 "parameters": [
                     {
                         "enum": [
@@ -389,7 +389,7 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
-                        "description": "Department ID",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "body",
                         "required": true,
@@ -417,14 +417,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/department/{id}": {
+        "/product/{id}": {
             "get": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "Get department by ID",
+                "description": "Get product by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -432,9 +432,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Department"
+                    "Product"
                 ],
-                "summary": "Get department by ID",
+                "summary": "Get product by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -460,7 +460,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
                         }
                     },
                     "400": {
@@ -489,7 +489,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Update department by ID",
+                "description": "Update product by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -497,9 +497,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Department"
+                    "Product"
                 ],
-                "summary": "Update department by ID",
+                "summary": "Update product by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -521,12 +521,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Department model",
-                        "name": "department",
+                        "description": "Product model",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO"
                         }
                     }
                 ],
@@ -534,7 +534,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
                         }
                     },
                     "400": {
@@ -1521,28 +1521,6 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Automation"
-                }
-            }
-        },
-        "github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Automation"
-                }
-            }
-        },
         "github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO": {
             "type": "object",
             "properties": {
@@ -1554,13 +1532,13 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO"
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
                     }
                 },
                 "pagination": {
@@ -1623,6 +1601,28 @@ const docTemplate = `{
                 "password_confirm": {
                     "type": "string",
                     "example": "secret"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Automation"
+                }
+            }
+        },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Automation"
                 }
             }
         },

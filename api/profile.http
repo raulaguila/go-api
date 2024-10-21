@@ -46,7 +46,7 @@ Content-Type: application/json
   "permissions": {
     "user_module": true,
     "profile_module": true,
-    "department_module": true
+    "product_module": true
   }
 }
 
@@ -70,7 +70,7 @@ Accept-Language: {{lang}}
         client.assert(response.body.name === "Profile Created", "Wrong created name");
         client.assert(response.body.permissions.user_module === true, "Wrong updated user permission");
         client.assert(response.body.permissions.profile_module === true, "Wrong created profile permission");
-        client.assert(response.body.permissions.department_module === true, "Wrong created department permission");
+        client.assert(response.body.permissions.product_module === true, "Wrong created product permission");
     });
 %}
 
@@ -87,7 +87,7 @@ Content-Type: application/json
   "permissions": {
     "user_module": false,
     "profile_module": false,
-    "department_module": false
+    "product_module": false
   }
 }
 
@@ -110,7 +110,7 @@ Accept-Language: {{lang}}
         client.assert(response.body.name === "Profile Updated", "Wrong updated name");
         client.assert(response.body.permissions.user_module === false, "Wrong updated user permission");
         client.assert(response.body.permissions.profile_module === false, "Wrong updated profile permission");
-        client.assert(response.body.permissions.department_module === false, "Wrong updated department permission");
+        client.assert(response.body.permissions.product_module === false, "Wrong updated product permission");
     });
 %}
 

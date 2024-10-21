@@ -94,19 +94,19 @@ func (u *User) ToMap() *map[string]any {
 	return &mapped
 }
 
-func (u *User) Bind(userDTO *dto.UserInputDTO) error {
-	if userDTO != nil {
-		if userDTO.Name != nil {
-			u.Name = *userDTO.Name
+func (u *User) Bind(p *dto.UserInputDTO) error {
+	if p != nil {
+		if p.Name != nil {
+			u.Name = *p.Name
 		}
-		if userDTO.Email != nil {
-			u.Email = *userDTO.Email
+		if p.Email != nil {
+			u.Email = *p.Email
 		}
-		if userDTO.Status != nil {
-			u.Auth.Status = *userDTO.Status
+		if p.Status != nil {
+			u.Auth.Status = *p.Status
 		}
-		if userDTO.ProfileID != nil {
-			u.Auth.ProfileID = *userDTO.ProfileID
+		if p.ProfileID != nil {
+			u.Auth.ProfileID = *p.ProfileID
 		}
 	}
 

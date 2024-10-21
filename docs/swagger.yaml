@@ -18,21 +18,6 @@ definitions:
       user:
         $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO:
-    properties:
-      name:
-        example: Automation
-        type: string
-    type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO:
-    properties:
-      id:
-        example: 1
-        type: integer
-      name:
-        example: Automation
-        type: string
-    type: object
   github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO:
     properties:
       ids:
@@ -40,11 +25,11 @@ definitions:
           type: integer
         type: array
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
         type: array
       pagination:
         $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
@@ -85,6 +70,21 @@ definitions:
         type: string
       password_confirm:
         example: secret
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO:
+    properties:
+      name:
+        example: Automation
+        type: string
+    type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Automation
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
@@ -183,7 +183,7 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -216,7 +216,7 @@ paths:
       description: User authentication
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -257,7 +257,7 @@ paths:
         name: Authorization
         type: string
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -282,21 +282,21 @@ paths:
       summary: User refresh
       tags:
       - Auth
-  /department:
+  /product:
     delete:
       consumes:
       - application/json
-      description: Delete departments by IDs
+      description: Delete products by IDs
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
         in: header
         name: Accept-Language
         type: string
-      - description: Department ID
+      - description: Product ID
         in: body
         name: id
         required: true
@@ -317,16 +317,16 @@ paths:
             $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
-      summary: Delete departments by IDs
+      summary: Delete products by IDs
       tags:
-      - Department
+      - Product
     get:
       consumes:
       - application/json
-      description: List departments
+      description: List products
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -367,7 +367,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_DepartmentOutputDTO'
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO'
             type: array
         "500":
           description: Internal Server Error
@@ -375,35 +375,35 @@ paths:
             $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
-      summary: List departments
+      summary: List products
       tags:
-      - Department
+      - Product
     post:
       consumes:
       - application/json
-      description: Insert department
+      description: Insert product
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
         in: header
         name: Accept-Language
         type: string
-      - description: Department model
+      - description: Product model
         in: body
-        name: department
+        name: product
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -418,17 +418,17 @@ paths:
             $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
-      summary: Insert department
+      summary: Insert product
       tags:
-      - Department
-  /department/{id}:
+      - Product
+  /product/{id}:
     get:
       consumes:
       - application/json
-      description: Get department by ID
+      description: Get product by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -447,7 +447,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -462,16 +462,16 @@ paths:
             $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
-      summary: Get department by ID
+      summary: Get product by ID
       tags:
-      - Department
+      - Product
     put:
       consumes:
       - application/json
-      description: Update department by ID
+      description: Update product by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -484,19 +484,19 @@ paths:
         name: id
         required: true
         type: integer
-      - description: Department model
+      - description: Product model
         in: body
-        name: department
+        name: product
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.DepartmentOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -511,9 +511,9 @@ paths:
             $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
       security:
       - Bearer: []
-      summary: Update department by ID
+      summary: Update product by ID
       tags:
-      - Department
+      - Product
   /profile:
     delete:
       consumes:
@@ -521,7 +521,7 @@ paths:
       description: Delete profiles by IDs
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -558,7 +558,7 @@ paths:
       description: Get profiles
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -616,7 +616,7 @@ paths:
       description: Insert profile
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -660,7 +660,7 @@ paths:
       description: Get profile by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -703,7 +703,7 @@ paths:
       description: Update profile by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -753,7 +753,7 @@ paths:
       description: Delete user by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -790,7 +790,7 @@ paths:
       description: Get all users
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -852,7 +852,7 @@ paths:
       description: Insert user
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -896,7 +896,7 @@ paths:
       description: Get user by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -939,7 +939,7 @@ paths:
       description: Update user by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -989,7 +989,7 @@ paths:
       description: Get user photo
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -1022,7 +1022,7 @@ paths:
       description: Set user photo
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -1061,7 +1061,7 @@ paths:
       description: Reset user password by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
@@ -1097,7 +1097,7 @@ paths:
       description: Set user password by ID
       parameters:
       - default: en-US
-        description: Request i18nmiddleware
+        description: Request language
         enum:
         - en-US
         - pt-BR
