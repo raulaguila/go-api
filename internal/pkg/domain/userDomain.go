@@ -16,7 +16,7 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-const UserTableName string = "users"
+const UserTableName string = "user"
 
 type (
 	User struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-const ProfileTableName string = "users_profile"
+const ProfileTableName string = "user_profile"
 
 type (
 	Profile struct {
