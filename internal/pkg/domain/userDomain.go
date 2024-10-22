@@ -16,7 +16,7 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-const UserTableName string = "user"
+const UserTableName string = "users"
 
 type (
 	User struct {
@@ -90,7 +90,6 @@ func (u *User) ToMap() *map[string]any {
 		mapped["Auth"].(map[string]any)["password"] = *u.Auth.Password
 	}
 
-	fmt.Println(mapped)
 	return &mapped
 }
 

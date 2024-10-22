@@ -38,7 +38,7 @@ func createDataBase() {
 		_ = con.Close()
 	}(con)
 
-	if err := db.Exec(fmt.Sprintf("CREATE DATABASE %v;", os.Getenv("POSTGRES_BASE"))).Error; err != nil {
+	if err := db.Exec(`CREATE DATABASE ` + os.Getenv("POSTGRES_BASE")).Error; err != nil {
 		switch {
 		case errors.Is(pgutils.HandlerError(err), pgutils.ErrDatabaseAlreadyExists):
 		default:

@@ -6,7 +6,7 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 
-const AuthTableName string = "user_auth"
+const AuthTableName string = "users_auth"
 
 type (
 	Auth struct {
