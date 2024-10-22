@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"gorm.io/gorm"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"

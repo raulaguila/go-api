@@ -2,14 +2,14 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/gofiber/contrib/fiberi18n/v2"
-
 	"log"
 	"mime/multipart"
 	"path/filepath"
 	"slices"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/pkg/helper"
 )

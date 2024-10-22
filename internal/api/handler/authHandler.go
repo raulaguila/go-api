@@ -20,7 +20,6 @@ type AuthHandler struct {
 }
 
 func (s *AuthHandler) handlerError(c *fiber.Ctx, err error) error {
-
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "userNotFound"))

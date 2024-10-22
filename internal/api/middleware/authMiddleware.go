@@ -3,9 +3,9 @@ package middleware
 import (
 	"encoding/base64"
 	"errors"
-	"github.com/gofiber/contrib/fiberi18n/v2"
 	"log"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/golang-jwt/jwt/v5"

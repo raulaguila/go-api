@@ -66,7 +66,7 @@ func (s *UserTestSuite) SetupTest() {
 	}
 
 	var nilFilter *filters.UserFilter = nil
-	//var nilUser *domain.User = nil
+	// var nilUser *domain.User = nil
 
 	repo := &mocks.UserRepositoryMock{}
 	repo.On("GetUsers", s.ctx, s.filter).Return(&s.items, nil)
@@ -82,9 +82,9 @@ func (s *UserTestSuite) SetupTest() {
 	repo.On("GetUserByID", s.ctx, s.items[5].ID).Return(&s.items[5], nil)
 	repo.On("GetUserByID", s.ctx, uint(10)).Return(nil, ErrItemNotFound)
 
-	//repo.On("CreateUser", s.ctx, &s.newItems[0]).Return(nil)
-	//repo.On("CreateUser", s.ctx, &s.newItems[1]).Return(nil)
-	//repo.On("CreateUser", s.ctx, nilUser).Return(nil, errors.New("error to create item"))
+	// repo.On("CreateUser", s.ctx, &s.newItems[0]).Return(nil)
+	// repo.On("CreateUser", s.ctx, &s.newItems[1]).Return(nil)
+	// repo.On("CreateUser", s.ctx, nilUser).Return(nil, errors.New("error to create item"))
 
 	//repo.On("UpdateUser", s.ctx, &s.newItem).Return(nil)
 	//s.newItem.Name = "."

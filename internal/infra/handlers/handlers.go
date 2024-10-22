@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"github.com/gofiber/contrib/fiberi18n/v2"
 	"os"
 	"strings"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
 	"gorm.io/gorm"

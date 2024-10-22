@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"golang.org/x/text/language"
 	"os"
 	"strings"
 	"time"
@@ -14,6 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"golang.org/x/text/language"
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/infra/database"
