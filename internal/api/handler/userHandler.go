@@ -36,14 +36,6 @@ type UserHandler struct {
 // NewUserHandler Creates a new user handler.
 func NewUserHandler(route fiber.Router, us domain.UserService) {
 	localErrors := map[string]map[error][]any{
-		"*": {
-			pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
-			pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
-			myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
-			myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
-			myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
-			gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
-		},
 		fiber.MethodPost: {
 			pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
 		},
@@ -52,6 +44,14 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 		},
 		fiber.MethodDelete: {
 			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
+		},
+		"*": {
+			pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
+			pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
+			myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
+			myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
+			myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
+			gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
 		},
 	}
 

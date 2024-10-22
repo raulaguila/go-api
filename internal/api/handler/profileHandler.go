@@ -28,13 +28,13 @@ type ProfileHandler struct {
 // NewProfileHandler Creates a new profile handler.
 func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	localErrors := map[string]map[error][]any{
+		fiber.MethodDelete: {
+			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
+		},
 		"*": {
 			pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 			pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 			gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
-		},
-		fiber.MethodDelete: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 		},
 	}
 
