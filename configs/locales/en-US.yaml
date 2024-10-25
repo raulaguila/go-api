@@ -20,4 +20,4 @@ disabledUser: Disabled user.
 invalidData: Invalid data, please specify valid data.
 incorrectCredentials: Incorrect credentials.
 nonExistentRoute: Route does not exist in this API.
-manyRequest: You have completed many requests in a short period of time! Please wait a minute!
+manyRequests: You have completed many requests in a short period of time! Please wait a minute!

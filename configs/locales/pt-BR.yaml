@@ -20,4 +20,4 @@ disabledUser: Usuário desativado.
 invalidData: Dados inválidos, especifique dados válidos.
 incorrectCredentials: Credenciais incorretas.
 nonExistentRoute: A rota não existe nesta API.
-manyRequest: Você completou muitas solicitações em um curto período de tempo! Por favor, espere um minuto!
+manyRequests: Você completou muitas solicitações em um curto período de tempo! Por favor, espere um minuto!

@@ -19,17 +19,15 @@ type AuthHandler struct {
 
 // NewAuthHandler Creates a new authenticator handler.
 func NewAuthHandler(route fiber.Router, as domain.AuthService) {
-	localErrors := map[string]map[error][]any{
-		"*": {
-			myerrors.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
-			myerrors.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
-			gorm.ErrRecordNotFound:         []any{fiber.StatusNotFound, "userNotFound"},
-		},
-	}
-
 	handler := &AuthHandler{
-		authService:  as,
-		handlerError: NewErrorHandler(localErrors),
+		authService: as,
+		handlerError: newErrorHandler(map[string]map[error][]any{
+			"*": {
+				myerrors.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
+				myerrors.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
+				gorm.ErrRecordNotFound:         []any{fiber.StatusNotFound, "userNotFound"},
+			},
+		}),
 	}
 
 	route.Post("", handler.login)

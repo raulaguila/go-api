@@ -27,20 +27,18 @@ type ProductHandler struct {
 
 // NewProductHandler Creates a new product handler.
 func NewProductHandler(route fiber.Router, ps domain.ProductService) {
-	localErrors := map[string]map[error][]any{
-		fiber.MethodDelete: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "productUsed"},
-		},
-		"*": {
-			pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
-			pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "productRegistered"},
-			gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "productNotFound"},
-		},
-	}
-
 	handler := &ProductHandler{
 		productService: ps,
-		handlerError:   NewErrorHandler(localErrors),
+		handlerError: newErrorHandler(map[string]map[error][]any{
+			fiber.MethodDelete: {
+				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "productUsed"},
+			},
+			"*": {
+				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
+				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "productRegistered"},
+				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "productNotFound"},
+			},
+		}),
 	}
 
 	route.Use(middleware.MidAccess)

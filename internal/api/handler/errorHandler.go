@@ -11,9 +11,9 @@ import (
 	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
-// NewErrorHandler Generic function that receives a map with the http methods, errors, status code and the message for each error.
+// newErrorHandler Generic function that receives a map with the http methods, errors, status code and the message for each error.
 // possiblesErrors: [method][error][]any{status_code, message}
-func NewErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx, error) error {
+func newErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx, error) error {
 	return func(c *fiber.Ctx, err error) error {
 		for method, mapper := range possiblesErrors {
 			if method == c.Method() || method == "*" {
