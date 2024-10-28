@@ -41,7 +41,6 @@ func (s *ProductHandlerTestSuite) SetupSuite() {
 
 	app := fiber.New()
 	app.Use(
-		//recover.New(),
 		fiberi18n.New(&fiberi18n.Config{
 			Next: func(c *fiber.Ctx) bool {
 				return false
@@ -65,16 +64,18 @@ func (s *ProductHandlerTestSuite) SetupSuite() {
 	service := &mocks.ProductServiceMock{}
 	service.On("GetProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), mock.AnythingOfType("*filter.Filter")).Return(listProducts, nil)
 
-	var id uint = 1
-	name := "Product 01"
-	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id).Return(nil, gorm.ErrRecordNotFound)
-	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id).Return(&dto.ProductOutputDTO{ID: &id, Name: &name}, nil)
-	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id, Name: &name}, nil)
+	var id1 uint = 1
+	name1 := "Product 01"
+	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(nil, gorm.ErrRecordNotFound)
+	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
+	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id1, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
+	service.On("DeleteProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), []uint{id1}).Return(nil)
 
 	var id2 uint = 2
 	name2 := "Product 02"
 	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id2).Return(&dto.ProductOutputDTO{ID: &id2, Name: &name2}, nil)
 	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id2, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id2, Name: &name2}, nil)
+	service.On("DeleteProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), []uint{id2}).Return(gorm.ErrRecordNotFound)
 
 	var id3 uint = 3
 	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id3, mock.AnythingOfType("*dto.ProductInputDTO")).Return(nil, pgutils.ErrDuplicatedKey)
@@ -132,30 +133,50 @@ func (s *ProductHandlerTestSuite) TestGetProductByID() {
 	}
 }
 
-// TestUpdateProductByID test to update an existing product
+// TestUpdateProductByID test to update a product
 func (s *ProductHandlerTestSuite) TestUpdateProductByID() {
 	for _, test := range []struct {
 		productID    int
 		expectedCode int
+		expectedBody string
 	}{
-		{1, fiber.StatusOK},
-		{2, fiber.StatusOK},
-		{3, fiber.StatusConflict},
-		{0, fiber.StatusBadRequest},
-		{-4, fiber.StatusBadRequest},
+		{1, fiber.StatusOK, "{\"id\":1,\"name\":\"Product 01\"}"},
+		{2, fiber.StatusOK, "{\"id\":2,\"name\":\"Product 02\"}"},
+		{3, fiber.StatusConflict, "{\"code\":409,\"message\":\"Product already registered.\"}"},
+		{0, fiber.StatusBadRequest, "{\"code\":400,\"message\":\"Invalid id, please specify valid id.\"}"},
+		{-4, fiber.StatusBadRequest, "{\"code\":400,\"message\":\"Invalid id, please specify valid id.\"}"},
 	} {
 		productDTO := fmt.Sprintf("{\"name\":\"Product 0%v\"}", test.productID)
 		fmt.Println(productDTO)
 
 		req := httptest.NewRequest(fiber.MethodPut, fmt.Sprintf("%v/%v", s.route, test.productID), strings.NewReader(productDTO))
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Content-Type", "application/json")
 
 		resp, _ := s.app.Test(req, 1000)
 		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
 		if resp.StatusCode == fiber.StatusOK {
 			body, err := io.ReadAll(resp.Body)
 			s.NoError(err)
-			s.Equal(fmt.Sprintf("{\"id\":%v,\"name\":\"Product 0%v\"}", test.productID, test.productID), string(body))
+			s.Equal(test.expectedBody, string(body))
 		}
+	}
+}
+
+// TestDeleteProductByID test to delete a product
+func (s *ProductHandlerTestSuite) TestDeleteProductByID() {
+	for _, test := range []struct {
+		productID    int
+		expectedCode int
+	}{
+		{1, fiber.StatusNoContent},
+		{2, fiber.StatusNotFound},
+		{-2, fiber.StatusInternalServerError},
+	} {
+		idsDTO := fmt.Sprintf("{\"ids\": [%v]}", test.productID)
+		req := httptest.NewRequest(fiber.MethodDelete, s.route, strings.NewReader(idsDTO))
+		req.Header.Set("Content-Type", "application/json")
+
+		resp, _ := s.app.Test(req, 1000)
+		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
 	}
 }

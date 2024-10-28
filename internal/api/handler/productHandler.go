@@ -1,18 +1,16 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"gorm.io/gorm"
-
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
+	"gorm.io/gorm"
 )
 
 var middlewareProductDTO = datatransferobject.New(datatransferobject.Config{
@@ -148,7 +146,6 @@ func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 
 	productDTO := c.Locals(helper.LocalDTO).(*dto.ProductInputDTO)
 	product, err := s.productService.UpdateProduct(c.Context(), id.ID, productDTO)
-	fmt.Printf("[%v] product: %v - %v\n", id.ID, product, err)
 	if err != nil {
 		return s.handlerError(c, err)
 	}
