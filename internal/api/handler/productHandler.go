@@ -1,8 +1,9 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
@@ -34,6 +35,7 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "productUsed"},
 			},
 			"*": {
+				myerrors.ErrInvalidID:      []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "productRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "productNotFound"},
@@ -41,7 +43,7 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 		}),
 	}
 
-	route.Use(middleware.MidAccess)
+	//route.Use(middleware.MidAccess)
 
 	route.Get("", middlewareFilterDTO, handler.getProducts)
 	route.Post("", middlewareProductDTO, handler.createProduct)
@@ -87,6 +89,10 @@ func (s *ProductHandler) getProducts(c *fiber.Ctx) error {
 // @Security	 Bearer
 func (s *ProductHandler) getProductByID(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
+	if id.ID == 0 {
+		return s.handlerError(c, myerrors.ErrInvalidID)
+	}
+
 	product, err := s.productService.GetProductByID(c.Context(), id.ID)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -136,8 +142,13 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 // @Security	 Bearer
 func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 	id := c.Locals(helper.LocalID).(*filters.IDFilter)
+	if id.ID == 0 {
+		return s.handlerError(c, myerrors.ErrInvalidID)
+	}
+
 	productDTO := c.Locals(helper.LocalDTO).(*dto.ProductInputDTO)
 	product, err := s.productService.UpdateProduct(c.Context(), id.ID, productDTO)
+	fmt.Printf("[%v] product: %v - %v\n", id.ID, product, err)
 	if err != nil {
 		return s.handlerError(c, err)
 	}

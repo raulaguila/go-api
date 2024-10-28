@@ -34,7 +34,7 @@ type UserHandler struct {
 }
 
 // NewUserHandler Creates a new user handler.
-func NewUserHandler(route fiber.Router, us domain.UserService) {
+func NewUserHandler(route fiber.Router, us domain.UserService) *UserHandler {
 	handler := &UserHandler{
 		userService: us,
 		handlerError: newErrorHandler(map[string]map[error][]any{
@@ -73,6 +73,8 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 	route.Delete("", handler.deleteUser)
 	route.Put("/:"+helper.ParamID+"/photo", middlewareIDDTO, midFiles, handler.setUserPhoto)
 	route.Get("/:"+helper.ParamID+"/photo", middlewareIDDTO, handler.getUserPhoto)
+
+	return handler
 }
 
 // getUserPhoto godoc

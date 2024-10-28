@@ -1,6 +1,7 @@
 package datatransferobject
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,6 +32,7 @@ func New(config ...Config) fiber.Handler {
 		obj := reflect.New(reflect.TypeOf(cfg.Model).Elem()).Interface()
 		obj, err = parser(c, obj)
 		if err != nil {
+			fmt.Printf("Error mid: %v - %v\n", err, reflect.TypeOf(cfg.Model))
 			return cfg.ErrorHandler(c, err)
 		}
 

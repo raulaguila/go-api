@@ -18,6 +18,7 @@ errGeneric: An unexpected error occurred, try again later.
 undefinedColumn: Undefined column or parameter name.
 disabledUser: Disabled user.
 invalidData: Invalid data, please specify valid data.
+invalidID: Invalid id, please specify valid id.
 incorrectCredentials: Incorrect credentials.
 nonExistentRoute: Route does not exist in this API.
 manyRequests: You have completed many requests in a short period of time! Please wait a minute!

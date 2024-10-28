@@ -18,13 +18,14 @@ var (
 	ErrInvalidValue = errors.New("invalid value")
 )
 
-func TestProductSuit(t *testing.T) {
-	suite.Run(t, new(ProductTestSuite))
+func TestProductServiceSuite(t *testing.T) {
+	suite.Run(t, new(ProductServiceTestSuite))
 }
 
-type ProductTestSuite struct {
+type ProductServiceTestSuite struct {
 	suite.Suite
 	ctx    context.Context
+	cancel context.CancelFunc
 	filter *filter.Filter
 
 	service  domain.ProductService
@@ -33,8 +34,8 @@ type ProductTestSuite struct {
 	dtos     []dto.ProductInputDTO
 }
 
-func (s *ProductTestSuite) SetupTest() {
-	s.ctx = context.Background()
+func (s *ProductServiceTestSuite) SetupTest() {
+	s.ctx, s.cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	s.filter = filter.New("name", "desc")
 	s.items = []domain.Product{
 		{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "Product 1"},
@@ -87,7 +88,9 @@ func (s *ProductTestSuite) SetupTest() {
 	s.service = NewProductService(repo)
 }
 
-func (s *ProductTestSuite) TestGetProducts() {
+func (s *ProductServiceTestSuite) TestGetProducts() {
+	defer s.cancel()
+
 	items, err := s.service.GetProducts(s.ctx, s.filter)
 
 	s.NoError(err)
@@ -99,7 +102,9 @@ func (s *ProductTestSuite) TestGetProducts() {
 	s.Error(err)
 }
 
-func (s *ProductTestSuite) TestGetProductByID() {
+func (s *ProductServiceTestSuite) TestGetProductByID() {
+	defer s.cancel()
+
 	item, err := s.service.GetProductByID(s.ctx, s.items[0].ID)
 
 	s.NoError(err)
@@ -121,7 +126,9 @@ func (s *ProductTestSuite) TestGetProductByID() {
 	s.Nil(item)
 }
 
-func (s *ProductTestSuite) TestCreateProduct() {
+func (s *ProductServiceTestSuite) TestCreateProduct() {
+	defer s.cancel()
+
 	item, err := s.service.CreateProduct(s.ctx, &s.dtos[0])
 
 	s.NoError(err)
@@ -142,7 +149,9 @@ func (s *ProductTestSuite) TestCreateProduct() {
 	s.Nil(item)
 }
 
-func (s *ProductTestSuite) TestUpdateProduct() {
+func (s *ProductServiceTestSuite) TestUpdateProduct() {
+	defer s.cancel()
+
 	item, err := s.service.UpdateProduct(s.ctx, s.items[3].ID, &s.dtos[0])
 
 	s.NoError(err)
@@ -169,7 +178,9 @@ func (s *ProductTestSuite) TestUpdateProduct() {
 	s.Nil(item)
 }
 
-func (s *ProductTestSuite) TestDeleteProducts() {
+func (s *ProductServiceTestSuite) TestDeleteProducts() {
+	defer s.cancel()
+
 	s.NoError(s.service.DeleteProducts(s.ctx, []uint{}))
 	s.NoError(s.service.DeleteProducts(s.ctx, []uint{1}))
 

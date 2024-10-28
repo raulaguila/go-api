@@ -18,6 +18,7 @@ errGeneric: Um erro inesperado ocorreu, tente novamente mais tarde.
 undefinedColumn: Coluna ou nome de parâmetro indefinido.
 disabledUser: Usuário desativado.
 invalidData: Dados inválidos, especifique dados válidos.
+invalidID: ID inválido, especifique id válido.
 incorrectCredentials: Credenciais incorretas.
 nonExistentRoute: A rota não existe nesta API.
 manyRequests: Você completou muitas solicitações em um curto período de tempo! Por favor, espere um minuto!

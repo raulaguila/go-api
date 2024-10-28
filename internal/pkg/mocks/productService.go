@@ -7,6 +7,7 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/filter"
 )
 
 type ProductServiceMock struct {
@@ -21,10 +22,35 @@ func (s *ProductServiceMock) GenerateProductOutputDTO(product *domain.Product) *
 }
 
 func (s *ProductServiceMock) GetProductByID(ctx context.Context, productID uint) (*dto.ProductOutputDTO, error) {
-	return nil, nil
+	ret := s.Called(ctx, productID)
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
+	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
 }
 
-// GetProducts(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
-// CreateProduct(context.Context, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
-// UpdateProduct(context.Context, uint, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
-// DeleteProducts(context.Context, []uint) error
+func (s *ProductServiceMock) GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error) {
+	ret := s.Called(ctx, f)
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
+	return ret.Get(0).(*dto.ItemsOutputDTO[dto.ProductOutputDTO]), ret.Error(1)
+}
+
+func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+	ret := s.Called(ctx, productDTO)
+	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
+}
+
+func (s *ProductServiceMock) UpdateProduct(ctx context.Context, productID uint, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+	ret := s.Called(ctx, productID, productDTO)
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
+	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
+}
+
+func (s *ProductServiceMock) DeleteProducts(ctx context.Context, productIDs []uint) error {
+	ret := s.Called(ctx, productIDs)
+	return ret.Error(0)
+}

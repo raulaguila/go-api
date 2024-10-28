@@ -26,7 +26,7 @@ type ProfileHandler struct {
 }
 
 // NewProfileHandler Creates a new profile handler.
-func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
+func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHandler {
 	handler := &ProfileHandler{
 		profileService: ps,
 		handlerError: newErrorHandler(map[string]map[error][]any{
@@ -48,6 +48,8 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", handler.deleteProfiles)
+
+	return handler
 }
 
 // getProfiles godoc

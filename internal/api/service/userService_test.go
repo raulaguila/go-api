@@ -14,11 +14,11 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func TestUserSuit(t *testing.T) {
-	suite.Run(t, new(UserTestSuite))
+func TestUserServiceSuite(t *testing.T) {
+	suite.Run(t, new(UserServiceTestSuite))
 }
 
-type UserTestSuite struct {
+type UserServiceTestSuite struct {
 	suite.Suite
 	ctx    context.Context
 	filter *filters.UserFilter
@@ -29,7 +29,7 @@ type UserTestSuite struct {
 	dtos     []dto.UserInputDTO
 }
 
-func (s *UserTestSuite) SetupTest() {
+func (s *UserServiceTestSuite) SetupTest() {
 	auth := &domain.Auth{
 		Base:      domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		Status:    true,
@@ -96,7 +96,7 @@ func (s *UserTestSuite) SetupTest() {
 	s.service = NewUserService(repo)
 }
 
-func (s *UserTestSuite) TestGetUsers() {
+func (s *UserServiceTestSuite) TestGetUsers() {
 	items, err := s.service.GetUsers(s.ctx, s.filter)
 
 	s.NoError(err)
@@ -108,7 +108,7 @@ func (s *UserTestSuite) TestGetUsers() {
 	s.Error(err)
 }
 
-func (s *UserTestSuite) TestGetUserByID() {
+func (s *UserServiceTestSuite) TestGetUserByID() {
 	item, err := s.service.GetUserByID(s.ctx, s.items[0].ID)
 
 	s.NoError(err)
@@ -130,7 +130,7 @@ func (s *UserTestSuite) TestGetUserByID() {
 	s.Nil(item)
 }
 
-//func (s *UserTestSuite) TestCreateUser() {
+//func (s *UserServiceTestSuite) TestCreateUser() {
 //	item, err := s.service.CreateUser(s.ctx, &s.dtos[0])
 //
 //	s.NoError(err)
@@ -151,7 +151,7 @@ func (s *UserTestSuite) TestGetUserByID() {
 //	s.Nil(item)
 //}
 
-//func (s *UserTestSuite) TestUpdateUser() {
+//func (s *UserServiceTestSuite) TestUpdateUser() {
 //	data := &dto.UserInputDTO{Name: &s.newItem.Name}
 //	item, err := s.service.UpdateUser(s.ctx, 4, data)
 //
@@ -175,7 +175,7 @@ func (s *UserTestSuite) TestGetUserByID() {
 //	s.Nil(item)
 //}
 //
-//func (s *UserTestSuite) TestDeleteUsers() {
+//func (s *UserServiceTestSuite) TestDeleteUsers() {
 //	s.NoError(s.service.DeleteUsers(s.ctx, []uint{1}))
 //
 //	err := s.service.DeleteUsers(s.ctx, []uint{7})
