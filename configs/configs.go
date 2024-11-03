@@ -20,7 +20,7 @@ var version string
 
 func init() {
 	_, b, _, _ := runtime.Caller(0)
-	err := godotenv.Load(path.Join(path.Join(path.Dir(b)), ".env"))
+	err := godotenv.Load(path.Join(path.Dir(b), ".env"))
 	helper.PanicIfErr(err)
 
 	helper.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))

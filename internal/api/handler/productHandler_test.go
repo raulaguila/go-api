@@ -62,10 +62,12 @@ func (s *ProductHandlerTestSuite) SetupSuite() {
 	}
 
 	service := &mocks.ProductServiceMock{}
-	service.On("GetProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), mock.AnythingOfType("*filter.Filter")).Return(listProducts, nil)
-
 	var id1 uint = 1
 	name1 := "Product 01"
+	service.On("CreateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), &dto.ProductInputDTO{Name: &name1}).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
+
+	service.On("GetProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), mock.AnythingOfType("*filter.Filter")).Return(listProducts, nil)
+
 	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(nil, gorm.ErrRecordNotFound)
 	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
 	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id1, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
@@ -96,7 +98,26 @@ func (s *ProductHandlerTestSuite) SetupTest() {
 
 // TestCreateProduct test to create a new product
 func (s *ProductHandlerTestSuite) TestCreateProduct() {
-	fmt.Println(">>> From TestCreateProduct")
+	for _, test := range []struct {
+		productID    int
+		expectedCode int
+		expectedBody string
+	}{
+		{1, fiber.StatusCreated, "{\"id\":1,\"name\":\"Product 01\"}"},
+	} {
+		productDTO := fmt.Sprintf("{\"name\":\"Product 0%v\"}", test.productID)
+
+		req := httptest.NewRequest(fiber.MethodPost, s.route, strings.NewReader(productDTO))
+		req.Header.Set("Content-Type", "application/json")
+
+		resp, _ := s.app.Test(req, 1000)
+		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
+		if resp.StatusCode == fiber.StatusOK {
+			body, err := io.ReadAll(resp.Body)
+			s.NoError(err)
+			s.Equal(test.expectedBody, string(body))
+		}
+	}
 }
 
 // TestGetProducts test to list products
@@ -147,7 +168,6 @@ func (s *ProductHandlerTestSuite) TestUpdateProductByID() {
 		{-4, fiber.StatusBadRequest, "{\"code\":400,\"message\":\"Invalid id, please specify valid id.\"}"},
 	} {
 		productDTO := fmt.Sprintf("{\"name\":\"Product 0%v\"}", test.productID)
-		fmt.Println(productDTO)
 
 		req := httptest.NewRequest(fiber.MethodPut, fmt.Sprintf("%v/%v", s.route, test.productID), strings.NewReader(productDTO))
 		req.Header.Set("Content-Type", "application/json")
