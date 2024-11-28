@@ -116,15 +116,15 @@ make compose-remove
 Authorization: Bearer <token>
 ```
 
-[Department module](../api/department.http):
+[Product module](../api/product.http):
 
-| Endpoint           | HTTP Method |        Description        |
-|:-------------------|:-----------:|:-------------------------:|
-| `/department`      |    `GET`    |   `Get all departments`   |
-| `/department`      |   `POST`    |  `Insert new department`  |
-| `/department`      |  `DELETE`   |   `Delete departments`    |
-| `/department/{id}` |    `GET`    |  `Get department by ID`   |
-| `/department/{id}` |    `PUT`    | `Update department by ID` |
+| Endpoint        | HTTP Method |      Description       |
+|:----------------|:-----------:|:----------------------:|
+| `/product`      |    `GET`    |   `Get all products`   |
+| `/product`      |   `POST`    | `Insert a new product` |
+| `/product`      |  `DELETE`   |   `Delete products`    |
+| `/product/{id}` |    `GET`    |  `Get product by ID`   |
+| `/product/{id}` |    `PUT`    | `Update product by ID` |
 
 ## Code status
 

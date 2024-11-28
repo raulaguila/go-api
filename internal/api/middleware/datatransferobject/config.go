@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Config defines the configuration for a middleware.
 type Config struct {
 	// ContextKey string key to store the dto object into context.
 	// Optional. Default: "localDTO".
@@ -34,6 +35,7 @@ type Config struct {
 	ErrorHandler fiber.ErrorHandler
 }
 
+// defaultConfig provides the default configuration settings for the application, including context key and error handler.
 var defaultConfig = Config{
 	ContextKey: "localDTO",
 	OnLookup:   Body,
@@ -47,10 +49,15 @@ var defaultConfig = Config{
 	},
 }
 
+// isPointerOfStruct checks if the provided interface is a pointer to a struct using reflection.
+// It returns true if the input is a pointer pointing to a struct, otherwise false.
 func isPointerOfStruct(i any) bool {
 	return reflect.ValueOf(i).Kind() == reflect.Ptr && reflect.TypeOf(i).Elem().Kind() == reflect.Struct
 }
 
+// configDefault returns a merged configuration by combining the defaultConfig with the provided custom Config options.
+// If no custom Config is provided, it returns the defaultConfig.
+// Validates and assigns default values for undefined fields in the provided Config.
 func configDefault(config ...Config) Config {
 	if len(config) < 1 {
 		return defaultConfig

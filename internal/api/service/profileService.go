@@ -2,21 +2,25 @@ package service
 
 import (
 	"context"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
 )
 
+// NewProfileService initializes a new instance of ProfileService with the provided ProfileRepository.
 func NewProfileService(r domain.ProfileRepository) domain.ProfileService {
 	return &profileService{
 		profileRepository: r,
 	}
 }
 
+// profileService handles business logic related to user profiles by utilizing a ProfileRepository for data operations.
 type profileService struct {
 	profileRepository domain.ProfileRepository
 }
 
+// GenerateProfileOutputDTO transforms a domain.Profile into a dto.ProfileOutputDTO for API output purposes.
 func (s *profileService) GenerateProfileOutputDTO(profile *domain.Profile) *dto.ProfileOutputDTO {
 	return &dto.ProfileOutputDTO{
 		ID:          &profile.ID,
@@ -25,7 +29,7 @@ func (s *profileService) GenerateProfileOutputDTO(profile *domain.Profile) *dto.
 	}
 }
 
-// GetProfileByID Implementation of 'GetProfileByID'.
+// GetProfileByID retrieves a user profile by its unique identifier and returns a ProfileOutputDTO or an error.
 func (s *profileService) GetProfileByID(ctx context.Context, profileID uint) (*dto.ProfileOutputDTO, error) {
 	profile, err := s.profileRepository.GetProfileByID(ctx, profileID)
 	if err != nil {
@@ -35,7 +39,8 @@ func (s *profileService) GetProfileByID(ctx context.Context, profileID uint) (*d
 	return s.GenerateProfileOutputDTO(profile), nil
 }
 
-// GetProfiles Implementation of 'GetProfiles'.
+// GetProfiles retrieves a list of profiles based on the provided filter criteria.
+// It returns the profiles along with pagination details or an error if the operation fails.
 func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
 	profiles, err := s.profileRepository.GetProfiles(ctx, profileFilter)
 	if err != nil {
@@ -63,7 +68,7 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 	}, nil
 }
 
-// CreateProfile Implementation of 'CreateProfile'.
+// CreateProfile creates a new user profile in the system using the provided ProfileInputDTO data.
 func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
 	profile := &domain.Profile{Permissions: map[string]any{}}
 	if err := profile.Bind(data); err != nil {
@@ -77,7 +82,8 @@ func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInp
 	return s.GenerateProfileOutputDTO(profile), nil
 }
 
-// UpdateProfile Implementation of 'UpdateProfile'.
+// UpdateProfile updates an existing profile with the specified profileID using the provided ProfileInputDTO data.
+// Returns a ProfileOutputDTO containing the updated profile information or an error if the update operation fails.
 func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
 	profile, err := s.profileRepository.GetProfileByID(ctx, profileID)
 	if err != nil {
@@ -95,7 +101,8 @@ func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data
 	return s.GenerateProfileOutputDTO(profile), nil
 }
 
-// DeleteProfiles Implementation of 'DeleteProfiles'.
+// DeleteProfiles removes the user profiles with the specified IDs from the repository.
+// It returns an error if the deletion operation fails. If no IDs are provided, it does nothing and returns nil.
 func (s *profileService) DeleteProfiles(ctx context.Context, ids []uint) error {
 	if len(ids) == 0 {
 		return nil

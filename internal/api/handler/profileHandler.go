@@ -14,33 +14,36 @@ import (
 	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
+// middlewareProfileDTO is a middleware handler that parses HTTP request data into a ProfileInputDTO object.
+// The parsed data is extracted from the request body and stored in the context with the key "localDTO".
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
 
+// ProfileHandler handles HTTP requests related to user profiles, utilizing a ProfileService to manage operations and errors.
 type ProfileHandler struct {
 	profileService domain.ProfileService
 	handlerError   func(*fiber.Ctx, error) error
 }
 
-// NewProfileHandler Creates a new profile handler.
-func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
-	localErrors := map[string]map[error][]any{
-		"*": {
-			pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
-			pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
-			gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
-		},
-		fiber.MethodDelete: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
-		},
-	}
-
+// NewProfileHandler initializes the profile handler with the given router and profile service.
+// It configures the necessary routes and middleware for handling profile-related operations.
+// The handler includes custom error handling for database-related issues.
+func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHandler {
 	handler := &ProfileHandler{
 		profileService: ps,
-		handlerError:   NewErrorHandler(localErrors),
+		handlerError: newErrorHandler(map[string]map[error][]any{
+			fiber.MethodDelete: {
+				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
+			},
+			"*": {
+				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
+				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
+				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
+			},
+		}),
 	}
 
 	route.Use(middleware.MidAccess)
@@ -50,6 +53,8 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", handler.deleteProfiles)
+
+	return handler
 }
 
 // getProfiles godoc

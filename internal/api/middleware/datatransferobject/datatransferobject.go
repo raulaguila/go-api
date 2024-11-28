@@ -1,11 +1,17 @@
 package datatransferobject
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+// New creates a new Fiber middleware handler with the given configuration options.
+// The middleware extracts data from HTTP requests into a specified struct according to the OnLookup setting.
+// By default, the data is parsed from the request body unless otherwise specified in the Config.
+// The parsed object is stored in the context using the specified ContextKey for further handling in request lifecycle.
+// Optional Config parameters include custom error handling and conditions to skip the middleware.
 func New(config ...Config) fiber.Handler {
 	cfg := configDefault(config...)
 
@@ -31,6 +37,7 @@ func New(config ...Config) fiber.Handler {
 		obj := reflect.New(reflect.TypeOf(cfg.Model).Elem()).Interface()
 		obj, err = parser(c, obj)
 		if err != nil {
+			fmt.Printf("Error mid: %v - %v\n", err, reflect.TypeOf(cfg.Model))
 			return cfg.ErrorHandler(c, err)
 		}
 

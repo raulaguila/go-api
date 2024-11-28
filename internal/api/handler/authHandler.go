@@ -1,9 +1,6 @@
 package handler
 
 import (
-	"errors"
-	"log"
-
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -16,28 +13,21 @@ import (
 )
 
 type AuthHandler struct {
-	authService domain.AuthService
+	authService  domain.AuthService
+	handlerError func(*fiber.Ctx, error) error
 }
 
-func (s *AuthHandler) handlerError(c *fiber.Ctx, err error) error {
-
-	switch {
-	case errors.Is(err, gorm.ErrRecordNotFound):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "userNotFound"))
-	case errors.Is(err, myerrors.ErrInvalidCredentials):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "incorrectCredentials"))
-	case errors.Is(err, myerrors.ErrDisabledUser):
-		return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, fiberi18n.MustLocalize(c, "disabledUser"))
-	}
-
-	log.Println(err.Error())
-	return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, fiberi18n.MustLocalize(c, "errGeneric"))
-}
-
-// NewAuthHandler Creates a new authenticator handler.
+// NewAuthHandler initializes the authentication handler with routes for login, user info retrieval, and token refresh.
 func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 	handler := &AuthHandler{
 		authService: as,
+		handlerError: newErrorHandler(map[string]map[error][]any{
+			"*": {
+				myerrors.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
+				myerrors.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
+				gorm.ErrRecordNotFound:         []any{fiber.StatusNotFound, "userNotFound"},
+			},
+		}),
 	}
 
 	route.Post("", handler.login)

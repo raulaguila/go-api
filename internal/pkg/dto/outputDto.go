@@ -1,7 +1,7 @@
 package dto
 
 type (
-	DepartmentOutputDTO struct {
+	ProductOutputDTO struct {
 		ID   *uint   `json:"id,omitempty" example:"1"`
 		Name *string `json:"name,omitempty" example:"Automation"`
 	}
@@ -21,7 +21,7 @@ type (
 	}
 
 	outputDTO interface {
-		ProfileOutputDTO | UserOutputDTO | DepartmentOutputDTO
+		ProfileOutputDTO | UserOutputDTO | ProductOutputDTO
 	}
 
 	PaginationDTO struct {

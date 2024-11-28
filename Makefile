@@ -15,14 +15,17 @@ init: ## Create environment file
 
 .PHONY: compose-build-services
 compose-build-services: ## Run 'docker compose --profile services up -d --build' to create and start containers
+	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services up -d --build
 	@${COMPOSE_COMMAND} --profile services up -d --build
 
 .PHONY: compose-build-source
 compose-build-source: ## Run 'docker compose --profile services --profile source up -d --build' to create and start containers from source code
+	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services --profile source up -d --build
 	@${COMPOSE_COMMAND} --profile services --profile source up -d --build
 
 .PHONY: compose-build-binary
 compose-build-binary: ## Run 'docker compose --profile services --profile binary up -d --build' to create and start containers from binary
+	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services --profile binary up -d --build
 	@${COMPOSE_COMMAND} --profile services --profile binary up -d --build
 
 .PHONY: compose-down

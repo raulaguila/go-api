@@ -23,7 +23,7 @@ Accept-Language: {{lang}}
 ###
 
 # @name getAll
-GET {{host}}/department?page=1&limit=5&order=asc&sort=name HTTP/1.1
+GET {{host}}/product?page=1&limit=5&order=asc&sort=name HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
@@ -37,27 +37,27 @@ Content-Type: application/json
 ###
 
 # @name createItem
-POST {{host}}/department HTTP/1.1
+POST {{host}}/product HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
-  "name": "Department Created"
+  "name": "Product Created"
 }
 
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 201, "Wrong status code");
         client.global.set("id", response.body.id);
-        client.global.set("body_create", "{\"name\":\"Department Created\"}");
+        client.global.set("body_create", "{\"name\":\"Product Created\"}");
     });
 %}
 
 ###
 
 # @name getCreatedItemByID
-GET {{host}}/department/{{id}} HTTP/1.1
+GET {{host}}/product/{{id}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
@@ -76,27 +76,27 @@ Content-Type: application/json
 ###
 
 # @name updateItemByID
-PUT {{host}}//department/{{id}} HTTP/1.1
+PUT {{host}}//product/{{id}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
 
 {
-  "name": "Department Updated"
+  "name": "Product Updated"
 }
 
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
         client.global.set("id", response.body.id);
-        client.global.set("body_update", "{\"name\":\"Department Updated\"}");
+        client.global.set("body_update", "{\"name\":\"Product Updated\"}");
     });
 %}
 
 ###
 
 # @name getUpdatedItemByID
-GET {{host}}/department/{{id}} HTTP/1.1
+GET {{host}}/product/{{id}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
@@ -115,7 +115,7 @@ Content-Type: application/json
 ###
 
 # @name deleteItemByID
-DELETE {{host}}/department HTTP/1.1
+DELETE {{host}}/product HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 Content-Type: application/json
@@ -133,7 +133,7 @@ Content-Type: application/json
 ###
 
 # @name getDeletedItemByID
-GET {{host}}/department/{{id}} HTTP/1.1
+GET {{host}}/product/{{id}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Accept-Language: {{lang}}
 

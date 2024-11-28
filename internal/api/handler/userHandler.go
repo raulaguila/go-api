@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"gorm.io/gorm"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
@@ -16,48 +16,50 @@ import (
 	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
+// middlewareUserDTO is a Fiber middleware configured to parse and store UserInputDTO data from the request body into context.
 var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
+// middlewarePasswordDTO is a middleware configuration that extracts and parses password data from HTTP request bodies.
+// The parsed data is stored in the request context under a specified key for use in further processing.
 var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
 
+// UserHandler is responsible for handling user-related HTTP routes and delegating operations to the UserService.
 type UserHandler struct {
 	userService  domain.UserService
 	handlerError func(*fiber.Ctx, error) error
 }
 
-// NewUserHandler Creates a new user handler.
-func NewUserHandler(route fiber.Router, us domain.UserService) {
-	localErrors := map[string]map[error][]any{
-		"*": {
-			pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
-			pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
-			myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
-			myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
-			myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
-			gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
-		},
-		fiber.MethodPost: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
-		},
-		fiber.MethodPut: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
-		},
-		fiber.MethodDelete: {
-			pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
-		},
-	}
-
+// NewUserHandler sets up the routes for user operations and returns a UserHandler instance.
+func NewUserHandler(route fiber.Router, us domain.UserService) *UserHandler {
 	handler := &UserHandler{
-		userService:  us,
-		handlerError: NewErrorHandler(localErrors),
+		userService: us,
+		handlerError: newErrorHandler(map[string]map[error][]any{
+			fiber.MethodPost: {
+				pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
+			},
+			fiber.MethodPut: {
+				pgutils.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
+			},
+			fiber.MethodDelete: {
+				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
+			},
+			"*": {
+				pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
+				pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
+				myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
+				myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
+				myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
+				gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
+			},
+		}),
 	}
 	extensions := []string{".jpg", ".jpeg", ".png"}
 
@@ -75,6 +77,8 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 	route.Delete("", handler.deleteUser)
 	route.Put("/:"+helper.ParamID+"/photo", middlewareIDDTO, midFiles, handler.setUserPhoto)
 	route.Get("/:"+helper.ParamID+"/photo", middlewareIDDTO, handler.getUserPhoto)
+
+	return handler
 }
 
 // getUserPhoto godoc

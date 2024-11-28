@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -13,11 +14,11 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func TestProfileSuit(t *testing.T) {
-	suite.Run(t, new(ProfileTestSuite))
+func TestProfileServiceSuite(t *testing.T) {
+	suite.Run(t, new(ProfileServiceTestSuite))
 }
 
-type ProfileTestSuite struct {
+type ProfileServiceTestSuite struct {
 	suite.Suite
 	ctx    context.Context
 	filter *filter.Filter
@@ -28,7 +29,19 @@ type ProfileTestSuite struct {
 	dtos     []dto.ProfileInputDTO
 }
 
-func (s *ProfileTestSuite) SetupTest() {
+// SetupSuite function executes before the test suite begins execution
+func (s *ProfileServiceTestSuite) SetupSuite() {
+	// set StartingNumber to one
+	fmt.Println(">>> From SetupSuite")
+}
+
+// TearDownSuite function executes after all tests executed
+func (s *ProfileServiceTestSuite) TearDownSuite() {
+	fmt.Println(">>> From TearDownSuite")
+}
+
+// SetupTest function executes before each test case
+func (s *ProfileServiceTestSuite) SetupTest() {
 	s.ctx = context.Background()
 	s.filter = filter.New("name", "desc")
 	s.items = []domain.Profile{
@@ -82,7 +95,7 @@ func (s *ProfileTestSuite) SetupTest() {
 	s.service = NewProfileService(repo)
 }
 
-func (s *ProfileTestSuite) TestGetProfiles() {
+func (s *ProfileServiceTestSuite) TestGetProfiles() {
 	items, err := s.service.GetProfiles(s.ctx, s.filter)
 
 	s.NoError(err)
@@ -94,7 +107,7 @@ func (s *ProfileTestSuite) TestGetProfiles() {
 	s.Error(err)
 }
 
-func (s *ProfileTestSuite) TestGetProfileByID() {
+func (s *ProfileServiceTestSuite) TestGetProfileByID() {
 	item, err := s.service.GetProfileByID(s.ctx, s.items[0].ID)
 
 	s.NoError(err)
@@ -116,7 +129,7 @@ func (s *ProfileTestSuite) TestGetProfileByID() {
 	s.Nil(item)
 }
 
-func (s *ProfileTestSuite) TestCreateProfile() {
+func (s *ProfileServiceTestSuite) TestCreateProfile() {
 	item, err := s.service.CreateProfile(s.ctx, &s.dtos[0])
 
 	s.NoError(err)
@@ -137,7 +150,7 @@ func (s *ProfileTestSuite) TestCreateProfile() {
 	s.Nil(item)
 }
 
-func (s *ProfileTestSuite) TestUpdateProfile() {
+func (s *ProfileServiceTestSuite) TestUpdateProfile() {
 	item, err := s.service.UpdateProfile(s.ctx, s.items[3].ID, &s.dtos[0])
 
 	s.NoError(err)
@@ -164,7 +177,7 @@ func (s *ProfileTestSuite) TestUpdateProfile() {
 	s.Nil(item)
 }
 
-func (s *ProfileTestSuite) TestDeleteProfiles() {
+func (s *ProfileServiceTestSuite) TestDeleteProfiles() {
 	s.NoError(s.service.DeleteProfiles(s.ctx, []uint{}))
 	s.NoError(s.service.DeleteProfiles(s.ctx, []uint{1}))
 

@@ -8,4 +8,5 @@ var (
 	ErrUserHasNoPhoto      = errors.New("user has no photo")
 	ErrUserHasPass         = errors.New("user already has password")
 	ErrPasswordsDoNotMatch = errors.New("passwords do not match")
+	ErrInvalidID           = errors.New("invalid id")
 )
