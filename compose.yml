@@ -1,16 +1,14 @@
-name: go_api
+name: api
 
 volumes:
 
-  api_postgres_volume:
-    name: api_postgres_volume
-  api_minio_volume:
-    name: api_minio_volume
+  postgres_volume:
+  minio_volume:
 
 networks:
 
-  go_api_network:
-    name: go_api_network
+  api_network:
+    name: api_network
     driver: bridge
 
 services:
@@ -22,7 +20,7 @@ services:
     image: postgres:14.7-alpine
     restart: always
     volumes:
-      - api_postgres_volume:/var/lib/postgresql/data
+      - postgres_volume:/var/lib/postgresql/data
     command: -p ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -32,7 +30,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
     networks:
-      - go_api_network
+      - api_network
     profiles: [ all, services ]
 
   minio:
@@ -42,7 +40,7 @@ services:
     image: bitnami/minio:2024
     restart: always
     volumes:
-      - api_minio_volume:/bitnami/minio/data
+      - minio_volume:/bitnami/minio/data
     ports:
       - ${MINIO_API_PORT}:${MINIO_API_PORT}
       - ${MINIO_WEB_PORT}:${MINIO_WEB_PORT}
@@ -53,7 +51,7 @@ services:
       - MINIO_API_PORT_NUMBER=${MINIO_API_PORT}
       - MINIO_CONSOLE_PORT_NUMBER=${MINIO_WEB_PORT}
     networks:
-      - go_api_network
+      - api_network
     profiles: [ all, services ]
 
   backend_binary:
@@ -73,7 +71,7 @@ services:
     environment:
       - TZ=${TZ}
     networks:
-      - go_api_network
+      - api_network
     profiles: [ all, binary ]
 
   backend_source:
@@ -93,5 +91,5 @@ services:
     environment:
       - TZ=${TZ}
     networks:
-      - go_api_network
+      - api_network
     profiles: [ all, source ]
