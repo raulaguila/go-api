@@ -16,8 +16,10 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
+// UserTableName specifies the database table name for storing User entities.
 const UserTableName string = "users"
 
+// User represents a user entity containing basic information and associated authentication details.
 type (
 	User struct {
 		Base
@@ -63,10 +65,12 @@ type (
 	}
 )
 
+// TableName returns the name of the database table associated with the User struct.
 func (u *User) TableName() string {
 	return UserTableName
 }
 
+// ToMap converts the User struct into a map with string keys and dynamic value types, representing its fields.
 func (u *User) ToMap() *map[string]any {
 	mapped := map[string]any{
 		"name":    u.Name,
@@ -93,6 +97,8 @@ func (u *User) ToMap() *map[string]any {
 	return &mapped
 }
 
+// Bind updates the User fields with values from the provided UserInputDTO if they are not nil.
+// Returns an error if the updated User does not pass validation.
 func (u *User) Bind(p *dto.UserInputDTO) error {
 	if p != nil {
 		if p.Name != nil {
@@ -112,10 +118,15 @@ func (u *User) Bind(p *dto.UserInputDTO) error {
 	return validator.StructValidator.Validate(u)
 }
 
+// ValidatePassword compares the provided password with the stored hashed password for the user.
+// Returns true if the password matches, otherwise false.
 func (u *User) ValidatePassword(password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(*u.Auth.Password), []byte(password)) == nil
 }
 
+// GenerateToken creates a JWT token for a user with a specified expiration, private key, and IP address.
+// It returns the signed token string or an error if the process fails.
+// The expiration duration is parsed from a string format and used to set the token's expiration claim.
 func (u *User) GenerateToken(expire, originalKey, ip string) (string, error) {
 	decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
 	if err != nil {

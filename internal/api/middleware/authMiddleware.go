@@ -14,11 +14,17 @@ import (
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
+// MidAccess is a fiber.Handler middleware for handling access controls.
 var (
 	MidAccess  fiber.Handler
 	MidRefresh fiber.Handler
 )
 
+// Auth initializes a Fiber middleware for JWT authentication.
+// It decodes a base64-encoded public key and leverages it for validating JWT tokens.
+// The function configures keyauth with custom handlers for failed and successful authentications.
+// It uses a UserRepository to fetch user details based on the token claims.
+// Auth stores the fetched user in the Fiber context locals for subsequent middlewares or handlers.
 func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 	decodedKey, err := base64.StdEncoding.DecodeString(base64key)
 	helper.PanicIfErr(err)

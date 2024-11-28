@@ -6,6 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// NewMiscHandler initializes the miscellaneous handler for the given router.
+// It sets up a route for the health check endpoint.
 func NewMiscHandler(miscRoute fiber.Router) {
 	handler := &MiscHandler{}
 

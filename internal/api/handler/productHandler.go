@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -13,18 +14,24 @@ import (
 	"gorm.io/gorm"
 )
 
+// middlewareProductDTO is a middleware that extracts a ProductInputDTO from the request body and stores it in the context.
 var middlewareProductDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProductInputDTO{},
 })
 
+// ProductHandler is responsible for handling HTTP requests related to product operations.
+// It interacts with the domain.ProductService to perform actions such as creating, updating, deleting, and retrieving products.
+// The handlerError function is used to manage and format error responses for the HTTP context.
 type ProductHandler struct {
 	productService domain.ProductService
 	handlerError   func(*fiber.Ctx, error) error
 }
 
-// NewProductHandler Creates a new product handler.
+// NewProductHandler initializes and registers the routes related to product operations with the given Fiber router.
+// It handles CRUD operations for products by attaching their respective handler functions to the routes.
+// It uses the given ProductService for performing business logic related to products.
 func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 	handler := &ProductHandler{
 		productService: ps,
@@ -41,7 +48,7 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 		}),
 	}
 
-	//route.Use(middleware.MidAccess)
+	route.Use(middleware.MidAccess)
 
 	route.Get("", middlewareFilterDTO, handler.getProducts)
 	route.Post("", middlewareProductDTO, handler.createProduct)

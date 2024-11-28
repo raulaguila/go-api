@@ -17,7 +17,7 @@ type AuthHandler struct {
 	handlerError func(*fiber.Ctx, error) error
 }
 
-// NewAuthHandler Creates a new authenticator handler.
+// NewAuthHandler initializes the authentication handler with routes for login, user info retrieval, and token refresh.
 func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 	handler := &AuthHandler{
 		authService: as,

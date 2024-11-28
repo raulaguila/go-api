@@ -14,6 +14,10 @@ import (
 	"github.com/raulaguila/go-api/pkg/helper"
 )
 
+// GetFileFromRequest returns a middleware that extracts a file from a request by the specified form key.
+// If a list of valid extensions is provided, it ensures the uploaded file matches one of the extensions.
+// Adds file information to the context's local storage under helper.LocalDTO for further processing.
+// Returns an error response if the file is invalid or if opening the file fails.
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		file, err := c.FormFile(formKey)

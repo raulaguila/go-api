@@ -2,11 +2,12 @@ package handler
 
 import (
 	"fmt"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"io"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/raulaguila/go-api/pkg/pgutils"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"

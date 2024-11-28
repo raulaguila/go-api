@@ -8,8 +8,10 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
+// ProductTableName is a constant that specifies the database table name for storing product data.
 const ProductTableName string = "product"
 
+// Product is a struct representing a product entity with a base and a unique name field.
 type (
 	Product struct {
 		Base
@@ -35,8 +37,12 @@ type (
 	}
 )
 
+// TableName returns the table name associated with the Product struct.
 func (s *Product) TableName() string { return ProductTableName }
 
+// Bind updates the Product fields based on the provided ProductInputDTO and validates the updated Product structure.
+// If the p.Name is non-nil, it assigns the dereferenced p.Name to the Product's Name field.
+// The method returns any validation error encountered during the update process.
 func (s *Product) Bind(p *dto.ProductInputDTO) error {
 	if p != nil {
 		if p.Name != nil {
@@ -47,6 +53,7 @@ func (s *Product) Bind(p *dto.ProductInputDTO) error {
 	return validator.StructValidator.Validate(s)
 }
 
+// ToMap converts the Product struct into a map, with the key as the field name and the value as the field's value.
 func (s *Product) ToMap() map[string]any {
 	return map[string]any{
 		"name": s.Name,

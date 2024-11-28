@@ -16,24 +16,28 @@ import (
 	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
+// middlewareUserDTO is a Fiber middleware configured to parse and store UserInputDTO data from the request body into context.
 var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
+// middlewarePasswordDTO is a middleware configuration that extracts and parses password data from HTTP request bodies.
+// The parsed data is stored in the request context under a specified key for use in further processing.
 var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: helper.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
 
+// UserHandler is responsible for handling user-related HTTP routes and delegating operations to the UserService.
 type UserHandler struct {
 	userService  domain.UserService
 	handlerError func(*fiber.Ctx, error) error
 }
 
-// NewUserHandler Creates a new user handler.
+// NewUserHandler sets up the routes for user operations and returns a UserHandler instance.
 func NewUserHandler(route fiber.Router, us domain.UserService) *UserHandler {
 	handler := &UserHandler{
 		userService: us,
