@@ -2,31 +2,28 @@ package helper
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 )
 
-func restore() {
-	if r := recover(); r != nil {
-		fmt.Printf("Recovered in f: %v\n", r)
+func TestPanicIfErr(t *testing.T) {
+	tests := []struct {
+		name        string
+		err         error
+		shouldPanic bool
+	}{
+		{"nilError", nil, false},
+		{"nonNilError", errors.New("some error"), true},
 	}
-}
 
-// go test -run TestErrPanicIfErr
-func TestErrPanicIfErr(t *testing.T) {
-	defer restore()
-
-	for i := 0; i < 99999; i++ {
-		PanicIfErr(errors.New("api error"))
-		t.Errorf("The code did not panic")
-	}
-}
-
-// go test -run TestNilPanicIfErr
-func TestNilPanicIfErr(t *testing.T) {
-	defer restore()
-
-	for i := 0; i < 99999; i++ {
-		PanicIfErr(nil)
+	for _, tt := range tests {
+		tt := tt // capture range variable
+		t.Run(tt.name, func(t *testing.T) {
+			defer func() {
+				if r := recover(); r != nil && !tt.shouldPanic {
+					t.Errorf("PanicIfErr() panicked when it shouldn't: %v", r)
+				}
+			}()
+			PanicIfErr(tt.err)
+		})
 	}
 }

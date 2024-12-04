@@ -1,41 +1,29 @@
 package helper
 
 import (
-	"strconv"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/require"
 )
 
-const testFactor = time.Second
-
-// go test -run TestDurationWithEmptyString
-func TestDurationWithEmptyString(t *testing.T) {
-	life, err := DurationFromString("", testFactor)
-
-	require.Error(t, err, "Did not return error!")
-	require.Equal(t, time.Duration(0), life)
-	require.Equal(t, err, ErrIntConvert)
-}
-
-// go test -run TestDurationWithInvalidString
-func TestDurationWithInvalidString(t *testing.T) {
-	life, err := DurationFromString("1m4i", testFactor)
-
-	require.Error(t, err, "Did not return error!")
-	require.Equal(t, time.Duration(0), life)
-	require.Equal(t, err, ErrIntConvert)
-}
-
-// go api -run TestDurationFromString
 func TestDurationFromString(t *testing.T) {
-	for i := 0; i < 99999; i++ {
-		for _, factor := range []time.Duration{time.Nanosecond, time.Microsecond, time.Millisecond, time.Second, time.Minute, time.Hour} {
-			life, err := DurationFromString(strconv.Itoa(i+1), factor)
+	tests := []struct {
+		str     string
+		factor  time.Duration
+		want    time.Duration
+		wantErr error
+	}{
+		{"100", time.Second, 100 * time.Second, nil},
+		{"0", time.Second, 0, nil},
+		{"-50", time.Millisecond, -50 * time.Millisecond, nil},
+		{"abc", time.Second, 0, ErrIntConvert},
+		{"123abc", time.Second, 0, ErrIntConvert},
+		{"", time.Minute, 0, ErrIntConvert},
+	}
 
-			require.NoError(t, err, "Returned error!")
-			require.Equal(t, time.Duration(i+1)*factor, life)
+	for _, tt := range tests {
+		got, err := DurationFromString(tt.str, tt.factor)
+		if got != tt.want || err != tt.wantErr {
+			t.Errorf("DurationFromString(%q, %v) = %v, %v; want %v, %v", tt.str, tt.factor, got, err, tt.want, tt.wantErr)
 		}
 	}
 }

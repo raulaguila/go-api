@@ -22,7 +22,6 @@ var version string
 // It panics if any error occurs during the loading of environment variables or setting time location.
 func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
-	helper.PanicIfErr(err)
 	if err != nil {
 		_, b, _, _ := runtime.Caller(0)
 		helper.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/middleware"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
@@ -31,7 +30,7 @@ type ProfileHandler struct {
 // NewProfileHandler initializes the profile handler with the given router and profile service.
 // It configures the necessary routes and middleware for handling profile-related operations.
 // The handler includes custom error handling for database-related issues.
-func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHandler {
+func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	handler := &ProfileHandler{
 		profileService: ps,
 		handlerError: newErrorHandler(map[string]map[error][]any{
@@ -46,15 +45,13 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHan
 		}),
 	}
 
-	route.Use(middleware.MidAccess)
+	//route.Use(middleware.MidAccess)
 
 	route.Get("", middlewareFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
 	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", handler.deleteProfiles)
-
-	return handler
 }
 
 // getProfiles godoc

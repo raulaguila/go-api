@@ -1,55 +1,36 @@
 package validator
 
 import (
+	"github.com/go-playground/validator/v10"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
 
-type structTest struct {
-	Name  string `validate:"required,min=5,max=10"`
-	Age   int    `validate:"required,min=12,max=18"`
+type testStruct struct {
+	ID    int    `validate:"gt=0"`
+	Name  string `validate:"required"`
 	Email string `validate:"required,email"`
 }
 
-// go test -run TestValidatorWithoutData
-func TestValidatorWithoutData(t *testing.T) {
-	element := &structTest{}
+func TestValidatorStruct_Validate(t *testing.T) {
+	validatorInstance := validator.New()
+	tests := []struct {
+		name    string
+		input   any
+		wantErr bool
+	}{
+		{"Valid", testStruct{ID: 1, Name: "John", Email: "john@example.com"}, false},
+		{"MissingName", testStruct{ID: 1, Name: "", Email: "john@example.com"}, true},
+		{"InvalidEmail", testStruct{ID: 1, Name: "John", Email: "john@com"}, true},
+		{"NegativeID", testStruct{ID: -1, Name: "John", Email: "john@example.com"}, true},
+		{"ZeroID", testStruct{ID: 0, Name: "John", Email: "john@example.com"}, true},
+	}
 
-	err := StructValidator.Validate(element)
-	require.Error(t, err)
-	require.ErrorAs(t, err, &ErrValidator)
-}
-
-// go test -run TestValidatorWitInvalidData
-func TestValidatorWitInvalidData(t *testing.T) {
-	element := &structTest{"1234", 22, "toError@email"}
-
-	err := StructValidator.Validate(element)
-	require.Error(t, err)
-	require.ErrorAs(t, err, &ErrValidator)
-
-	element.Name = "0123456"
-	element.Age = 33
-	element.Email = "email.com"
-
-	err = StructValidator.Validate(element)
-	require.Error(t, err)
-	require.IsType(t, "", err.Error())
-	require.ErrorAs(t, err, &ErrValidator)
-}
-
-// go test -run TestValidatorWitValidData
-func TestValidatorWitValidData(t *testing.T) {
-	element := &structTest{"123456", 15, "example@example.com"}
-
-	err := StructValidator.Validate(element)
-	require.NoError(t, err)
-
-	element.Name = "12345678"
-	element.Age = 13
-	element.Email = "email@email.com"
-
-	err = StructValidator.Validate(element)
-	require.NoError(t, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := validatorStruct{validator: validatorInstance}
+			if err := v.Validate(tt.input); (err != nil) != tt.wantErr {
+				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
 }

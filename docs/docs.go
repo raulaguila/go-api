@@ -270,7 +270,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -621,7 +621,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -978,7 +978,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }

@@ -10,9 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// orders is a slice containing the strings "asc" and "desc" representing valid order directions for sorting.
-var orders = []string{"asc", "desc"}
-
 // New creates a new Filter instance with the specified sort and order parameters.
 // The Search, Page, and Limit fields are initialized to their zero values.
 func New(sort, order string) *Filter {
@@ -30,7 +27,7 @@ type Filter struct {
 	Search string `query:"search" form:"search" example:"name"`
 	Page   int    `query:"page" form:"page" minimum:"1" default:"1"`
 	Limit  int    `query:"limit" form:"limit" minimum:"1" default:"10"`
-	Sort   string `query:"sort" form:"sort" default:"updated_at" example:"'updated_at', 'created_at', 'name' or some other field from response object"`
+	Sort   string `query:"sort" form:"sort" default:"updated_at" example:"updated_at"`
 	Order  string `query:"order" form:"order" enums:"asc,desc" default:"desc"`
 }
 
@@ -85,8 +82,7 @@ func (s *Filter) ApplyPagination(db *gorm.DB) *gorm.DB {
 // Converts the `Order` string to lowercase and ensures it matches a valid order, defaulting if invalid.
 // Sets the `Sort` field to a default value if it is empty.
 func (s *Filter) check() {
-	s.Order = strings.ToLower(s.Order)
-	if !slices.Contains(orders, s.Order) {
+	if !slices.Contains([]string{"asc", "desc"}, strings.ToLower(s.Order)) {
 		s.Order = os.Getenv("API_DEFAULT_ORDER")
 	}
 	if s.Sort == "" {

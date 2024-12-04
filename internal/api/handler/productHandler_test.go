@@ -1,202 +1,305 @@
 package handler
 
+//
 //import (
-//	"fmt"
-//	"io"
-//	"net/http/httptest"
-//	"strings"
+//	"errors"
+//	"github.com/gofiber/fiber/v2"
+//	"github.com/raulaguila/go-api/internal/pkg/filters"
 //	"testing"
 //
-//	"github.com/gofiber/contrib/fiberi18n/v2"
-//	"github.com/gofiber/fiber/v2"
-//	"github.com/stretchr/testify/mock"
-//	"github.com/stretchr/testify/suite"
-//	"golang.org/x/text/language"
-//	"gorm.io/gorm"
-//
-//	"github.com/raulaguila/go-api/configs"
+//	"github.com/raulaguila/go-api/internal/pkg/domain"
 //	"github.com/raulaguila/go-api/internal/pkg/dto"
-//	"github.com/raulaguila/go-api/internal/pkg/mocks"
 //	"github.com/raulaguila/go-api/pkg/filter"
-//	"github.com/raulaguila/go-api/pkg/pgutils"
+//	"github.com/raulaguila/go-api/pkg/helper"
+//	"github.com/stretchr/testify/assert"
+//	"github.com/stretchr/testify/mock"
 //)
 //
-//func TestProductHandlerSuite(t *testing.T) {
-//	suite.Run(t, new(ProductHandlerTestSuite))
+//// MockService is a mock implementation of the ProductService
+//type MockService struct {
+//	mock.Mock
 //}
 //
-//type ProductHandlerTestSuite struct {
-//	suite.Suite
-//	filter *filter.Filter
-//	route  string
-//
-//	app *fiber.App
+//func (m *MockService) GenerateProductOutputDTO(p *domain.Product) *dto.ProductOutputDTO {
+//	return m.Called(p).Get(0).(*dto.ProductOutputDTO)
 //}
 //
-//// SetupSuite function executes before the test suite begins execution
-//func (s *ProductHandlerTestSuite) SetupSuite() {
-//	fmt.Println(">>> From SetupSuite")
-//	s.filter = filter.New("name", "desc")
-//	s.route = "/product"
+//func (m *MockService) GetProductByID(ctx context.Context, id uint) (*dto.ProductOutputDTO, error) {
+//	args := m.Called(ctx, id)
+//	return args.Get(0).(*dto.ProductOutputDTO), args.Error(1)
+//}
 //
-//	app := fiber.New()
-//	app.Use(
-//		fiberi18n.New(&fiberi18n.Config{
-//			Next: func(c *fiber.Ctx) bool {
-//				return false
+//func (m *MockService) GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error) {
+//	args := m.Called(ctx, f)
+//	return args.Get(0).(*dto.ItemsOutputDTO[dto.ProductOutputDTO]), args.Error(1)
+//}
+//
+//func (m *MockService) CreateProduct(ctx context.Context, dto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+//	args := m.Called(ctx, dto)
+//	return args.Get(0).(*dto.ProductOutputDTO), args.Error(1)
+//}
+//
+//func (m *MockService) UpdateProduct(ctx context.Context, id uint, dto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+//	args := m.Called(ctx, id, dto)
+//	return args.Get(0).(*dto.ProductOutputDTO), args.Error(1)
+//}
+//
+//func (m *MockService) DeleteProducts(ctx context.Context, ids []uint) error {
+//	return m.Called(ctx, ids).Error(0)
+//}
+//
+//func mockErrorHandler(c *fiber.Ctx, err error) error {
+//	return err
+//}
+//
+//func TestGetProducts(t *testing.T) {
+//	tests := []struct {
+//		name    string
+//		setup   func(*MockService)
+//		wantErr bool
+//	}{
+//		{
+//			name: "Success",
+//			setup: func(m *MockService) {
+//				m.On("GetProducts", mock.Anything, mock.Anything).Return(new(dto.ItemsOutputDTO[dto.ProductOutputDTO]), nil)
 //			},
-//			RootPath:        "./locales",
-//			AcceptLanguages: []language.Tag{language.AmericanEnglish, language.BrazilianPortuguese},
-//			DefaultLanguage: language.AmericanEnglish,
-//			Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
-//		}),
-//	)
-//	listProducts := &dto.ItemsOutputDTO[dto.ProductOutputDTO]{
-//		Items: []dto.ProductOutputDTO{},
-//		Pagination: dto.PaginationDTO{
-//			CurrentPage: 0,
-//			PageSize:    0,
-//			TotalItems:  0,
-//			TotalPages:  0,
+//			wantErr: false,
+//		},
+//		{
+//			name: "ServiceError",
+//			setup: func(m *MockService) {
+//				m.On("GetProducts", mock.Anything, mock.Anything).Return(nil, errors.New("error"))
+//			},
+//			wantErr: true,
 //		},
 //	}
 //
-//	service := &mocks.ProductServiceMock{}
-//	var id1 uint = 1
-//	name1 := "Product 01"
-//	service.On("CreateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), &dto.ProductInputDTO{Name: &name1}).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			app := fiber.New()
+//			service := new(MockService)
+//			tt.setup(service)
+//			handler := &ProductHandler{
+//				productService: service,
+//				handlerError:   mockErrorHandler,
+//			}
 //
-//	service.On("GetProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), mock.AnythingOfType("*filter.Filter")).Return(listProducts, nil)
+//			c := app.AcquireCtx(&fiber.Ctx{})
+//			defer app.ReleaseCtx(c)
+//			c.Locals(helper.LocalFilter, &filter.Filter{})
 //
-//	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(nil, gorm.ErrRecordNotFound)
-//	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id1).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
-//	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id1, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id1, Name: &name1}, nil)
-//	service.On("DeleteProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), []uint{id1}).Return(nil)
-//
-//	var id2 uint = 2
-//	name2 := "Product 02"
-//	service.On("GetProductByID", mock.AnythingOfType("*fasthttp.RequestCtx"), id2).Return(&dto.ProductOutputDTO{ID: &id2, Name: &name2}, nil)
-//	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id2, mock.AnythingOfType("*dto.ProductInputDTO")).Return(&dto.ProductOutputDTO{ID: &id2, Name: &name2}, nil)
-//	service.On("DeleteProducts", mock.AnythingOfType("*fasthttp.RequestCtx"), []uint{id2}).Return(gorm.ErrRecordNotFound)
-//
-//	var id3 uint = 3
-//	service.On("UpdateProduct", mock.AnythingOfType("*fasthttp.RequestCtx"), id3, mock.AnythingOfType("*dto.ProductInputDTO")).Return(nil, pgutils.ErrDuplicatedKey)
-//
-//	NewProductHandler(app.Group(s.route), service)
-//	s.app = app
-//}
-//
-//// TearDownSuite function executes after all tests executed
-//func (s *ProductHandlerTestSuite) TearDownSuite() {
-//	fmt.Println(">>> From TearDownSuite")
-//}
-//
-//// SetupTest function executes before each test case
-//func (s *ProductHandlerTestSuite) SetupTest() {
-//	fmt.Println(">>> From SetupTest")
-//}
-//
-//// TestCreateProduct test to create a new product
-//func (s *ProductHandlerTestSuite) TestCreateProduct() {
-//	for _, test := range []struct {
-//		productID    int
-//		expectedCode int
-//		expectedBody string
-//	}{
-//		{1, fiber.StatusCreated, "{\"id\":1,\"name\":\"Product 01\"}"},
-//	} {
-//		productDTO := fmt.Sprintf("{\"name\":\"Product 0%v\"}", test.productID)
-//
-//		req := httptest.NewRequest(fiber.MethodPost, s.route, strings.NewReader(productDTO))
-//		req.Header.Set("Content-Type", "application/json")
-//
-//		resp, _ := s.app.Test(req, 1000)
-//		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
-//		if resp.StatusCode == fiber.StatusOK {
-//			body, err := io.ReadAll(resp.Body)
-//			s.NoError(err)
-//			s.Equal(test.expectedBody, string(body))
-//		}
+//			err := handler.getProducts(c)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
 //	}
 //}
 //
-//// TestGetProducts test to list products
-//func (s *ProductHandlerTestSuite) TestGetProducts() {
-//	req := httptest.NewRequest(fiber.MethodGet, s.route, nil)
-//	resp, _ := s.app.Test(req, 100)
-//	s.Equal(fiber.StatusOK, resp.StatusCode, "Wrong status code.")
-//	if resp.StatusCode == fiber.StatusOK {
-//		body, err := io.ReadAll(resp.Body)
-//		s.NoError(err)
-//		s.Equal("{\"items\":[],\"pagination\":{\"current_page\":0,\"page_size\":0,\"total_items\":0,\"total_pages\":0}}", string(body))
+//func TestGetProductByID(t *testing.T) {
+//	tests := []struct {
+//		name    string
+//		id      uint
+//		setup   func(*MockService)
+//		wantErr bool
+//	}{
+//		{
+//			name: "Success",
+//			id:   1,
+//			setup: func(m *MockService) {
+//				m.On("GetProductByID", mock.Anything, uint(1)).Return(new(dto.ProductOutputDTO), nil)
+//			},
+//			wantErr: false,
+//		},
+//		{
+//			name:    "InvalidID",
+//			id:      0,
+//			setup:   func(m *MockService) {},
+//			wantErr: true,
+//		},
+//		{
+//			name: "NotFoundError",
+//			id:   1,
+//			setup: func(m *MockService) {
+//				m.On("GetProductByID", mock.Anything, uint(1)).Return(nil, errors.New("not found"))
+//			},
+//			wantErr: true,
+//		},
+//	}
+//
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			app := fiber.New()
+//			service := new(MockService)
+//			tt.setup(service)
+//			handler := &ProductHandler{
+//				productService: service,
+//				handlerError:   mockErrorHandler,
+//			}
+//
+//			c := app.AcquireCtx(&fiber.Ctx{})
+//			defer app.ReleaseCtx(c)
+//			c.Locals(helper.LocalID, &filters.IDFilter{ID: tt.id})
+//
+//			err := handler.getProductByID(c)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
 //	}
 //}
 //
-//// TestCreateProduct test to create a new product
-//func (s *ProductHandlerTestSuite) TestGetProductByID() {
-//	for _, test := range []struct {
-//		productID    int
-//		expectedCode int
+//func TestCreateProduct(t *testing.T) {
+//	tests := []struct {
+//		name    string
+//		setup   func(*MockService)
+//		wantErr bool
 //	}{
-//		{1, fiber.StatusNotFound},
-//		{2, fiber.StatusOK},
-//		{0, fiber.StatusBadRequest},
-//		{-4, fiber.StatusBadRequest},
-//	} {
-//		req := httptest.NewRequest(fiber.MethodGet, fmt.Sprintf("%v/%v", s.route, test.productID), nil)
-//		resp, _ := s.app.Test(req, 100)
-//		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
-//		if resp.StatusCode == fiber.StatusOK {
-//			body, err := io.ReadAll(resp.Body)
-//			s.NoError(err)
-//			s.Equal("{\"id\":2,\"name\":\"Product 02\"}", string(body))
-//		}
+//		{
+//			name: "Success",
+//			setup: func(m *MockService) {
+//				m.On("CreateProduct", mock.Anything, mock.Anything).Return(new(dto.ProductOutputDTO), nil)
+//			},
+//			wantErr: false,
+//		},
+//		{
+//			name: "ServiceError",
+//			setup: func(m *MockService) {
+//				m.On("CreateProduct", mock.Anything, mock.Anything).Return(nil, errors.New("error"))
+//			},
+//			wantErr: true,
+//		},
+//	}
+//
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			app := fiber.New()
+//			service := new(MockService)
+//			tt.setup(service)
+//			handler := &ProductHandler{
+//				productService: service,
+//				handlerError:   mockErrorHandler,
+//			}
+//
+//			c := app.AcquireCtx(&fiber.Ctx{})
+//			defer app.ReleaseCtx(c)
+//			c.Locals(helper.LocalDTO, &dto.ProductInputDTO{})
+//
+//			err := handler.createProduct(c)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
 //	}
 //}
 //
-//// TestUpdateProductByID test to update a product
-//func (s *ProductHandlerTestSuite) TestUpdateProductByID() {
-//	for _, test := range []struct {
-//		productID    int
-//		expectedCode int
-//		expectedBody string
+//func TestUpdateProduct(t *testing.T) {
+//	tests := []struct {
+//		name    string
+//		id      uint
+//		setup   func(*MockService)
+//		wantErr bool
 //	}{
-//		{1, fiber.StatusOK, "{\"id\":1,\"name\":\"Product 01\"}"},
-//		{2, fiber.StatusOK, "{\"id\":2,\"name\":\"Product 02\"}"},
-//		{3, fiber.StatusConflict, "{\"code\":409,\"message\":\"Product already registered.\"}"},
-//		{0, fiber.StatusBadRequest, "{\"code\":400,\"message\":\"Invalid id, please specify valid id.\"}"},
-//		{-4, fiber.StatusBadRequest, "{\"code\":400,\"message\":\"Invalid id, please specify valid id.\"}"},
-//	} {
-//		productDTO := fmt.Sprintf("{\"name\":\"Product 0%v\"}", test.productID)
+//		{
+//			name: "Success",
+//			id:   1,
+//			setup: func(m *MockService) {
+//				m.On("UpdateProduct", mock.Anything, uint(1), mock.Anything).Return(new(dto.ProductOutputDTO), nil)
+//			},
+//			wantErr: false,
+//		},
+//		{
+//			name:    "InvalidID",
+//			id:      0,
+//			setup:   func(m *MockService) {},
+//			wantErr: true,
+//		},
+//		{
+//			name: "ServiceError",
+//			id:   1,
+//			setup: func(m *MockService) {
+//				m.On("UpdateProduct", mock.Anything, uint(1), mock.Anything).Return(nil, errors.New("error"))
+//			},
+//			wantErr: true,
+//		},
+//	}
 //
-//		req := httptest.NewRequest(fiber.MethodPut, fmt.Sprintf("%v/%v", s.route, test.productID), strings.NewReader(productDTO))
-//		req.Header.Set("Content-Type", "application/json")
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			app := fiber.New()
+//			service := new(MockService)
+//			tt.setup(service)
+//			handler := &ProductHandler{
+//				productService: service,
+//				handlerError:   mockErrorHandler,
+//			}
 //
-//		resp, _ := s.app.Test(req, 1000)
-//		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
-//		if resp.StatusCode == fiber.StatusOK {
-//			body, err := io.ReadAll(resp.Body)
-//			s.NoError(err)
-//			s.Equal(test.expectedBody, string(body))
-//		}
+//			c := app.AcquireCtx(&fiber.Ctx{})
+//			defer app.ReleaseCtx(c)
+//			c.Locals(helper.LocalID, &filters.IDFilter{ID: tt.id})
+//			c.Locals(helper.LocalDTO, &dto.ProductInputDTO{})
+//
+//			err := handler.updateProduct(c)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
 //	}
 //}
 //
-//// TestDeleteProductByID test to delete a product
-//func (s *ProductHandlerTestSuite) TestDeleteProductByID() {
-//	for _, test := range []struct {
-//		productID    int
-//		expectedCode int
+//func TestDeleteProducts(t *testing.T) {
+//	tests := []struct {
+//		name    string
+//		ids     []uint
+//		setup   func(*MockService)
+//		wantErr bool
 //	}{
-//		{1, fiber.StatusNoContent},
-//		{2, fiber.StatusNotFound},
-//		{-2, fiber.StatusInternalServerError},
-//	} {
-//		idsDTO := fmt.Sprintf("{\"ids\": [%v]}", test.productID)
-//		req := httptest.NewRequest(fiber.MethodDelete, s.route, strings.NewReader(idsDTO))
-//		req.Header.Set("Content-Type", "application/json")
+//		{
+//			name: "Success",
+//			ids:  []uint{1, 2, 3},
+//			setup: func(m *MockService) {
+//				m.On("DeleteProducts", mock.Anything, []uint{1, 2, 3}).Return(nil)
+//			},
+//			wantErr: false,
+//		},
+//		{
+//			name: "ParseError",
+//			ids:  nil,
+//			setup: func(m *MockService) {
+//				m.On("DeleteProducts", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+//			},
+//			wantErr: true,
+//		},
+//	}
 //
-//		resp, _ := s.app.Test(req, 1000)
-//		s.Equal(test.expectedCode, resp.StatusCode, "Wrong status code.")
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			app := fiber.New()
+//			service := new(MockService)
+//			tt.setup(service)
+//			handler := &ProductHandler{
+//				productService: service,
+//				handlerError:   mockErrorHandler,
+//			}
+//
+//			c := app.AcquireCtx(&fiber.Ctx{})
+//			defer app.ReleaseCtx(c)
+//			c.BodyParser(&dto.IDsInputDTO{IDs: tt.ids})
+//
+//			err := handler.deleteProducts(c)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
 //	}
 //}

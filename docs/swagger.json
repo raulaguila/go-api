@@ -262,7 +262,7 @@
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -613,7 +613,7 @@
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -970,7 +970,7 @@
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
