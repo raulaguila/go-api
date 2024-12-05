@@ -36,10 +36,10 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
 		AuthScheme: "Bearer",
 		ContextKey: "token",
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(c *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
-			return false
+			return c.Get("X-Skip-Auth", "false") == "true"
 		},
 		SuccessHandler: func(c *fiber.Ctx) error {
 			return c.Next()

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
@@ -45,7 +46,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 		}),
 	}
 
-	//route.Use(middleware.MidAccess)
+	route.Use(middleware.MidAccess)
 
 	route.Get("", middlewareFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)

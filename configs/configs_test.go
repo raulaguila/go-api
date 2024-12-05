@@ -38,7 +38,7 @@ func TestInit(t *testing.T) {
 				os.Remove(envPath)
 			},
 			wantErr:    false,
-			tzExpected: "UTC",
+			tzExpected: "America/Manaus",
 		},
 		{
 			name:       "DefaultLocalTime",

@@ -1,34 +1,48 @@
 package handler
 
 import (
-	"github.com/stretchr/testify/assert"
-	"net/http/httptest"
+	"github.com/gofiber/contrib/fiberi18n/v2"
+	"github.com/raulaguila/go-api/configs"
+	"golang.org/x/text/language"
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func TestMiscHandler_healthCheck(t *testing.T) {
+func setupMiscApp() *fiber.App {
 	app := fiber.New()
-	NewMiscHandler(app.Group("/health"))
+	app.Use(fiberi18n.New(&fiberi18n.Config{
+		Next: func(c *fiber.Ctx) bool {
+			return false
+		},
+		RootPath:        "./locales",
+		AcceptLanguages: []language.Tag{language.AmericanEnglish, language.BrazilianPortuguese},
+		DefaultLanguage: language.AmericanEnglish,
+		Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
+	}))
+	NewMiscHandler(app.Group("/"))
 
-	tests := []struct {
-		description  string
-		route        string
-		expectedCode int
-	}{
-		{"success", "/health", fiber.StatusOK},
-		{"invalid", "/user", fiber.StatusNotFound},
+	return app
+}
+
+func TestMiscHandler_healthCheck(t *testing.T) {
+	tests := []generalHandlerTest{
+		{
+			name:         "success",
+			method:       fiber.MethodGet,
+			endpoint:     "/",
+			body:         nil,
+			setupMocks:   func() {},
+			expectedCode: fiber.StatusOK,
+		},
+		{
+			name:         "error",
+			method:       fiber.MethodGet,
+			endpoint:     "/invalid",
+			body:         nil,
+			setupMocks:   func() {},
+			expectedCode: fiber.StatusNotFound,
+		},
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.description, func(t *testing.T) {
-			req := httptest.NewRequest(fiber.MethodGet, tt.route, nil)
-			req.Header.Set("Content-Type", "application/json")
-
-			resp, err := app.Test(req)
-			assert.NoError(t, err)
-			assert.Equal(t, tt.expectedCode, resp.StatusCode)
-		})
-	}
+	runGeneralHandlerTests(t, tests, setupMiscApp())
 }

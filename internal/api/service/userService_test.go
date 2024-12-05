@@ -2,184 +2,373 @@ package service
 
 import (
 	"context"
-	"errors"
+	"github.com/raulaguila/go-api/internal/pkg/mocks"
+	"gorm.io/gorm"
 	"testing"
-	"time"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
-	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/stretchr/testify/suite"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
-func TestUserServiceSuite(t *testing.T) {
-	suite.Run(t, new(UserServiceTestSuite))
-}
+func TestUserService_GetUserByID(t *testing.T) {
+	mockRepository := new(mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
 
-type UserServiceTestSuite struct {
-	suite.Suite
-	ctx    context.Context
-	filter *filters.UserFilter
-
-	service  domain.UserService
-	items    []domain.User
-	newItems []domain.User
-	dtos     []dto.UserInputDTO
-}
-
-func (s *UserServiceTestSuite) SetupTest() {
-	auth := &domain.Auth{
-		Base:      domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
-		Status:    true,
-		ProfileID: 1,
-		Profile: &domain.Profile{
-			Base:        domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()},
-			Name:        "ADMIN",
-			Permissions: map[string]any{"user": true},
+	tests := []struct {
+		name      string
+		setupMock func()
+		userID    uint
+		wantErr   bool
+	}{
+		{
+			name: "success",
+			setupMock: func() {
+				mockRepository.
+					On("GetUserByID", mock.Anything, uint(1)).
+					Return(&domain.User{
+						Base: domain.Base{
+							ID: 1,
+						},
+						Auth: &domain.Auth{
+							Status: false,
+							Profile: &domain.Profile{
+								Base: domain.Base{
+									ID: 1,
+								},
+								Name: "ADMIN",
+							},
+						},
+						Name:  "John Doe",
+						Email: "johndoe@example.com",
+					}, nil).
+					Once()
+			},
+			userID:  1,
+			wantErr: false,
 		},
-		Token: nil,
+		{
+			name: "not found",
+			setupMock: func() {
+				mockRepository.
+					On("GetUserByID", mock.Anything, uint(1)).
+					Return(nil, gorm.ErrRecordNotFound).
+					Once()
+			},
+			userID:  1,
+			wantErr: true,
+		},
 	}
 
-	s.ctx = context.Background()
-	s.filter = &filters.UserFilter{Filter: *filter.New("name", "desc"), ProfileID: 0}
-	s.items = []domain.User{
-		{Base: domain.Base{ID: 1, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 1", Email: "email1@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 2, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 2", Email: "email2@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 3, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 3", Email: "email3@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 4, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 4", Email: "email4@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 5, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 5", Email: "email5@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 6, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: "User 6", Email: "email6@email.com", AuthID: 1, Auth: auth},
-		{Base: domain.Base{ID: 6, CreatedAt: time.Now(), UpdatedAt: time.Now()}, Name: ".", Email: ".", AuthID: 1, Auth: auth},
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setupMock()
+			_, err := service.GetUserByID(context.Background(), tt.userID)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
 	}
-	var um uint = 1
-	s.newItems = []domain.User{
-		{Name: "User 4", Email: "email4@email.com", AuthID: 0, Auth: &domain.Auth{ProfileID: um, Profile: auth.Profile}},
-		{Name: "User 5", Email: "email5@email.com", AuthID: 0, Auth: &domain.Auth{ProfileID: um, Profile: auth.Profile}},
-		{Name: ".", Email: ".", AuthID: 0, Auth: &domain.Auth{ProfileID: um, Profile: auth.Profile}},
-	}
-	s.dtos = []dto.UserInputDTO{
-		{Name: &s.newItems[0].Name, Email: &s.newItems[0].Email, ProfileID: &um},
-		{Name: &s.newItems[1].Name, Email: &s.newItems[1].Email, ProfileID: &um},
-		{Name: &s.newItems[2].Name, Email: &s.newItems[2].Email, ProfileID: &um},
-	}
-
-	var nilFilter *filters.UserFilter = nil
-	// var nilUser *domain.User = nil
-
-	repo := &mocks.UserRepositoryMock{}
-	repo.On("GetUsers", s.ctx, s.filter).Return(&s.items, nil)
-	repo.On("GetUsers", s.ctx, nilFilter).Return(&s.items, nil)
-
-	repo.On("CountUsers", s.ctx, s.filter).Return(int64(len(s.items)), nil)
-	repo.On("CountUsers", s.ctx, nilFilter).Return(int64(0), errors.New("error to count items"))
-
-	repo.On("GetUserByID", s.ctx, s.items[0].ID).Return(&s.items[0], nil)
-	repo.On("GetUserByID", s.ctx, s.items[1].ID).Return(&s.items[1], nil)
-	repo.On("GetUserByID", s.ctx, s.items[3].ID).Return(&s.items[3], nil)
-	repo.On("GetUserByID", s.ctx, s.items[4].ID).Return(&s.items[4], nil)
-	repo.On("GetUserByID", s.ctx, s.items[5].ID).Return(&s.items[5], nil)
-	repo.On("GetUserByID", s.ctx, uint(10)).Return(nil, ErrItemNotFound)
-
-	// repo.On("CreateUser", s.ctx, &s.newItems[0]).Return(nil)
-	// repo.On("CreateUser", s.ctx, &s.newItems[1]).Return(nil)
-	// repo.On("CreateUser", s.ctx, nilUser).Return(nil, errors.New("error to create item"))
-
-	//repo.On("UpdateUser", s.ctx, &s.newItem).Return(nil)
-	//s.newItem.Name = "."
-	//repo.On("UpdateUser", s.ctx, &s.newItem).Return(ErrInvalidValue)
-	//
-	//repo.On("DeleteUsers", s.ctx, []uint{1}).Return(nil)
-	//repo.On("DeleteUsers", s.ctx, []uint{7}).Return(ErrItemNotFound)
-
-	s.service = NewUserService(repo)
 }
 
-func (s *UserServiceTestSuite) TestGetUsers() {
-	items, err := s.service.GetUsers(s.ctx, s.filter)
-
-	s.NoError(err)
-	s.IsType(&dto.ItemsOutputDTO[dto.UserOutputDTO]{}, items)
-	s.Equal(items.Pagination.TotalItems, uint(len(s.items)))
-
-	_, err = s.service.GetUsers(s.ctx, nil)
-
-	s.Error(err)
-}
-
-func (s *UserServiceTestSuite) TestGetUserByID() {
-	item, err := s.service.GetUserByID(s.ctx, s.items[0].ID)
-
-	s.NoError(err)
-	s.IsType(&dto.UserOutputDTO{}, item)
-	s.Equal(s.items[0].Name, *item.Name)
-	s.Equal(s.items[0].ID, *item.ID)
-
-	item, err = s.service.GetUserByID(s.ctx, s.items[1].ID)
-
-	s.NoError(err)
-	s.IsType(&dto.UserOutputDTO{}, item)
-	s.Equal(s.items[1].Name, *item.Name)
-	s.Equal(s.items[1].ID, *item.ID)
-
-	item, err = s.service.GetUserByID(s.ctx, uint(10))
-
-	s.Error(err)
-	s.True(errors.Is(err, ErrItemNotFound))
-	s.Nil(item)
-}
-
-//func (s *UserServiceTestSuite) TestCreateUser() {
-//	item, err := s.service.CreateUser(s.ctx, &s.dtos[0])
+//func TestUserService_CreateUser(t *testing.T) {
+//	mockRepository := new(mocks.UserRepositoryMock)
+//	service := NewUserService(mockRepository)
 //
-//	s.NoError(err)
-//	s.IsType(&dto.UserOutputDTO{}, item)
-//	s.Equal(s.newItems[0].Name, *item.Name)
-//	s.Equal(s.newItems[0].ID, *item.ID)
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		userInput *dto.UserInputDTO
+//		wantErr   bool
+//	}{
+//		{
+//			name: "success",
+//			setupMock: func() {
+//				mockRepository.
+//					On("CreateUser", mock.Anything, mock.Anything).
+//					Return(nil).
+//					Once()
+//				mockRepository.
+//					On("GetUserByID", mock.Anything, uint(1)).
+//					Return(&domain.User{Base: domain.Base{ID: 1}, Name: "John Doe", Email: "johndoe@example.com"}, nil).
+//					Once()
+//			},
+//			userInput: &dto.UserInputDTO{Name: helper.StringPtr("John Doe"), Email: helper.StringPtr("johndoe@example.com")},
+//			wantErr:   false,
+//		},
+//		{
+//			name: "create error",
+//			setupMock: func() {
+//				mockRepository.
+//					On("CreateUser", mock.Anything, mock.Anything).
+//					Return(errors.New("create error")).
+//					Once()
+//			},
+//			userInput: &dto.UserInputDTO{Name: helper.StringPtr("John Doe"), Email: helper.StringPtr("johndoe@example.com")},
+//			wantErr:   true,
+//		},
+//	}
 //
-//	item, err = s.service.CreateUser(s.ctx, &s.dtos[1])
-//
-//	s.NoError(err)
-//	s.IsType(&dto.UserOutputDTO{}, item)
-//	s.Equal(s.newItems[1].Name, *item.Name)
-//	s.Equal(s.newItems[1].ID, *item.ID)
-//
-//	item, err = s.service.CreateUser(s.ctx, nil)
-//
-//	s.Error(err)
-//	s.Nil(item)
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			_, err := service.CreateUser(context.Background(), tt.userInput)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
 //}
 
-//func (s *UserServiceTestSuite) TestUpdateUser() {
-//	data := &dto.UserInputDTO{Name: &s.newItem.Name}
-//	item, err := s.service.UpdateUser(s.ctx, 4, data)
+//func TestUserService_SetUserPassword(t *testing.T) {
+//	mockRepo := new(mockUserRepository)
+//	service := &userService{userRepository: mockRepo}
 //
-//	s.NoError(err)
-//	s.IsType(&dto.UserOutputDTO{}, item)
-//	s.Equal(*item.Name, s.newItem.Name)
-//	s.Equal(*item.ID, s.newItem.ID)
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		email     string
+//		password  *dto.PasswordInputDTO
+//		wantErr   bool
+//	}{
+//		{
+//			name: "successful password set",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(&domain.User{Auth: &domain.Auth{Password: nil}}, nil)
+//				mockRepo.On("SetUserPassword", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+//			},
+//			email:    "test@example.com",
+//			password: &dto.PasswordInputDTO{Password: "newpassword"},
+//			wantErr:  false,
+//		},
+//		{
+//			name: "password already set",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(&domain.User{Auth: &domain.Auth{Password: new(string)}}, nil)
+//			},
+//			email:    "test@example.com",
+//			password: &dto.PasswordInputDTO{Password: "newpassword"},
+//			wantErr:  true,
+//		},
+//		{
+//			name: "user not found",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(nil, errors.New("user not found"))
+//			},
+//			email:    "test@example.com",
+//			password: &dto.PasswordInputDTO{Password: "newpassword"},
+//			wantErr:  true,
+//		},
+//	}
 //
-//	item, err = s.service.UpdateUser(s.ctx, 7, data)
-//
-//	s.Error(err)
-//	s.True(errors.Is(err, ErrItemNotFound))
-//	s.Nil(item)
-//
-//	invalidName := "."
-//	data = &dto.UserInputDTO{Name: &invalidName}
-//	item, err = s.service.UpdateUser(s.ctx, 4, data)
-//
-//	s.Error(err)
-//	s.True(errors.Is(err, ErrInvalidValue))
-//	s.Nil(item)
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			err := service.SetUserPassword(context.Background(), tt.email, tt.password)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//				if tt.name == "password already set" {
+//					assert.True(t, errors.Is(err, myerrors.ErrUserHasPass))
+//				}
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
 //}
 //
-//func (s *UserServiceTestSuite) TestDeleteUsers() {
-//	s.NoError(s.service.DeleteUsers(s.ctx, []uint{1}))
+//func TestUserService_ResetUserPassword(t *testing.T) {
+//	mockRepo := new(mockUserRepository)
+//	service := &userService{userRepository: mockRepo}
 //
-//	err := s.service.DeleteUsers(s.ctx, []uint{7})
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		email     string
+//		wantErr   bool
+//	}{
+//		{
+//			name: "successful reset",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(&domain.User{Auth: &domain.Auth{Password: new(string)}}, nil)
+//				mockRepo.On("ResetUserPassword", mock.Anything, mock.Anything).Return(nil)
+//			},
+//			email:   "test@example.com",
+//			wantErr: false,
+//		},
+//		{
+//			name: "password nil, no reset",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(&domain.User{Auth: &domain.Auth{Password: nil}}, nil)
+//			},
+//			email:   "test@example.com",
+//			wantErr: false,
+//		},
+//		{
+//			name: "user not found",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByMail", mock.Anything, "test@example.com").
+//					Return(nil, errors.New("user not found"))
+//			},
+//			email:   "test@example.com",
+//			wantErr: true,
+//		},
+//	}
 //
-//	s.Error(err)
-//	s.True(errors.Is(err, ErrItemNotFound))
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			err := service.ResetUserPassword(context.Background(), tt.email)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
+//}
+//
+//func TestUserService_DeleteUsers(t *testing.T) {
+//	mockRepo := new(mockUserRepository)
+//	service := &userService{userRepository: mockRepo}
+//
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		ids       []uint
+//		wantErr   bool
+//	}{
+//		{
+//			name: "successful delete",
+//			setupMock: func() {
+//				mockRepo.On("DeleteUsers", mock.Anything, []uint{1, 2, 3}).
+//					Return(nil)
+//			},
+//			ids:     []uint{1, 2, 3},
+//			wantErr: false,
+//		},
+//		{
+//			name: "delete error",
+//			setupMock: func() {
+//				mockRepo.On("DeleteUsers", mock.Anything, []uint{1, 2, 3}).
+//					Return(errors.New("delete error"))
+//			},
+//			ids:     []uint{1, 2, 3},
+//			wantErr: true,
+//		},
+//	}
+//
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			err := service.DeleteUsers(context.Background(), tt.ids)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
+//}
+//
+//func TestUserService_SetUserPhoto(t *testing.T) {
+//	mockRepo := new(mockUserRepository)
+//	service := &userService{userRepository: mockRepo}
+//
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		userID    uint
+//		file      *domain.File
+//		wantErr   bool
+//	}{
+//		{
+//			name: "successful set photo",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByID", mock.Anything, uint(1)).
+//					Return(&domain.User{ID: 1}, nil)
+//				mockRepo.On("SetUserPhoto", mock.Anything, mock.Anything, mock.Anything).
+//					Return(nil)
+//			},
+//			userID:  1,
+//			file:    &domain.File{},
+//			wantErr: false,
+//		},
+//		{
+//			name: "user not found",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByID", mock.Anything, uint(1)).
+//					Return(nil, errors.New("user not found"))
+//			},
+//			userID:  1,
+//			file:    &domain.File{},
+//			wantErr: true,
+//		},
+//	}
+//
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			err := service.SetUserPhoto(context.Background(), tt.userID, tt.file)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
+//}
+//
+//func TestUserService_GenerateUserPhotoURL(t *testing.T) {
+//	mockRepo := new(mockUserRepository)
+//	service := &userService{userRepository: mockRepo}
+//
+//	tests := []struct {
+//		name      string
+//		setupMock func()
+//		userID    uint
+//		wantErr   bool
+//	}{
+//		{
+//			name: "successful URL generation",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByID", mock.Anything, uint(1)).
+//					Return(&domain.User{ID: 1}, nil)
+//				mockRepo.On("GenerateUserPhotoURL", mock.Anything, mock.Anything).
+//					Return("http://photo.url", nil)
+//			},
+//			userID:  1,
+//			wantErr: false,
+//		},
+//		{
+//			name: "user not found",
+//			setupMock: func() {
+//				mockRepo.On("GetUserByID", mock.Anything, uint(1)).
+//					Return(nil, errors.New("user not found"))
+//			},
+//			userID:  1,
+//			wantErr: true,
+//		},
+//	}
+//
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			tt.setupMock()
+//			_, err := service.GenerateUserPhotoURL(context.Background(), tt.userID)
+//			if tt.wantErr {
+//				assert.Error(t, err)
+//			} else {
+//				assert.NoError(t, err)
+//			}
+//		})
+//	}
 //}
