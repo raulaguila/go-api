@@ -11,12 +11,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // GetFileFromRequest returns a middleware that extracts a file from a request by the specified form key.
 // If a list of valid extensions is provided, it ensures the uploaded file matches one of the extensions.
-// Adds file information to the context's local storage under helper.LocalDTO for further processing.
+// Adds file information to the context's local storage under utils.LocalDTO for further processing.
 // Returns an error response if the file is invalid or if opening the file fails.
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
@@ -25,12 +25,12 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
+			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 		}
 
 		f, err := file.Open()
 		if err != nil {
-			return helper.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
+			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 		}
 		defer func(f multipart.File) {
 			if err := f.Close(); err != nil {
@@ -38,7 +38,7 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			}
 		}(f)
 
-		c.Locals(helper.LocalDTO, &domain.File{
+		c.Locals(utils.LocalDTO, &domain.File{
 			Name:      file.Filename,
 			Extension: filepath.Ext(file.Filename),
 			File:      f,

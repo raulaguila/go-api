@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 //go:embed locales/*
@@ -24,11 +24,11 @@ func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
 	if err != nil {
 		_, b, _, _ := runtime.Caller(0)
-		helper.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
+		utils.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
 	}
 
-	helper.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))
+	utils.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))
 
 	time.Local, err = time.LoadLocation(os.Getenv("TZ"))
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 }

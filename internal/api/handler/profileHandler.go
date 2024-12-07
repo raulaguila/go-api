@@ -11,14 +11,14 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // middlewareProfileDTO is a middleware handler that parses HTTP request data into a ProfileInputDTO object.
 // The parsed data is extracted from the request body and stored in the context with the key "localDTO".
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: helper.LocalDTO,
+	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
@@ -52,8 +52,8 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 
 	route.Get("", middlewareFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
-	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getProfile)
-	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
+	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProfile)
+	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", handler.deleteProfiles)
 }
 
@@ -67,11 +67,11 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter				query	filter.Filter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
-	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
+	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(utils.LocalFilter).(*filter.Filter))
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -89,13 +89,13 @@ func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
 // @Success      201  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      409  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      409  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [post]
 // @Security	 Bearer
 func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
-	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
+	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
 	profile, err := s.profileService.CreateProfile(c.Context(), profileDTO)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -114,13 +114,13 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile/{id} [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*filters.IDFilter)
 	profile, err := s.profileService.GetProfileByID(c.Context(), id.ID)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -140,14 +140,14 @@ func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
 func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
+	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
 	profile, err := s.profileService.UpdateProfile(c.Context(), id.ID, profileDTO)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -166,8 +166,8 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					body	dto.IDsInputDTO     true	"Profile ID"
 // @Success      204  {object}  	nil
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {

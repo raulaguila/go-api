@@ -140,7 +140,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  github_com_raulaguila_go-api_pkg_helper.HTTPResponse:
+  github_com_raulaguila_go-api_pkg_utils.HTTPResponse:
     properties:
       code:
         example: 400
@@ -200,11 +200,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: User authenticated
@@ -239,11 +239,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: User authentication
       tags:
       - Auth
@@ -274,11 +274,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: User refresh
       tags:
       - Auth
@@ -318,11 +318,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete products by IDs
@@ -387,7 +387,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: List products
@@ -430,15 +430,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert product
@@ -482,15 +482,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get product by ID
@@ -539,15 +539,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update product by ID
@@ -589,11 +589,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete profiles by IDs
@@ -658,7 +658,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profiles
@@ -701,15 +701,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert profile
@@ -753,15 +753,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profile by ID
@@ -810,15 +810,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update profile
@@ -860,11 +860,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete user
@@ -933,7 +933,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get users
@@ -976,15 +976,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert user
@@ -1028,15 +1028,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get user
@@ -1085,15 +1085,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update user
@@ -1134,11 +1134,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Reset user password
@@ -1185,11 +1185,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: Set user password
       tags:
       - User

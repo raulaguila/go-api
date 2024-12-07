@@ -12,7 +12,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // MidAccess is a fiber.Handler middleware for handling access controls.
@@ -28,10 +28,10 @@ var (
 // Auth stores the fetched user in the Fiber context locals for subsequent middlewares or handlers.
 func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 	decodedKey, err := base64.StdEncoding.DecodeString(base64key)
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 
 	parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 
 	return keyauth.New(keyauth.Config{
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
@@ -40,14 +40,14 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		Next: func(c *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
-			c.Locals(helper.LocalUser, new(domain.User))
+			c.Locals(utils.LocalUser, new(domain.User))
 			return os.Getenv("API_ACCEPT_SKIP_AUTH") == "1" && c.Get("X-Skip-Auth", "false") == "true"
 		},
 		SuccessHandler: func(c *fiber.Ctx) error {
 			return c.Next()
 		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error())
+			return utils.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error())
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
@@ -77,7 +77,7 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 				return false, errors.New(fiberi18n.MustLocalize(c, "disabledUser"))
 			}
 
-			c.Locals(helper.LocalUser, user)
+			c.Locals(utils.LocalUser, user)
 			return true, nil
 		},
 	})

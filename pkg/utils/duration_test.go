@@ -1,6 +1,7 @@
-package helper
+package utils
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
@@ -22,8 +23,7 @@ func TestDurationFromString(t *testing.T) {
 
 	for _, tt := range tests {
 		got, err := DurationFromString(tt.str, tt.factor)
-		if got != tt.want || err != tt.wantErr {
-			t.Errorf("DurationFromString(%q, %v) = %v, %v; want %v, %v", tt.str, tt.factor, got, err, tt.want, tt.wantErr)
-		}
+		assert.Equal(t, tt.want, got)
+		assert.Equal(t, tt.wantErr, err)
 	}
 }

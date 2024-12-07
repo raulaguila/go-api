@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/raulaguila/go-api/pkg/utils"
 	"io"
 	"time"
 
@@ -13,7 +12,7 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -130,7 +129,7 @@ func (u *User) GenerateToken(expire, originalKey, ip string) (string, error) {
 	now := time.Now()
 	claims := jwt.MapClaims{"token": u.Auth.Token, "ip": ip, "iat": now.Unix()}
 
-	life, err := helper.DurationFromString(expire, time.Minute)
+	life, err := utils.DurationFromString(expire, time.Minute)
 	if err == nil {
 		claims["exp"] = now.Add(life).Unix()
 	}

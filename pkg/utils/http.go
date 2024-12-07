@@ -1,8 +1,6 @@
-package helper
+package utils
 
-import (
-	"github.com/gofiber/fiber/v2"
-)
+import "github.com/gofiber/fiber/v2"
 
 // HTTPResponse represents a standard structure for HTTP responses containing a status code and a message.
 type HTTPResponse struct {

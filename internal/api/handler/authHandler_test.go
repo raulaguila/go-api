@@ -1,9 +1,6 @@
 package handler
 
 import (
-	"github.com/raulaguila/go-api/internal/api/middleware"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
-	"gorm.io/gorm"
 	"os"
 	"strings"
 	"testing"
@@ -12,10 +9,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/text/language"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 )
 
 func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {

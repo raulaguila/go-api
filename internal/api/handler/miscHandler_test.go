@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"github.com/gofiber/contrib/fiberi18n/v2"
-	"github.com/raulaguila/go-api/configs"
-	"golang.org/x/text/language"
 	"testing"
 
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/text/language"
+
+	"github.com/raulaguila/go-api/configs"
 )
 
 func setupMiscApp() *fiber.App {

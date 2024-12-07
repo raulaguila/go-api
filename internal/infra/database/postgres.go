@@ -12,8 +12,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // pgConnect establishes a connection to a PostgreSQL database using the provided database name and environment variables.
@@ -26,7 +26,7 @@ func pgConnect(dbName string) *gorm.DB {
 		NowFunc:     time.Now,
 		PrepareStmt: true,
 	})
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 
 	return db
 }
@@ -39,7 +39,7 @@ func createDataBase() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	con, err := db.WithContext(ctx).DB()
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 	defer func(con *sql.DB) {
 		_ = con.Close()
 	}(con)
@@ -48,7 +48,7 @@ func createDataBase() {
 		switch {
 		case errors.Is(pgutils.HandlerError(err), pgutils.ErrDatabaseAlreadyExists):
 		default:
-			helper.PanicIfErr(err)
+			utils.PanicIfErr(err)
 		}
 	}
 }

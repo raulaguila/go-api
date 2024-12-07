@@ -17,7 +17,7 @@ import (
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // @title 							Go API
@@ -34,7 +34,7 @@ import (
 // @description 					Type "Bearer" followed by a space and JWT token.
 func main() {
 	db, err := database.ConnectPostgresDB()
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
@@ -45,7 +45,7 @@ func main() {
 		AppName:               "Golang template",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
+			return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
 		},
 		BodyLimit: 50 * 1024 * 1024,
 	})
@@ -92,7 +92,7 @@ func main() {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"))
+				return utils.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"))
 			},
 		}),
 	)
