@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -19,7 +18,6 @@ import (
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/minioutils"
 )
 
 // @title 							Go API
@@ -37,9 +35,6 @@ import (
 func main() {
 	db, err := database.ConnectPostgresDB()
 	helper.PanicIfErr(err)
-
-	minioClient := minioutils.NewMinioClient()
-	helper.PanicIfErr(minioClient.InitBucket(context.Background(), os.Getenv("MINIO_BUCKET_FILES"), "*"))
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
@@ -102,5 +97,5 @@ func main() {
 		}),
 	)
 
-	handlers.HandleRequests(app, db, minioClient)
+	handlers.HandleRequests(app, db)
 }

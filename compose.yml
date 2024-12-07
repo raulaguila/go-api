@@ -3,7 +3,6 @@ name: api
 volumes:
 
   postgres_volume:
-  minio_volume:
 
 networks:
 
@@ -33,27 +32,6 @@ services:
       - api_network
     profiles: [ all, services ]
 
-  minio:
-
-    hostname: minio
-    container_name: api_minio
-    image: bitnami/minio:2024
-    restart: always
-    volumes:
-      - minio_volume:/bitnami/minio/data
-    ports:
-      - ${MINIO_API_PORT}:${MINIO_API_PORT}
-      - ${MINIO_WEB_PORT}:${MINIO_WEB_PORT}
-    environment:
-      - TZ=${TZ}
-      - MINIO_ROOT_USER=${MINIO_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_PASS}
-      - MINIO_API_PORT_NUMBER=${MINIO_API_PORT}
-      - MINIO_CONSOLE_PORT_NUMBER=${MINIO_WEB_PORT}
-    networks:
-      - api_network
-    profiles: [ all, services ]
-
   backend_binary:
 
     container_name: api_backend_binary
@@ -64,7 +42,6 @@ services:
     restart: always
     depends_on:
       - postgres
-      - minio
     ports:
       - ${API_PORT}:${API_PORT}
     tty: true
@@ -84,7 +61,6 @@ services:
     restart: always
     depends_on:
       - postgres
-      - minio
     ports:
       - ${API_PORT}:${API_PORT}
     tty: true

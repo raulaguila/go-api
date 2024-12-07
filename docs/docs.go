@@ -228,6 +228,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -313,6 +324,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -379,6 +401,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -436,6 +469,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get product by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -501,6 +545,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update product by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -577,6 +632,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get profiles",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -664,6 +730,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -730,6 +807,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -787,6 +875,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get profile by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -852,6 +951,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update profile",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -928,6 +1038,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get users",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1021,6 +1142,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -1087,6 +1219,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -1139,6 +1282,17 @@ const docTemplate = `{
                 ],
                 "summary": "Set user password",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1206,6 +1360,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -1261,6 +1426,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get user",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1328,6 +1504,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
                             "en-US",
                             "pt-BR"
                         ],
@@ -1373,115 +1560,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/{id}/photo": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get user photo",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get user photo",
-                "parameters": [
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Set user photo",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Set user photo",
-                "parameters": [
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "profile photo",
-                        "name": "photo",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -1609,7 +1687,7 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string",
-                    "example": "Automation"
+                    "example": "Product 01"
                 }
             }
         },
@@ -1622,7 +1700,7 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "example": "Automation"
+                    "example": "Product 01"
                 }
             }
         },

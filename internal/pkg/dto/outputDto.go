@@ -3,7 +3,7 @@ package dto
 type (
 	ProductOutputDTO struct {
 		ID   *uint   `json:"id,omitempty" example:"1"`
-		Name *string `json:"name,omitempty" example:"Automation"`
+		Name *string `json:"name,omitempty" example:"Product 01"`
 	}
 
 	ProfileOutputDTO struct {

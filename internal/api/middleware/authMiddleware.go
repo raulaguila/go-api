@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"log"
+	"os"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
@@ -39,7 +40,8 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		Next: func(c *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
-			return c.Get("X-Skip-Auth", "false") == "true"
+			c.Locals(helper.LocalUser, new(domain.User))
+			return os.Getenv("API_ACCEPT_SKIP_AUTH") == "1" && c.Get("X-Skip-Auth", "false") == "true"
 		},
 		SuccessHandler: func(c *fiber.Ctx) error {
 			return c.Next()

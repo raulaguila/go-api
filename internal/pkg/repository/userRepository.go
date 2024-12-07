@@ -3,9 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -14,23 +11,20 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/internal/pkg/postgre"
-	"github.com/raulaguila/go-api/pkg/minioutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// NewUserRepository creates and returns a new instance of UserRepository using the provided gorm DB and Minio client.
-func NewUserRepository(db *gorm.DB, minioClient *minioutils.Minio) domain.UserRepository {
+// NewUserRepository creates and returns a new instance of UserRepository using the provided gorm DB.
+func NewUserRepository(db *gorm.DB) domain.UserRepository {
 	return &userRepository{
-		db:    db,
-		minio: minioClient,
+		db: db,
 	}
 }
 
 // userRepository is a struct that provides methods to interact with the users in the database.
 type userRepository struct {
-	db    *gorm.DB
-	minio *minioutils.Minio
+	db *gorm.DB
 }
 
 // applyFilter applies the provided filters to the user database query within a context and returns a modified *gorm.DB.
@@ -63,7 +57,7 @@ func (s *userRepository) CountUsers(ctx context.Context, filter *filters.UserFil
 	var count int64
 
 	db := s.applyFilter(ctx, filter)
-	return count, db.Model(&domain.User{}).Count(&count).Error
+	return count, db.Model(new(domain.User)).Count(&count).Error
 }
 
 // GetUsers retrieves a list of users from the database based on the provided filter criteria.
@@ -75,13 +69,13 @@ func (s *userRepository) GetUsers(ctx context.Context, filter *filters.UserFilte
 		db = filter.ApplyPagination(db)
 	}
 
-	users := &[]domain.User{}
+	users := new([]domain.User)
 	return users, db.Preload(postgre.AuthProfile).Find(users).Error
 }
 
 // GetUserByID retrieves a user from the database by their unique user ID.
 func (s *userRepository) GetUserByID(ctx context.Context, userID uint) (*domain.User, error) {
-	user := &domain.User{}
+	user := new(domain.User)
 	return user, s.db.WithContext(ctx).Preload(postgre.AuthProfile).First(user, userID).Error
 }
 
@@ -147,7 +141,7 @@ func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error
 			return err
 		}
 
-		return tx.WithContext(ctx).Delete(&domain.Auth{}, auths).Error
+		return tx.WithContext(ctx).Delete(new(domain.Auth), auths).Error
 	})
 }
 
@@ -168,49 +162,13 @@ func (s *userRepository) ResetUserPassword(ctx context.Context, user *domain.Use
 // It takes a context, a user object, and a password input DTO as parameters.
 // Returns an error if password hashing or user update fails.
 func (s *userRepository) SetUserPassword(ctx context.Context, user *domain.User, pass *dto.PasswordInputDTO) error {
-	user.Auth.Token = new(string)
-	user.Auth.Password = new(string)
-
 	hash, err := bcrypt.GenerateFromPassword([]byte(*pass.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 
-	*user.Auth.Token = uuid.New().String()
-	*user.Auth.Password = string(hash)
+	user.Auth.Token = utils.Pointer(uuid.New().String())
+	user.Auth.Password = utils.Pointer(string(hash))
 
 	return s.UpdateUser(ctx, user)
-}
-
-// SetUserPhoto sets a user's photo by uploading a file to MinIO and updating the user's photo path in the database.
-// If a photo already exists, it deletes the existing photo before uploading the new one.
-func (s *userRepository) SetUserPhoto(ctx context.Context, user *domain.User, p *domain.File) error {
-	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if user.PhotoPath == nil {
-			user.PhotoPath = new(string)
-		} else if err := s.minio.DeleteObject(ctx, os.Getenv("MINIO_BUCKET_FILES"), *user.PhotoPath); err != nil {
-			return err
-		}
-
-		*user.PhotoPath = fmt.Sprintf("photos/%v%v", user.ID, p.Extension)
-		if err := s.minio.PutObject(ctx, os.Getenv("MINIO_BUCKET_FILES"), *user.PhotoPath, p.File); err != nil {
-			return err
-		}
-
-		return s.UpdateUser(ctx, user)
-	})
-}
-
-// GenerateUserPhotoURL generates a URL for the user's photo if a photo path exists. Returns the URL or an error.
-func (s *userRepository) GenerateUserPhotoURL(ctx context.Context, user *domain.User) (string, error) {
-	if user.PhotoPath == nil {
-		return "", myerrors.ErrUserHasNoPhoto
-	}
-
-	return s.minio.GenerateObjectURL(
-		ctx,
-		os.Getenv("MINIO_BUCKET_FILES"),
-		*user.PhotoPath,
-		fmt.Sprintf("%v%v", strings.ToLower(user.Name), filepath.Ext(*user.PhotoPath)),
-	)
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 	"os"
 	"time"
 
@@ -15,11 +16,11 @@ import (
 
 // autoMigrate migrates the database schema for Profile, Auth, User, and Product models using GORM's AutoMigrate function.
 func autoMigrate(db *gorm.DB) {
-	helper.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-	helper.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
-	helper.PanicIfErr(db.AutoMigrate(&domain.User{}))
+	helper.PanicIfErr(db.AutoMigrate(new(domain.Profile)))
+	helper.PanicIfErr(db.AutoMigrate(new(domain.Auth)))
+	helper.PanicIfErr(db.AutoMigrate(new(domain.User)))
 
-	helper.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+	helper.PanicIfErr(db.AutoMigrate(new(domain.Product)))
 }
 
 // createDefaults initializes the database with a default profile and user if they do not already exist.
@@ -37,10 +38,8 @@ func createDefaults(db *gorm.DB) {
 	defer cancel()
 	helper.PanicIfErr(db.WithContext(ctx).FirstOrCreate(profile, "name = ?", profile.Name).Error)
 
-	token := uuid.New().String()
 	hash, err := bcrypt.GenerateFromPassword([]byte(os.Getenv("ADM_PASS")), bcrypt.DefaultCost)
 	helper.PanicIfErr(err)
-	pass := string(hash)
 
 	user := &domain.User{
 		Name:  os.Getenv("ADM_NAME"),
@@ -48,8 +47,8 @@ func createDefaults(db *gorm.DB) {
 		Auth: &domain.Auth{
 			Status:    true,
 			ProfileID: profile.ID,
-			Token:     &token,
-			Password:  &pass,
+			Token:     utils.Pointer(uuid.New().String()),
+			Password:  utils.Pointer(string(hash)),
 		},
 	}
 

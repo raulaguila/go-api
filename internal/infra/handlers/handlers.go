@@ -16,7 +16,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/minioutils"
 )
 
 // profileRepository is an instance of the ProfileRepository interface for managing profile data operations.
@@ -38,10 +37,10 @@ var (
 )
 
 // initRepositories initializes the repositories for profile, user, and product entities using the provided database
-// connection and MinIO client. It assigns the created repository instances to their respective global variables.
-func initRepositories(db *gorm.DB, minioClient *minioutils.Minio) {
+// connection. It assigns the created repository instances to their respective global variables.
+func initRepositories(db *gorm.DB) {
 	profileRepository = repository.NewProfileRepository(db)
-	userRepository = repository.NewUserRepository(db, minioClient)
+	userRepository = repository.NewUserRepository(db)
 	productRepository = repository.NewProductRepository(db)
 }
 
@@ -73,7 +72,7 @@ func initHandlers(app *fiber.App) {
 }
 
 // HandleRequests configures route handlers for the app, initializes dependencies and starts the server.
-func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) {
+func HandleRequests(app *fiber.App, db *gorm.DB) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "1" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 
@@ -85,7 +84,7 @@ func HandleRequests(app *fiber.App, db *gorm.DB, minioClient *minioutils.Minio) 
 		}))
 	}
 
-	initRepositories(db, minioClient)
+	initRepositories(db)
 	initServices()
 	initHandlers(app)
 

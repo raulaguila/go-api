@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
@@ -39,6 +40,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 			},
 			"*": {
+				myerrors.ErrInvalidID:      []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
@@ -61,6 +63,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter				query	filter.Filter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
@@ -82,6 +85,7 @@ func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
 // @Success      201  {object}  	dto.ProfileOutputDTO
@@ -106,6 +110,7 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Success      200  {object}  	dto.ProfileOutputDTO
@@ -130,6 +135,7 @@ func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
@@ -156,6 +162,7 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					body	dto.IDsInputDTO     true	"Profile ID"
 // @Success      204  {object}  	nil
@@ -166,7 +173,7 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
 	toDelete := &dto.IDsInputDTO{}
 	if err := c.BodyParser(toDelete); err != nil {
-		return s.handlerError(c, err)
+		return s.handlerError(c, myerrors.ErrInvalidID)
 	}
 
 	if err := s.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {

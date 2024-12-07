@@ -52,6 +52,7 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
 			},
 			"*": {
+				myerrors.ErrInvalidID:           []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
 				myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
@@ -61,67 +62,17 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 			},
 		}),
 	}
-	extensions := []string{".jpg", ".jpeg", ".png"}
 
 	route.Put("/pass", middlewarePasswordDTO, handler.setUserPassword)
 	route.Delete("/pass", middlewareIDDTO, handler.resetUserPassword)
 
 	route.Use(middleware.MidAccess)
 
-	midFiles := middleware.GetFileFromRequest("photo", &extensions)
-
 	route.Get("", middlewareUserFilterDTO, handler.getUsers)
 	route.Post("", middlewareUserDTO, handler.createUser)
 	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getUser)
 	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareUserDTO, handler.updateUser)
 	route.Delete("", handler.deleteUser)
-	route.Put("/:"+helper.ParamID+"/photo", middlewareIDDTO, midFiles, handler.setUserPhoto)
-	route.Get("/:"+helper.ParamID+"/photo", middlewareIDDTO, handler.getUserPhoto)
-}
-
-// getUserPhoto godoc
-// @Summary      Get user photo
-// @Description  Get user photo
-// @Tags         User
-// @Accept       json
-// @Produce      json
-// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path	filters.IDFilter	true	"User ID"
-// @Success      200  {object}  	nil
-// @Failure      500  {object}  	helper.HTTPResponse
-// @Router       /user/{id}/photo [get]
-// @Security	 Bearer
-func (h *UserHandler) getUserPhoto(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	url, err := h.userService.GenerateUserPhotoURL(c.Context(), id.ID)
-	if err != nil {
-		return h.handlerError(c, err)
-	}
-
-	return c.Redirect(url, fiber.StatusOK)
-}
-
-// setUserPhoto godoc
-// @Summary      Set user photo
-// @Description  Set user photo
-// @Tags         User
-// @Accept       json
-// @Produce      json
-// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path    	filters.IDFilter	true	"User ID"
-// @Param		 photo				formData	file				true	"profile photo"
-// @Success      200  {object}  	nil
-// @Failure      500  {object}  	helper.HTTPResponse
-// @Router       /user/{id}/photo [put]
-// @Security	 Bearer
-func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	photo := c.Locals(helper.LocalDTO).(*domain.File)
-	if err := h.userService.SetUserPhoto(c.Context(), id.ID, photo); err != nil {
-		return h.handlerError(c, err)
-	}
-
-	return c.SendStatus(fiber.StatusOK)
 }
 
 // getUsers godoc
@@ -130,6 +81,7 @@ func (h *UserHandler) setUserPhoto(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter				query		filters.UserFilter	false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
@@ -151,6 +103,7 @@ func (h *UserHandler) getUsers(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        user				body		dto.UserInputDTO	true	"User model"
 // @Success      201  {object}  	dto.UserOutputDTO
@@ -175,6 +128,7 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path		filters.IDFilter	true	"User ID"
 // @Success      200  {object}  	dto.UserOutputDTO
@@ -199,6 +153,7 @@ func (h *UserHandler) getUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path		filters.IDFilter	true	"User ID"
 // @Param        user				body		dto.UserInputDTO	true	"User model"
@@ -225,6 +180,7 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					body		dto.IDsInputDTO		true	"User ID"
 // @Success      204  {object}  	nil
@@ -235,7 +191,7 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 	toDelete := &dto.IDsInputDTO{}
 	if err := c.BodyParser(toDelete); err != nil {
-		return h.handlerError(c, err)
+		return h.handlerError(c, myerrors.ErrInvalidID)
 	}
 
 	if err := h.userService.DeleteUsers(c.Context(), toDelete.IDs); err != nil {
@@ -251,6 +207,7 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        email				query		string				true 	"User email"
 // @Success      200  {object}  	nil
@@ -273,6 +230,7 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header		bool					false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string					false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        email				query		string					true	"User email" Format(email)
 // @Param        password			body		dto.PasswordInputDTO	true	"Password model"

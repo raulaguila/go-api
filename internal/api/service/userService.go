@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -66,8 +67,8 @@ func (s *userService) GetUsers(ctx context.Context, userFilter *filters.UserFilt
 	return &dto.ItemsOutputDTO[dto.UserOutputDTO]{
 		Items: outputUsers,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(userFilter.Page, 1)),
-			PageSize:    uint(max(userFilter.Limit, len(outputUsers))),
+			CurrentPage: uint(utils.Max(userFilter.Page, 1)),
+			PageSize:    uint(utils.Max(userFilter.Limit, len(outputUsers))),
 			TotalItems:  uint(count),
 			TotalPages:  uint(userFilter.CalcPages(count)),
 		},
@@ -163,24 +164,4 @@ func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dt
 	}
 
 	return s.userRepository.SetUserPassword(ctx, user, pass)
-}
-
-// SetUserPhoto updates the photo of a user by their userID with the provided file information in the database.
-func (s *userService) SetUserPhoto(ctx context.Context, userID uint, p *domain.File) error {
-	user, err := s.userRepository.GetUserByID(ctx, userID)
-	if err != nil {
-		return err
-	}
-
-	return s.userRepository.SetUserPhoto(ctx, user, p)
-}
-
-// GenerateUserPhotoURL generates a photo URL for a given user ID by retrieving the user and invoking the repository function.
-func (s *userService) GenerateUserPhotoURL(ctx context.Context, userID uint) (string, error) {
-	user, err := s.userRepository.GetUserByID(ctx, userID)
-	if err != nil {
-		return "", err
-	}
-
-	return s.userRepository.GenerateUserPhotoURL(ctx, user)
 }

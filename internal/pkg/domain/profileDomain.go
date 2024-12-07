@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
@@ -56,10 +57,7 @@ func (s *Profile) ToMap() *map[string]any {
 // Bind updates the Profile's Name and Permissions fields based on the provided ProfileInputDTO, and validates the Profile.
 func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
 	if p != nil {
-		if p.Name != nil {
-			s.Name = *p.Name
-		}
-
+		s.Name = utils.PointerValue(p.Name, s.Name)
 		if p.Permissions != nil {
 			s.Permissions = p.Permissions
 		}

@@ -39,6 +39,9 @@ func (s *ProductServiceMock) GetProducts(ctx context.Context, f *filter.Filter) 
 
 func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
 	ret := s.Called(ctx, productDTO)
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
 	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
 }
 

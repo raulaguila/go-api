@@ -37,7 +37,7 @@ func (s *profileRepository) applyFilter(ctx context.Context, filter *filter.Filt
 func (s *profileRepository) CountProfiles(ctx context.Context, filter *filter.Filter) (int64, error) {
 	var count int64
 	db := s.applyFilter(ctx, filter)
-	return count, db.Model(&domain.Profile{}).Count(&count).Error
+	return count, db.Model(new(domain.Profile)).Count(&count).Error
 }
 
 // GetProfiles retrieves a list of profiles from the database based on provided filter conditions.
@@ -48,14 +48,14 @@ func (s *profileRepository) GetProfiles(ctx context.Context, filter *filter.Filt
 		db = filter.ApplyPagination(db)
 	}
 
-	profiles := &[]domain.Profile{}
+	profiles := new([]domain.Profile)
 	return profiles, db.Find(profiles).Error
 }
 
 // GetProfileByID retrieves a Profile from the database using the provided profileID.
 // It takes a context and a uint profileID as parameters and returns a pointer to the Profile and an error if any occurs.
 func (s *profileRepository) GetProfileByID(ctx context.Context, profileID uint) (*domain.Profile, error) {
-	profile := &domain.Profile{}
+	profile := new(domain.Profile)
 	return profile, s.db.WithContext(ctx).First(profile, profileID).Error
 }
 
@@ -78,6 +78,6 @@ func (s *profileRepository) UpdateProfile(ctx context.Context, profile *domain.P
 // Returns an error if the operation fails, otherwise returns nil.
 func (s *profileRepository) DeleteProfiles(ctx context.Context, toDelete []uint) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		return tx.Delete(&domain.Profile{}, toDelete).Error
+		return tx.Delete(new(domain.Profile), toDelete).Error
 	})
 }

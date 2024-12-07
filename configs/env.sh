@@ -21,6 +21,7 @@ API_LOGGER='1'                                  # API Logger enable
 API_SWAGGO='1'                                  # API Swagger enable
 API_DEFAULT_SORT='updated_at'                   # API default column sort
 API_DEFAULT_ORDER='desc'                        # API default order
+API_ACCEPT_SKIP_AUTH='1'                        # API accept skip auth header
 
 ACCESS_TOKEN_EXPIRE='15'                        # [MINUTES] Access token expiration time
 ACCESS_TOKEN_PRIVAT='${tokens[0, 0]}'           # Token to encode access token - PRIVATE TOKEN
@@ -39,11 +40,4 @@ POSTGRES_BASE='go_api'                          # Postgres BASE
 ADM_NAME='Administrator'                        # User Default Name
 ADM_MAIL='admin@admin.com'                      # User Default Email
 ADM_PASS='12345678'                             # User Default Pass
-
-MINIO_HOST='minio'                              # Minio Container HOST
-MINIO_API_PORT='9004'                           # Minio Container API PORT
-MINIO_WEB_PORT='9005'                           # Minio Container WEB HOST
-MINIO_USER='minio'                              # Minio USER
-MINIO_PASS='minioroot'                          # Minio PASS
-MINIO_BUCKET_FILES='files'                      # Minio BUCKET
 " >.env

@@ -10,7 +10,6 @@ import (
 )
 
 func prepareDatabase() *gorm.DB {
-
 	db, _ := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
 		DryRun: true,
 	})
@@ -19,9 +18,7 @@ func prepareDatabase() *gorm.DB {
 }
 
 type Result struct {
-	ID   int
 	Name string
-	Age  int
 }
 
 func TestApplySearchLike(t *testing.T) {

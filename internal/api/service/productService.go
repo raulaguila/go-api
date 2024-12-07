@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -60,8 +61,8 @@ func (s *productService) GetProducts(ctx context.Context, productFilter *filter.
 	return &dto.ItemsOutputDTO[dto.ProductOutputDTO]{
 		Items: outputProducts,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(productFilter.Page, 1)),
-			PageSize:    uint(max(productFilter.Limit, len(outputProducts))),
+			CurrentPage: uint(utils.Max(productFilter.Page, 1)),
+			PageSize:    uint(utils.Max(productFilter.Limit, len(outputProducts))),
 			TotalItems:  uint(count),
 			TotalPages:  uint(productFilter.CalcPages(count)),
 		},
@@ -70,7 +71,7 @@ func (s *productService) GetProducts(ctx context.Context, productFilter *filter.
 
 // CreateProduct creates a new product in the repository using the provided input data and returns the created product.
 func (s *productService) CreateProduct(ctx context.Context, data *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
-	product := &domain.Product{}
+	product := new(domain.Product)
 	if err := product.Bind(data); err != nil {
 		return nil, err
 	}

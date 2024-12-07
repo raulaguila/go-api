@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"github.com/raulaguila/go-api/pkg/utils"
 	"io"
 	"time"
 
@@ -47,8 +48,6 @@ type (
 		DeleteUsers(context.Context, []uint) error
 		ResetUserPassword(context.Context, *User) error
 		SetUserPassword(context.Context, *User, *dto.PasswordInputDTO) error
-		SetUserPhoto(context.Context, *User, *File) error
-		GenerateUserPhotoURL(context.Context, *User) (string, error)
 	}
 
 	UserService interface {
@@ -60,8 +59,6 @@ type (
 		DeleteUsers(context.Context, []uint) error
 		ResetUserPassword(context.Context, string) error
 		SetUserPassword(context.Context, string, *dto.PasswordInputDTO) error
-		SetUserPhoto(context.Context, uint, *File) error
-		GenerateUserPhotoURL(context.Context, uint) (string, error)
 	}
 )
 
@@ -101,18 +98,10 @@ func (u *User) ToMap() *map[string]any {
 // Returns an error if the updated User does not pass validation.
 func (u *User) Bind(p *dto.UserInputDTO) error {
 	if p != nil {
-		if p.Name != nil {
-			u.Name = *p.Name
-		}
-		if p.Email != nil {
-			u.Email = *p.Email
-		}
-		if p.Status != nil {
-			u.Auth.Status = *p.Status
-		}
-		if p.ProfileID != nil {
-			u.Auth.ProfileID = *p.ProfileID
-		}
+		u.Name = utils.PointerValue(p.Name, u.Name)
+		u.Email = utils.PointerValue(p.Email, u.Email)
+		u.Auth.Status = utils.PointerValue(p.Status, u.Auth.Status)
+		u.Auth.ProfileID = utils.PointerValue(p.ProfileID, u.Auth.ProfileID)
 	}
 
 	return validator.StructValidator.Validate(u)

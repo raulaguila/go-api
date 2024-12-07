@@ -31,46 +31,9 @@ func setupUserApp(mockService *mocks.UserServiceMock) *fiber.App {
 		DefaultLanguage: language.AmericanEnglish,
 		Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 	}))
-	NewUserHandler(app.Group("/user"), mockService)
+	NewUserHandler(app.Group(""), mockService)
 
 	return app
-}
-
-func TestUserHandler_getUserPhoto(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
-	tests := []generalHandlerTest{
-		{
-			name:     "success",
-			method:   fiber.MethodGet,
-			endpoint: "/user/1/photo",
-			body:     nil,
-			setupMocks: func() {
-				mockService.On("GenerateUserPhotoURL", mock.Anything, uint(1)).Return("http://photo.url", nil).Once()
-			},
-			expectedCode: fiber.StatusOK,
-		},
-		{
-			name:     "not found",
-			method:   fiber.MethodGet,
-			endpoint: "/user/200/photo",
-			body:     nil,
-			setupMocks: func() {
-				mockService.On("GenerateUserPhotoURL", mock.Anything, uint(200)).Return("", gorm.ErrRecordNotFound).Once()
-			},
-			expectedCode: fiber.StatusNotFound,
-		},
-		{
-			name:     "general error",
-			method:   fiber.MethodGet,
-			endpoint: "/user/500/photo",
-			body:     nil,
-			setupMocks: func() {
-				mockService.On("GenerateUserPhotoURL", mock.Anything, uint(500)).Return("", errors.New("error")).Once()
-			},
-			expectedCode: fiber.StatusInternalServerError,
-		},
-	}
-	runGeneralHandlerTests(t, tests, setupUserApp(mockService))
 }
 
 func TestUserHandler_getUsers(t *testing.T) {
@@ -79,7 +42,7 @@ func TestUserHandler_getUsers(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodGet,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetUsers", mock.Anything, mock.Anything).Return(&dto.ItemsOutputDTO[dto.UserOutputDTO]{}, nil).Once()
@@ -89,7 +52,7 @@ func TestUserHandler_getUsers(t *testing.T) {
 		{
 			name:     "general error",
 			method:   fiber.MethodGet,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetUsers", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
@@ -106,7 +69,7 @@ func TestUserHandler_createUser(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodPost,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     strings.NewReader(`{"name":"user1","email":"example@email.com"}`),
 			setupMocks: func() {
 				mockService.On("CreateUser", mock.Anything, mock.Anything).Return(&dto.UserOutputDTO{}, nil).Once()
@@ -116,7 +79,7 @@ func TestUserHandler_createUser(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodPost,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     strings.NewReader(`{"name":"user1"}`),
 			setupMocks: func() {
 				mockService.On("CreateUser", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
@@ -133,7 +96,7 @@ func TestUserHandler_getUser(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodGet,
-			endpoint: "/user/1",
+			endpoint: "/1",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetUserByID", mock.Anything, uint(1)).Return(&dto.UserOutputDTO{}, nil).Once()
@@ -143,7 +106,7 @@ func TestUserHandler_getUser(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodGet,
-			endpoint: "/user/200",
+			endpoint: "/200",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetUserByID", mock.Anything, uint(200)).Return(nil, gorm.ErrRecordNotFound).Once()
@@ -160,7 +123,7 @@ func TestUserHandler_updateUser(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodPut,
-			endpoint: "/user/1",
+			endpoint: "/1",
 			body:     strings.NewReader(`{"name":"user1","email":"example@email.com"}`),
 			setupMocks: func() {
 				mockService.On("UpdateUser", mock.Anything, uint(1), mock.Anything).Return(&dto.UserOutputDTO{}, nil).Once()
@@ -170,7 +133,7 @@ func TestUserHandler_updateUser(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodPut,
-			endpoint: "/user/500",
+			endpoint: "/500",
 			body:     strings.NewReader(`{"name":"user1"}`),
 			setupMocks: func() {
 				mockService.On("UpdateUser", mock.Anything, uint(500), mock.Anything).Return(nil, errors.New("error")).Once()
@@ -180,7 +143,7 @@ func TestUserHandler_updateUser(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodPut,
-			endpoint: "/user/200",
+			endpoint: "/200",
 			body:     strings.NewReader(`{"name":"user1"}`),
 			setupMocks: func() {
 				mockService.On("UpdateUser", mock.Anything, uint(200), mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
@@ -197,7 +160,7 @@ func TestUserHandler_deleteUser(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodDelete,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4]}`),
 			setupMocks: func() {
 				mockService.On("DeleteUsers", mock.Anything, []uint{1, 2, 3, 4}).Return(nil).Once()
@@ -207,7 +170,7 @@ func TestUserHandler_deleteUser(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodDelete,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5]}`),
 			setupMocks: func() {
 				mockService.On("DeleteUsers", mock.Anything, []uint{1, 2, 3, 4, 5}).Return(errors.New("error")).Once()
@@ -217,7 +180,7 @@ func TestUserHandler_deleteUser(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodDelete,
-			endpoint: "/user",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5, 6]}`),
 			setupMocks: func() {
 				mockService.On("DeleteUsers", mock.Anything, []uint{1, 2, 3, 4, 5, 6}).Return(gorm.ErrRecordNotFound).Once()
@@ -234,7 +197,7 @@ func TestUserHandler_resetUserPassword(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodDelete,
-			endpoint: "/user/pass?email=example1@email.com",
+			endpoint: "/pass?email=example1@email.com",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("ResetUserPassword", mock.Anything, "example1@email.com").Return(nil).Once()
@@ -244,7 +207,7 @@ func TestUserHandler_resetUserPassword(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodDelete,
-			endpoint: "/user/pass?email=example2@email.com",
+			endpoint: "/pass?email=example2@email.com",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("ResetUserPassword", mock.Anything, "example2@email.com").Return(errors.New("error")).Once()
@@ -254,7 +217,7 @@ func TestUserHandler_resetUserPassword(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodDelete,
-			endpoint: "/user/pass?email=example3@email.com",
+			endpoint: "/pass?email=example3@email.com",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("ResetUserPassword", mock.Anything, "example3@email.com").Return(gorm.ErrRecordNotFound).Once()
@@ -271,7 +234,7 @@ func TestUserHandler_setUserPassword(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodPut,
-			endpoint: "/user/pass?email=example1@email.com",
+			endpoint: "/pass?email=example1@email.com",
 			body:     strings.NewReader(`{"password": "<PASSWORD>", "password_confirm": "<PASSWORD>"}`),
 			setupMocks: func() {
 				mockService.On("SetUserPassword", mock.Anything, "example1@email.com", mock.Anything).Return(nil).Once()
@@ -281,7 +244,7 @@ func TestUserHandler_setUserPassword(t *testing.T) {
 		{
 			name:         "different passwords",
 			method:       fiber.MethodPut,
-			endpoint:     "/user/pass?email=example1@email.com",
+			endpoint:     "/pass?email=example1@email.com",
 			body:         strings.NewReader(`{"password": "<PASSWORD>", "password_confirm": "<PASSWORD2>"}`),
 			setupMocks:   func() {},
 			expectedCode: fiber.StatusBadRequest,
@@ -289,7 +252,7 @@ func TestUserHandler_setUserPassword(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodPut,
-			endpoint: "/user/pass?email=example2@email.com",
+			endpoint: "/pass?email=example2@email.com",
 			body:     strings.NewReader(`{"password": "<PASSWORD>", "password_confirm": "<PASSWORD>"}`),
 			setupMocks: func() {
 				mockService.On("SetUserPassword", mock.Anything, "example2@email.com", mock.Anything).Return(errors.New("error")).Once()
@@ -299,56 +262,21 @@ func TestUserHandler_setUserPassword(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodPut,
-			endpoint: "/user/pass?email=example3@email.com",
+			endpoint: "/pass?email=example3@email.com",
 			body:     strings.NewReader(`{"password": "<PASSWORD>", "password_confirm": "<PASSWORD>"}`),
 			setupMocks: func() {
 				mockService.On("SetUserPassword", mock.Anything, "example3@email.com", mock.Anything).Return(gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
+		{
+			name:         "invalid id",
+			method:       fiber.MethodDelete,
+			endpoint:     "/",
+			body:         strings.NewReader(`{"ids": ["a", "b", "c", "d"]}`),
+			setupMocks:   func() {},
+			expectedCode: fiber.StatusBadRequest,
+		},
 	}
 	runGeneralHandlerTests(t, tests, setupUserApp(mockService))
 }
-
-//func TestUserHandler_setUserPhoto(t *testing.T) {
-//	userHandler, userService := setup()
-//
-//	tests := []struct {
-//		name    string
-//		setup   func()
-//		wantErr bool
-//	}{
-//		{
-//			name: "success",
-//			setup: func() {
-//				userService.On("SetUserPhoto", mock.Anything, uint(1), mock.Anything).Return(nil)
-//			},
-//			wantErr: false,
-//		},
-//		{
-//			name: "failure",
-//			setup: func() {
-//				userService.On("SetUserPhoto", mock.Anything, uint(1), mock.Anything).Return(errors.New("error"))
-//			},
-//			wantErr: true,
-//		},
-//	}
-//
-//	for _, tt := range tests {
-//		tt.setup()
-//		t.Run(tt.name, func(t *testing.T) {
-//			app := fiber.New()
-//			req := app.AcquireCtx(&fiber.Ctx{})
-//			req.Locals(helper.LocalID, &filters.IDFilter{ID: 1})
-//			req.Locals(helper.LocalDTO, &domain.File{})
-//
-//			err := userHandler.setUserPhoto(req)
-//			if tt.wantErr {
-//				require.NotNil(t, err)
-//			} else {
-//				require.Equal(t, fiber.StatusOK, req.Response().StatusCode())
-//			}
-//		})
-//		userService.AssertExpectations(t)
-//	}
-//}

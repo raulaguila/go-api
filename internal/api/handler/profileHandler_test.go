@@ -31,7 +31,7 @@ func setupProfileApp(mockService *mocks.ProfileServiceMock) *fiber.App {
 		DefaultLanguage: language.AmericanEnglish,
 		Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 	}))
-	NewProfileHandler(app.Group("/profile"), mockService)
+	NewProfileHandler(app.Group(""), mockService)
 
 	return app
 }
@@ -42,7 +42,7 @@ func TestProfileHandler_getProfiles(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodGet,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetProfiles", mock.Anything, mock.Anything).Return(&dto.ItemsOutputDTO[dto.ProfileOutputDTO]{}, nil).Once()
@@ -52,7 +52,7 @@ func TestProfileHandler_getProfiles(t *testing.T) {
 		{
 			name:     "general error",
 			method:   fiber.MethodGet,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetProfiles", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
@@ -69,7 +69,7 @@ func TestProfileHandler_createProfile(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodPost,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     strings.NewReader(`{"name":"admin"}`),
 			setupMocks: func() {
 				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(&dto.ProfileOutputDTO{}, nil).Once()
@@ -79,7 +79,7 @@ func TestProfileHandler_createProfile(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodPost,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     strings.NewReader(`{"name":"admin"}`),
 			setupMocks: func() {
 				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
@@ -96,7 +96,7 @@ func TestProfileHandler_getProfile(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodGet,
-			endpoint: "/profile/1",
+			endpoint: "/1",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetProfileByID", mock.Anything, uint(1)).Return(&dto.ProfileOutputDTO{}, nil).Once()
@@ -106,7 +106,7 @@ func TestProfileHandler_getProfile(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodGet,
-			endpoint: "/profile/200",
+			endpoint: "/200",
 			body:     nil,
 			setupMocks: func() {
 				mockService.On("GetProfileByID", mock.Anything, uint(200)).Return(nil, gorm.ErrRecordNotFound).Once()
@@ -123,7 +123,7 @@ func TestProfileHandler_updateProfile(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodPut,
-			endpoint: "/profile/1",
+			endpoint: "/1",
 			body:     strings.NewReader(`{"name":"user1","email":"example@email.com"}`),
 			setupMocks: func() {
 				mockService.On("UpdateProfile", mock.Anything, uint(1), mock.Anything).Return(&dto.ProfileOutputDTO{}, nil).Once()
@@ -133,7 +133,7 @@ func TestProfileHandler_updateProfile(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodPut,
-			endpoint: "/profile/500",
+			endpoint: "/500",
 			body:     strings.NewReader(`{"name":"user1"}`),
 			setupMocks: func() {
 				mockService.On("UpdateProfile", mock.Anything, uint(500), mock.Anything).Return(nil, errors.New("error")).Once()
@@ -143,7 +143,7 @@ func TestProfileHandler_updateProfile(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodPut,
-			endpoint: "/profile/200",
+			endpoint: "/200",
 			body:     strings.NewReader(`{"name":"user1"}`),
 			setupMocks: func() {
 				mockService.On("UpdateProfile", mock.Anything, uint(200), mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
@@ -160,7 +160,7 @@ func TestProfileHandler_deleteProfile(t *testing.T) {
 		{
 			name:     "success",
 			method:   fiber.MethodDelete,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4]}`),
 			setupMocks: func() {
 				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4}).Return(nil).Once()
@@ -170,7 +170,7 @@ func TestProfileHandler_deleteProfile(t *testing.T) {
 		{
 			name:     "bad request",
 			method:   fiber.MethodDelete,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5]}`),
 			setupMocks: func() {
 				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4, 5}).Return(errors.New("error")).Once()
@@ -180,12 +180,20 @@ func TestProfileHandler_deleteProfile(t *testing.T) {
 		{
 			name:     "not found",
 			method:   fiber.MethodDelete,
-			endpoint: "/profile",
+			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5, 6]}`),
 			setupMocks: func() {
 				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4, 5, 6}).Return(gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
+		},
+		{
+			name:         "invalid id",
+			method:       fiber.MethodDelete,
+			endpoint:     "/",
+			body:         strings.NewReader(`{"ids": ["a", "b", "c", "d"]}`),
+			setupMocks:   func() {},
+			expectedCode: fiber.StatusBadRequest,
 		},
 	}
 	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))

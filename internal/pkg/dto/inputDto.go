@@ -28,6 +28,6 @@ type (
 	}
 
 	ProductInputDTO struct {
-		Name *string `json:"name" example:"Automation"`
+		Name *string `json:"name" example:"Product 01"`
 	}
 )

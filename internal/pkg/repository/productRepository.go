@@ -36,7 +36,7 @@ func (s *productRepository) applyFilter(ctx context.Context, filter *filter.Filt
 func (s *productRepository) CountProducts(ctx context.Context, filter *filter.Filter) (int64, error) {
 	var count int64
 	db := s.applyFilter(ctx, filter)
-	return count, db.Model(&domain.Product{}).Count(&count).Error
+	return count, db.Model(new(domain.Product)).Count(&count).Error
 }
 
 // GetProducts retrieves a list of products from the database based on the provided filter criteria.
@@ -48,13 +48,13 @@ func (s *productRepository) GetProducts(ctx context.Context, filter *filter.Filt
 		db = filter.ApplyPagination(db)
 	}
 
-	products := &[]domain.Product{}
+	products := new([]domain.Product)
 	return products, db.Find(products).Error
 }
 
 // GetProductByID retrieves a product from the database using the specified product ID.
 func (s *productRepository) GetProductByID(ctx context.Context, productID uint) (*domain.Product, error) {
-	product := &domain.Product{}
+	product := new(domain.Product)
 	return product, s.db.WithContext(ctx).First(product, productID).Error
 }
 
@@ -73,6 +73,6 @@ func (s *productRepository) UpdateProduct(ctx context.Context, product *domain.P
 // It uses the provided context for database operations and returns an error if the deletion fails.
 func (s *productRepository) DeleteProducts(ctx context.Context, toDelete []uint) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		return tx.Delete(&domain.Product{}, toDelete).Error
+		return tx.Delete(new(domain.Product), toDelete).Error
 	})
 }

@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
@@ -45,9 +46,7 @@ func (s *Product) TableName() string { return ProductTableName }
 // The method returns any validation error encountered during the update process.
 func (s *Product) Bind(p *dto.ProductInputDTO) error {
 	if p != nil {
-		if p.Name != nil {
-			s.Name = *p.Name
-		}
+		s.Name = utils.PointerValue(p.Name, s.Name)
 	}
 
 	return validator.StructValidator.Validate(s)

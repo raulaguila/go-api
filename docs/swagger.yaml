@@ -75,7 +75,7 @@ definitions:
   github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO:
     properties:
       name:
-        example: Automation
+        example: Product 01
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO:
@@ -84,7 +84,7 @@ definitions:
         example: 1
         type: integer
       name:
-        example: Automation
+        example: Product 01
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
@@ -288,6 +288,14 @@ paths:
       - application/json
       description: Delete products by IDs
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -325,6 +333,14 @@ paths:
       - application/json
       description: List products
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -382,6 +398,14 @@ paths:
       - application/json
       description: Insert product
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -426,6 +450,14 @@ paths:
       - application/json
       description: Get product by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -469,6 +501,14 @@ paths:
       - application/json
       description: Update product by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -519,6 +559,14 @@ paths:
       - application/json
       description: Delete profiles by IDs
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -556,6 +604,14 @@ paths:
       - application/json
       description: Get profiles
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -613,6 +669,14 @@ paths:
       - application/json
       description: Insert profile
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -657,6 +721,14 @@ paths:
       - application/json
       description: Get profile by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -700,6 +772,14 @@ paths:
       - application/json
       description: Update profile by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -750,6 +830,14 @@ paths:
       - application/json
       description: Delete user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -787,6 +875,14 @@ paths:
       - application/json
       description: Get all users
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -848,6 +944,14 @@ paths:
       - application/json
       description: Insert user
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -892,6 +996,14 @@ paths:
       - application/json
       description: Get user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -935,6 +1047,14 @@ paths:
       - application/json
       description: Update user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -979,84 +1099,20 @@ paths:
       summary: Update user
       tags:
       - User
-  /user/{id}/photo:
-    get:
-      consumes:
-      - application/json
-      description: Get user photo
-      parameters:
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
-      security:
-      - Bearer: []
-      summary: Get user photo
-      tags:
-      - User
-    put:
-      consumes:
-      - application/json
-      description: Set user photo
-      parameters:
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      - description: profile photo
-        in: formData
-        name: photo
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
-      security:
-      - Bearer: []
-      summary: Set user photo
-      tags:
-      - User
   /user/pass:
     delete:
       consumes:
       - application/json
       description: Reset user password by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -1093,6 +1149,14 @@ paths:
       - application/json
       description: Set user password by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:

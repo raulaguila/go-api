@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"log"
+	"reflect"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
@@ -28,7 +29,7 @@ func newErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx
 			}
 		}
 
-		log.Printf("Undected error: %s\n", err.Error())
+		log.Printf("Undected error '%v': %s\n", reflect.TypeOf(err), err.Error())
 		return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, fiberi18n.MustLocalize(c, "errGeneric"))
 	}
 }

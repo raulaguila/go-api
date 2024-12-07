@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -60,8 +61,8 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 	return &dto.ItemsOutputDTO[dto.ProfileOutputDTO]{
 		Items: outputProfiles,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(max(profileFilter.Page, 1)),
-			PageSize:    uint(max(profileFilter.Limit, len(outputProfiles))),
+			CurrentPage: uint(utils.Max(profileFilter.Page, 1)),
+			PageSize:    uint(utils.Max(profileFilter.Limit, len(outputProfiles))),
 			TotalItems:  uint(count),
 			TotalPages:  uint(profileFilter.CalcPages(count)),
 		},
