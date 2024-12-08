@@ -54,7 +54,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	route.Post("", middlewareProfileDTO, handler.createProfile)
 	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
-	route.Delete("", handler.deleteProfiles)
+	route.Delete("", middlewareIDsDTO, handler.deleteProfiles)
 }
 
 // getProfiles godoc
@@ -171,11 +171,7 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
-	toDelete := &dto.IDsInputDTO{}
-	if err := c.BodyParser(toDelete); err != nil {
-		return s.handlerError(c, myerrors.ErrInvalidID)
-	}
-
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
 	if err := s.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}

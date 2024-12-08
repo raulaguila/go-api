@@ -72,7 +72,7 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 	route.Post("", middlewareUserDTO, handler.createUser)
 	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getUser)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareUserDTO, handler.updateUser)
-	route.Delete("", handler.deleteUser)
+	route.Delete("", middlewareIDsDTO, handler.deleteUser)
 }
 
 // getUsers godoc
@@ -189,11 +189,7 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
-	toDelete := &dto.IDsInputDTO{}
-	if err := c.BodyParser(toDelete); err != nil {
-		return h.handlerError(c, myerrors.ErrInvalidID)
-	}
-
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
 	if err := h.userService.DeleteUsers(c.Context(), toDelete.IDs); err != nil {
 		return h.handlerError(c, err)
 	}

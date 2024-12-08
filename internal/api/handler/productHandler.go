@@ -55,7 +55,7 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 	route.Post("", middlewareProductDTO, handler.createProduct)
 	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProductByID)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProductDTO, handler.updateProduct)
-	route.Delete("", handler.deleteProducts)
+	route.Delete("", middlewareIDsDTO, handler.deleteProducts)
 }
 
 // getProducts godoc
@@ -172,11 +172,7 @@ func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 // @Router       /product [delete]
 // @Security	 Bearer
 func (s *ProductHandler) deleteProducts(c *fiber.Ctx) error {
-	toDelete := &dto.IDsInputDTO{}
-	if err := c.BodyParser(toDelete); err != nil {
-		return s.handlerError(c, myerrors.ErrInvalidID)
-	}
-
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
 	if err := s.productService.DeleteProducts(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}
