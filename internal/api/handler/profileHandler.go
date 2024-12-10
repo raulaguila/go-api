@@ -2,10 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/middleware"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -15,23 +14,17 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// middlewareProfileDTO is a middleware handler that parses HTTP request data into a ProfileInputDTO object.
-// The parsed data is extracted from the request body and stored in the context with the key "localDTO".
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
 
-// ProfileHandler handles HTTP requests related to user profiles, utilizing a ProfileService to manage operations and errors.
 type ProfileHandler struct {
 	profileService domain.ProfileService
 	handlerError   func(*fiber.Ctx, error) error
 }
 
-// NewProfileHandler initializes the profile handler with the given router and profile service.
-// It configures the necessary routes and middleware for handling profile-related operations.
-// The handler includes custom error handling for database-related issues.
 func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	handler := &ProfileHandler{
 		profileService: ps,
@@ -40,7 +33,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 			},
 			"*": {
-				myerrors.ErrInvalidID:      []any{fiber.StatusBadRequest, "invalidID"},
+				utils.ErrInvalidID:         []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},

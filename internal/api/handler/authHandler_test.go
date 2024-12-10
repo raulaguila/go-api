@@ -15,7 +15,7 @@ import (
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {
@@ -69,7 +69,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, myerrors.ErrDisabledUser).Once()
+				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, utils.ErrDisabledUser).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},
@@ -79,7 +79,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, myerrors.ErrInvalidCredentials).Once()
+				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, utils.ErrInvalidCredentials).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},

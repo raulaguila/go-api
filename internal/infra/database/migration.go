@@ -13,7 +13,6 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// autoMigrate migrates the database schema for Profile, Auth, User, and Product models using GORM's AutoMigrate function.
 func autoMigrate(db *gorm.DB) {
 	utils.PanicIfErr(db.AutoMigrate(new(domain.Profile)))
 	utils.PanicIfErr(db.AutoMigrate(new(domain.Auth)))
@@ -22,7 +21,6 @@ func autoMigrate(db *gorm.DB) {
 	utils.PanicIfErr(db.AutoMigrate(new(domain.Product)))
 }
 
-// createDefaults initializes the database with a default profile and user if they do not already exist.
 func createDefaults(db *gorm.DB) {
 	profile := &domain.Profile{
 		Name: "ROOT",

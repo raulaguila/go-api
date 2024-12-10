@@ -18,8 +18,6 @@ var Locales embed.FS
 //go:embed version.txt
 var version string
 
-// init initializes the environment configuration by loading variables from a .env file and setting system properties.
-// It panics if any error occurs during the loading of environment variables or setting time location.
 func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
 	if err != nil {

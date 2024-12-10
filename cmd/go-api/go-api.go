@@ -31,7 +31,7 @@ import (
 // @securityDefinitions.apiKey		Bearer
 // @in								header
 // @name							Authorization
-// @description 					Type "Bearer" followed by a space and JWT token.
+// @description 					Type "Bearer" followed by a space and the JWT token.
 func main() {
 	db, err := database.ConnectPostgresDB()
 	utils.PanicIfErr(err)

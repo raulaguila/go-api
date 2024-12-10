@@ -6,7 +6,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Config defines the configuration for a middleware.
 type Config struct {
 	// ContextKey string key to store the dto object into context.
 	// Optional. Default: "localDTO".

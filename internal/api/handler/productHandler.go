@@ -9,30 +9,22 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// middlewareProductDTO is a middleware that extracts a ProductInputDTO from the request body and stores it in the context.
 var middlewareProductDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProductInputDTO{},
 })
 
-// ProductHandler is responsible for handling HTTP requests related to product operations.
-// It interacts with the domain.ProductService to perform actions such as creating, updating, deleting, and retrieving products.
-// The handlerError function is used to manage and format error responses for the HTTP context.
 type ProductHandler struct {
 	productService domain.ProductService
 	handlerError   func(*fiber.Ctx, error) error
 }
 
-// NewProductHandler initializes and registers the routes related to product operations with the given Fiber router.
-// It handles CRUD operations for products by attaching their respective handler functions to the routes.
-// It uses the given ProductService for performing business logic related to products.
 func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 	handler := &ProductHandler{
 		productService: ps,
@@ -41,7 +33,7 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "productUsed"},
 			},
 			"*": {
-				myerrors.ErrInvalidID:      []any{fiber.StatusBadRequest, "invalidID"},
+				utils.ErrInvalidID:         []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "productRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "productNotFound"},

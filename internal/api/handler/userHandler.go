@@ -11,33 +11,27 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// middlewareUserDTO is a Fiber middleware configured to parse and store UserInputDTO data from the request body into context.
 var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
-// middlewarePasswordDTO is a middleware configuration that extracts and parses password data from HTTP request bodies.
-// The parsed data is stored in the request context under a specified key for use in further processing.
 var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
 
-// UserHandler is responsible for handling user-related HTTP routes and delegating operations to the UserService.
 type UserHandler struct {
 	userService  domain.UserService
 	handlerError func(*fiber.Ctx, error) error
 }
 
-// NewUserHandler sets up the routes for user operations and returns a UserHandler instance.
 func NewUserHandler(route fiber.Router, us domain.UserService) {
 	handler := &UserHandler{
 		userService: us,
@@ -52,22 +46,22 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
 			},
 			"*": {
-				myerrors.ErrInvalidID:           []any{fiber.StatusBadRequest, "invalidID"},
-				pgutils.ErrUndefinedColumn:      []any{fiber.StatusBadRequest, "undefinedColumn"},
-				pgutils.ErrDuplicatedKey:        []any{fiber.StatusConflict, "userRegistered"},
-				myerrors.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
-				myerrors.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
-				myerrors.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
-				gorm.ErrRecordNotFound:          []any{fiber.StatusNotFound, "userNotFound"},
+				utils.ErrInvalidID:           []any{fiber.StatusBadRequest, "invalidID"},
+				pgutils.ErrUndefinedColumn:   []any{fiber.StatusBadRequest, "undefinedColumn"},
+				pgutils.ErrDuplicatedKey:     []any{fiber.StatusConflict, "userRegistered"},
+				utils.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
+				utils.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
+				utils.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
+				gorm.ErrRecordNotFound:       []any{fiber.StatusNotFound, "userNotFound"},
 			},
 		}),
 	}
 
 	route.Put("/pass", middlewarePasswordDTO, handler.setUserPassword)
-	route.Delete("/pass", middlewareIDDTO, handler.resetUserPassword)
 
 	route.Use(middleware.MidAccess)
 
+	route.Delete("/pass", middlewareIDDTO, handler.resetUserPassword)
 	route.Get("", middlewareUserFilterDTO, handler.getUsers)
 	route.Post("", middlewareUserDTO, handler.createUser)
 	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getUser)
@@ -237,7 +231,7 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 	pass := c.Locals(utils.LocalDTO).(*dto.PasswordInputDTO)
 	if pass.Password == nil || pass.PasswordConfirm == nil || *pass.Password != *pass.PasswordConfirm {
-		return h.handlerError(c, myerrors.ErrPasswordsDoNotMatch)
+		return h.handlerError(c, utils.ErrPasswordsDoNotMatch)
 	}
 
 	mail := strings.ReplaceAll(c.Query(utils.ParamMail), "%40", "@")

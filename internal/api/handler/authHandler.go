@@ -8,7 +8,6 @@ import (
 	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/myerrors"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -17,15 +16,14 @@ type AuthHandler struct {
 	handlerError func(*fiber.Ctx, error) error
 }
 
-// NewAuthHandler initializes the authentication handler with routes for login, user info retrieval, and token refresh.
 func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 	handler := &AuthHandler{
 		authService: as,
 		handlerError: newErrorHandler(map[string]map[error][]any{
 			"*": {
-				myerrors.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
-				myerrors.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
-				gorm.ErrRecordNotFound:         []any{fiber.StatusNotFound, "userNotFound"},
+				utils.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
+				utils.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
+				gorm.ErrRecordNotFound:      []any{fiber.StatusNotFound, "userNotFound"},
 			},
 		}),
 	}
