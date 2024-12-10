@@ -41,7 +41,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(&dto.AuthOutputDTO{}, nil).Once()
+				nockService.On("Login", mock.Anything, mock.Anything).Return(&dto.AuthOutputDTO{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -59,7 +59,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
+				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
@@ -69,7 +69,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, utils.ErrDisabledUser).Once()
+				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, utils.ErrDisabledUser).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},
@@ -79,7 +79,7 @@ func TestAuthHandler_login(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Login", mock.Anything, mock.Anything, mock.Anything).Return(nil, utils.ErrInvalidCredentials).Once()
+				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, utils.ErrInvalidCredentials).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},
@@ -117,7 +117,7 @@ func TestAuthHandler_refresh(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
 			setupMocks: func() {
-				nockService.On("Refresh", mock.Anything, mock.Anything).Return(&dto.AuthOutputDTO{}).Once()
+				nockService.On("Refresh", mock.Anything).Return(&dto.AuthOutputDTO{}).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},

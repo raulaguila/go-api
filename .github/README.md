@@ -138,5 +138,4 @@ Authorization: Bearer <token>
 
 ## License
 
-Copyright © 2023 [raulaguila](https://github.com/raulaguila).
-This project is [MIT](../LICENSE) licensed.
+Copyright © 2023 [raulaguila](https://github.com/raulaguila). This project is [MIT](../LICENSE) licensed.

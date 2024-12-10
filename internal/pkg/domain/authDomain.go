@@ -19,8 +19,8 @@ type (
 	}
 
 	AuthService interface {
-		Login(context.Context, *dto.AuthInputDTO, string) (*dto.AuthOutputDTO, error)
-		Refresh(*User, string) *dto.AuthOutputDTO
+		Login(context.Context, *dto.AuthInputDTO) (*dto.AuthOutputDTO, error)
+		Refresh(*User) *dto.AuthOutputDTO
 		Me(*User) *dto.UserOutputDTO
 	}
 )

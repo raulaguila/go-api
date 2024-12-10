@@ -5,5 +5,5 @@ type Numbers interface {
 }
 
 type Generic interface {
-	bool | string | Numbers
+	bool | string | []string | Numbers
 }

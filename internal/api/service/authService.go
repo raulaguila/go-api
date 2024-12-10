@@ -37,12 +37,9 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 	}
 }
 
-func (s *authService) generateAuthOutputDTO(user *domain.User, ip string) *dto.AuthOutputDTO {
-	accessTime := os.Getenv("ACCESS_TOKEN_EXPIRE")
-	refreshTime := os.Getenv("RFRESH_TOKEN_EXPIRE")
-
-	accessToken, _ := user.GenerateToken(accessTime, os.Getenv("ACCESS_TOKEN_PRIVAT"), ip)
-	refreshToken, _ := user.GenerateToken(refreshTime, os.Getenv("RFRESH_TOKEN_PRIVAT"), ip)
+func (s *authService) generateAuthOutputDTO(user *domain.User) *dto.AuthOutputDTO {
+	accessToken, _ := user.GenerateToken(os.Getenv("ACCESS_TOKEN_EXPIRE"), os.Getenv("ACCESS_TOKEN_PRIVAT"))
+	refreshToken, _ := user.GenerateToken(os.Getenv("RFRESH_TOKEN_EXPIRE"), os.Getenv("RFRESH_TOKEN_PRIVAT"))
 
 	return &dto.AuthOutputDTO{
 		User:         s.generateUserOutputDTO(user),
@@ -51,7 +48,7 @@ func (s *authService) generateAuthOutputDTO(user *domain.User, ip string) *dto.A
 	}
 }
 
-func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO, ip string) (*dto.AuthOutputDTO, error) {
+func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) (*dto.AuthOutputDTO, error) {
 	user, err := s.userRepository.GetUserByMail(ctx, credentials.Login)
 	if err != nil {
 		return nil, err
@@ -65,13 +62,13 @@ func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO, 
 		return nil, utils.ErrDisabledUser
 	}
 
-	return s.generateAuthOutputDTO(user, ip), nil
+	return s.generateAuthOutputDTO(user), nil
 }
 
 func (s *authService) Me(user *domain.User) *dto.UserOutputDTO {
 	return s.generateUserOutputDTO(user)
 }
 
-func (s *authService) Refresh(user *domain.User, ip string) *dto.AuthOutputDTO {
-	return s.generateAuthOutputDTO(user, ip)
+func (s *authService) Refresh(user *domain.User) *dto.AuthOutputDTO {
+	return s.generateAuthOutputDTO(user)
 }

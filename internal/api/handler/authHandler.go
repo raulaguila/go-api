@@ -46,12 +46,12 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /auth [post]
 func (s *AuthHandler) login(c *fiber.Ctx) error {
-	credentials := &dto.AuthInputDTO{}
+	credentials := new(dto.AuthInputDTO)
 	if err := c.BodyParser(credentials); err != nil {
 		return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
 	}
 
-	authResponse, err := s.authService.Login(c.Context(), credentials, c.IP())
+	authResponse, err := s.authService.Login(c.Context(), credentials)
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -73,8 +73,7 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
-	user := c.Locals(utils.LocalUser).(*domain.User)
-	return c.Status(fiber.StatusOK).JSON(s.authService.Me(user))
+	return c.Status(fiber.StatusOK).JSON(s.authService.Me(c.Locals(utils.LocalUser).(*domain.User)))
 }
 
 // refresh godoc
@@ -90,6 +89,5 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
-	user := c.Locals(utils.LocalUser).(*domain.User)
-	return c.Status(fiber.StatusOK).JSON(s.authService.Refresh(user, c.IP()))
+	return c.Status(fiber.StatusOK).JSON(s.authService.Refresh(c.Locals(utils.LocalUser).(*domain.User)))
 }

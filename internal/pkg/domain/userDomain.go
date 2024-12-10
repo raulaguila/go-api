@@ -104,7 +104,7 @@ func (u *User) ValidatePassword(password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(*u.Auth.Password), []byte(password)) == nil
 }
 
-func (u *User) GenerateToken(expire, originalKey, ip string) (string, error) {
+func (u *User) GenerateToken(expire, originalKey string) (string, error) {
 	decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
 	if err != nil {
 		return "", fmt.Errorf("could not decode key: %v", err.Error())
@@ -116,7 +116,7 @@ func (u *User) GenerateToken(expire, originalKey, ip string) (string, error) {
 	}
 
 	now := time.Now()
-	claims := jwt.MapClaims{"token": u.Auth.Token, "ip": ip, "iat": now.Unix()}
+	claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
 
 	life, err := utils.DurationFromString(expire, time.Minute)
 	if err == nil {
