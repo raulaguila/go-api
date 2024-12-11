@@ -15,15 +15,11 @@ func TestMax(t *testing.T) {
 	tests := []testStruct[int]{
 		{"maxEmpty", []int{}, 0},
 		{"maxSingle", []int{5}, 5},
-		{"maxMultiple", []int{1, 2, 3}, 3},
+		{"maxMultiple", []int{1, 2, 3, 5, 0, 4}, 5},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := Max(tt.numbers...)
-			if result != tt.expected {
-				t.Errorf("expected %d, got %d", tt.expected, result)
-			}
+			assert.Equal(t, tt.expected, Max(tt.numbers...))
 		})
 	}
 }
@@ -34,13 +30,9 @@ func TestMin(t *testing.T) {
 		{"minSingle", []int{5}, 5},
 		{"minMultiple", []int{5, 7, 1, 2, 3}, 1},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := Min(tt.numbers...)
-			if result != tt.expected {
-				t.Errorf("expected %d, got %d", tt.expected, result)
-			}
+			assert.Equal(t, tt.expected, Min(tt.numbers...))
 		})
 	}
 }
@@ -54,8 +46,7 @@ func TestSum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			sum := Sum(tt.numbers...)
-			assert.Equal(t, tt.expected, sum)
+			assert.Equal(t, tt.expected, Sum(tt.numbers...))
 		})
 	}
 }
@@ -69,8 +60,7 @@ func TestAvg(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			sum := Avg(tt.numbers...)
-			assert.Equal(t, tt.expected, sum)
+			assert.Equal(t, tt.expected, Avg(tt.numbers...))
 		})
 	}
 }

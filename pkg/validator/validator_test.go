@@ -1,7 +1,9 @@
 package validator
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -23,14 +25,16 @@ func TestValidatorStruct_Validate(t *testing.T) {
 		{"InvalidEmail", testStruct{ID: 1, Name: "John", Email: "john@com"}, true},
 		{"NegativeID", testStruct{ID: -1, Name: "John", Email: "john@example.com"}, true},
 		{"ZeroID", testStruct{ID: 0, Name: "John", Email: "john@example.com"}, true},
+		{"EmptyStruct", testStruct{}, true},
+		{"ValidWithLongName", testStruct{ID: 2, Name: "John Doe", Email: "johndoe@example.com"}, false},
+		{"VeryLongEmail", testStruct{ID: 3, Name: "Jane", Email: "a.really.long.email.address@example.com"}, false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			v := validatorStruct{validator: validatorInstance}
-			if err := v.Validate(tt.input); (err != nil) != tt.wantErr {
-				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := v.Validate(tt.input)
+			assert.Equal(t, tt.wantErr, err != nil, fmt.Sprintf("Test name: %v - Validate() error = %v, wantErr %v", tt.name, err, tt.wantErr))
 		})
 	}
 }
