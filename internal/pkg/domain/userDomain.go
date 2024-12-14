@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"github.com/google/uuid"
 	"io"
 	"time"
 
@@ -21,11 +22,10 @@ const UserTableName string = "users"
 type (
 	User struct {
 		Base
-		Name      string  `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
-		Email     string  `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		PhotoPath *string `gorm:"column:photo;type:varchar(150);null;default:null;"`
-		AuthID    uint    `gorm:"column:auth_id;type:bigint;not null;index;"`
-		Auth      *Auth   `gorm:"constraint:OnDelete:CASCADE"`
+		Name   string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
+		Email  string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
+		AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
+		Auth   *Auth  `gorm:"constraint:OnDelete:CASCADE"`
 	}
 
 	File struct {
@@ -43,8 +43,6 @@ type (
 		CreateUser(context.Context, *User) error
 		UpdateUser(context.Context, *User) error
 		DeleteUsers(context.Context, []uint) error
-		ResetUserPassword(context.Context, *User) error
-		SetUserPassword(context.Context, *User, *dto.PasswordInputDTO) error
 	}
 
 	UserService interface {
@@ -68,17 +66,12 @@ func (u *User) ToMap() *map[string]any {
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
-		"photo":   nil,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
 			"token":      nil,
 			"password":   nil,
 		},
-	}
-
-	if u.PhotoPath != nil {
-		mapped["photo"] = *u.PhotoPath
 	}
 
 	if u.Auth.Password != nil {
@@ -98,6 +91,23 @@ func (u *User) Bind(p *dto.UserInputDTO) error {
 	}
 
 	return validator.StructValidator.Validate(u)
+}
+
+func (u *User) SetPassword(password string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	u.Auth.Token = utils.Pointer(uuid.New().String())
+	u.Auth.Password = utils.Pointer(string(hash))
+
+	return nil
+}
+
+func (u *User) ResetPassword() {
+	u.Auth.Token = nil
+	u.Auth.Password = nil
 }
 
 func (u *User) ValidatePassword(password string) bool {

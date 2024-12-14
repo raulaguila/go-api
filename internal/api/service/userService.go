@@ -118,11 +118,12 @@ func (s *userService) ResetUserPassword(ctx context.Context, mail string) error 
 		return err
 	}
 
-	if user.Auth.Password == nil {
+	if user.Auth.Password == nil && user.Auth.Token == nil {
 		return nil
 	}
 
-	return s.userRepository.ResetUserPassword(ctx, user)
+	user.ResetPassword()
+	return s.userRepository.UpdateUser(ctx, user)
 }
 
 func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dto.PasswordInputDTO) error {
@@ -135,5 +136,9 @@ func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dt
 		return utils.ErrUserHasPass
 	}
 
-	return s.userRepository.SetUserPassword(ctx, user, pass)
+	if err = user.SetPassword(*pass.Password); err != nil {
+		return err
+	}
+
+	return s.userRepository.UpdateUser(ctx, user)
 }

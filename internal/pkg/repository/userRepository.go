@@ -4,12 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -117,23 +114,4 @@ func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error
 
 		return tx.WithContext(ctx).Delete(new(domain.Auth), auths).Error
 	})
-}
-
-func (s *userRepository) ResetUserPassword(ctx context.Context, user *domain.User) error {
-	user.Auth.Password = nil
-	user.Auth.Token = nil
-
-	return s.UpdateUser(ctx, user)
-}
-
-func (s *userRepository) SetUserPassword(ctx context.Context, user *domain.User, pass *dto.PasswordInputDTO) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(*pass.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	user.Auth.Token = utils.Pointer(uuid.New().String())
-	user.Auth.Password = utils.Pointer(string(hash))
-
-	return s.UpdateUser(ctx, user)
 }

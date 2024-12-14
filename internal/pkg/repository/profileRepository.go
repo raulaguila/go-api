@@ -32,6 +32,7 @@ func (s *profileRepository) applyFilter(ctx context.Context, filter *filter.Filt
 func (s *profileRepository) CountProfiles(ctx context.Context, filter *filter.Filter) (int64, error) {
 	var count int64
 	db := s.applyFilter(ctx, filter)
+	
 	return count, db.Model(new(domain.Profile)).Count(&count).Error
 }
 
