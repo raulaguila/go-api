@@ -83,6 +83,4 @@ CREATE TABLE if not exists public.users (
 CREATE INDEX if not exists idx_users_auth_id ON public.users USING btree (auth_id);
 CREATE INDEX if not exists idx_users_email ON public.users USING btree (mail);
 
-INSERT INTO public.users (name, mail, auth_id) VALUES
-    ('Administrator', 'admin@admin.com', 1);
-
+INSERT INTO public.users (name, mail, auth_id) VALUES ('Administrator', 'admin@admin.com', 1);

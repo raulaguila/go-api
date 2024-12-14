@@ -20,7 +20,7 @@ services:
     restart: always
     volumes:
       - postgres_volume:/var/lib/postgresql/data
-      - ./build/postgreSQL:/docker-entrypoint-initdb.d
+      - ./build/SQL:/docker-entrypoint-initdb.d
     command: -p ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
