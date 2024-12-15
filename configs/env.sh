@@ -14,11 +14,11 @@ for ((i = 0; i < 2; i++)); do
 done
 
 echo "TZ='America/Manaus'                             # Set system time zone
-SYS_PREFORK='1'                                 # Enable Fiber Prefork
 
 API_PORT='9000'                                 # API Container PORT
 API_LOGGER='1'                                  # API Logger enable
 API_SWAGGO='1'                                  # API Swagger enable
+API_ENABLE_PREFORK='1'                          # API enable fiber prefork
 API_DEFAULT_SORT='updated_at'                   # API default column sort
 API_DEFAULT_ORDER='desc'                        # API default order
 API_ACCEPT_SKIP_AUTH='1'                        # API accept skip auth header

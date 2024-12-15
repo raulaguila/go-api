@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/google/uuid"
 	"io"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"

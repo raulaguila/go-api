@@ -63,8 +63,7 @@ CREATE INDEX if not exists idx_users_auth_profile_id ON public.users_auth USING 
 CREATE INDEX if not exists idx_users_auth_token ON public.users_auth USING btree (token);
 
 -- Password: 12345678
-INSERT INTO public.users_auth (status, profile_id, token, "password") VALUES
-    (true, 1, 'd048aee9-dd65-4ca0-aee7-230c1bf19d8c', '$2a$10$vqkyIvgHRU2sl2FGtlbkNeGFeTsJHQYz18abMJiLlGyJt.Ge99zYy');
+INSERT INTO public.users_auth (status, profile_id, token, "password") VALUES(true, 1, 'd048aee9-dd65-4ca0-aee7-230c1bf19d8c', '$2a$10$vqkyIvgHRU2sl2FGtlbkNeGFeTsJHQYz18abMJiLlGyJt.Ge99zYy');
 
 -- DROP TABLE public.users;
 

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -44,11 +45,13 @@ func (s *userService) GetUserByID(ctx context.Context, userID uint) (*dto.UserOu
 func (s *userService) GetUsers(ctx context.Context, userFilter *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
 	users, err := s.userRepository.GetUsers(ctx, userFilter)
 	if err != nil {
+		fmt.Printf("GetUsers Error: %v\n", err)
 		return nil, err
 	}
 
 	count, err := s.userRepository.CountUsers(ctx, userFilter)
 	if err != nil {
+		fmt.Printf("CountUsers Error: %v\n", err)
 		return nil, err
 	}
 

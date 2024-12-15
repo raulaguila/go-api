@@ -37,7 +37,7 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
-		Prefork:               os.Getenv("SYS_PREFORK") == "1",
+		Prefork:               os.Getenv("API_ENABLE_PREFORK") == "1",
 		CaseSensitive:         true,
 		StrictRouting:         true,
 		DisableStartupMessage: false,

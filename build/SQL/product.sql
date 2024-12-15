@@ -10,6 +10,8 @@ CREATE SEQUENCE IF NOT EXISTS public.product_id_seq
 	CACHE 1
 	NO CYCLE;
 
+-- DROP TABLE public.product;
+
 CREATE table IF NOT EXISTS public.product (
     id bigint DEFAULT nextval('product_id_seq'::regclass) NOT NULL,
     created_at timestamptz NOT NULL default NOW(),

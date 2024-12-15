@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
