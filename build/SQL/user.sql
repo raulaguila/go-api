@@ -34,8 +34,8 @@ CREATE SEQUENCE if not exists public.users_profile_id_seq
 
 CREATE TABLE if not exists public.users_profile (
     id bigint DEFAULT nextval('users_profile_id_seq'::regclass) NOT NULL,
-    created_at timestamptz NOT NULL default NOW(),
-    updated_at timestamptz NOT NULL default NOW(),
+    created_at timestamptz default NOW() NOT NULL,
+    updated_at timestamptz default NOW() NOT NULL,
     "name" varchar(100) NOT NULL,
     permissions jsonb NOT NULL,
     CONSTRAINT uni_users_profile_name UNIQUE (name),
@@ -48,8 +48,8 @@ INSERT INTO public.users_profile (name, permissions) VALUES ('ROOT', '{"*": true
 
 CREATE TABLE if not exists public.users_auth (
     id bigint DEFAULT nextval('users_auth_id_seq'::regclass) NOT NULL,
-    created_at timestamptz NOT NULL default NOW(),
-    updated_at timestamptz NOT NULL default NOW(),
+    created_at timestamptz default NOW() NOT NULL,
+    updated_at timestamptz default NOW() NOT NULL,
     status bool NOT NULL,
     profile_id int8 NOT NULL,
     "token" varchar(255) NULL,
@@ -69,8 +69,8 @@ INSERT INTO public.users_auth (status, profile_id, token, "password") VALUES(tru
 
 CREATE TABLE if not exists public.users (
     id bigint DEFAULT nextval('users_id_seq'::regclass) NOT NULL,
-    created_at timestamptz NOT NULL default NOW(),
-    updated_at timestamptz NOT NULL default NOW(),
+    created_at timestamptz default NOW() NOT NULL,
+    updated_at timestamptz default NOW() NOT NULL,
     "name" varchar(90) NOT NULL,
     mail varchar(50) NOT NULL,
     auth_id int8 NOT NULL,
