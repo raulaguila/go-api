@@ -63,13 +63,12 @@ func (s *userRepository) GetUser(ctx context.Context, user *domain.User) error {
 }
 
 func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*domain.User, error) {
-	auth := new(domain.Auth)
-	if err := s.db.WithContext(ctx).First(auth, "token = ?", token).Error; err != nil {
-		return nil, err
-	}
-
-	user := &domain.User{AuthID: auth.ID}
-	return user, s.GetUser(ctx, user)
+	user := new(domain.User)
+	return user, s.db.
+		WithContext(ctx).
+		Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.auth_id", domain.AuthTableName, domain.AuthTableName, domain.UserTableName)).
+		Preload(utils.PGAuthProfile).
+		First(user, domain.AuthTableName+".token = ?", token).Error
 }
 
 func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) error {
