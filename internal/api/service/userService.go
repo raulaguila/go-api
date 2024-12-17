@@ -34,8 +34,8 @@ func (s *userService) GenerateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 }
 
 func (s *userService) GetUserByID(ctx context.Context, userID uint) (*dto.UserOutputDTO, error) {
-	user, err := s.userRepository.GetUserByID(ctx, userID)
-	if err != nil {
+	user := &domain.User{Base: domain.Base{ID: userID}}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
@@ -81,8 +81,8 @@ func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*
 		return nil, err
 	}
 
-	user, err := s.userRepository.GetUserByID(ctx, user.ID)
-	if err != nil {
+	user = &domain.User{Base: domain.Base{ID: user.ID}}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
@@ -90,8 +90,8 @@ func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*
 }
 
 func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
-	user, err := s.userRepository.GetUserByID(ctx, userID)
-	if err != nil {
+	user := &domain.User{Base: domain.Base{ID: userID}}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
@@ -103,8 +103,8 @@ func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.Use
 		return nil, err
 	}
 
-	user, err = s.userRepository.GetUserByID(ctx, user.ID)
-	if err != nil {
+	user = &domain.User{Base: domain.Base{ID: userID}}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
@@ -116,8 +116,8 @@ func (s *userService) DeleteUsers(ctx context.Context, ids []uint) error {
 }
 
 func (s *userService) ResetUserPassword(ctx context.Context, mail string) error {
-	user, err := s.userRepository.GetUserByMail(ctx, mail)
-	if err != nil {
+	user := &domain.User{Email: mail}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return err
 	}
 
@@ -130,8 +130,8 @@ func (s *userService) ResetUserPassword(ctx context.Context, mail string) error 
 }
 
 func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dto.PasswordInputDTO) error {
-	user, err := s.userRepository.GetUserByMail(ctx, mail)
-	if err != nil {
+	user := &domain.User{Email: mail}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return err
 	}
 
@@ -139,7 +139,7 @@ func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dt
 		return utils.ErrUserHasPass
 	}
 
-	if err = user.SetPassword(*pass.Password); err != nil {
+	if err := user.SetPassword(*pass.Password); err != nil {
 		return err
 	}
 

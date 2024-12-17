@@ -49,8 +49,8 @@ func (s *authService) generateAuthOutputDTO(user *domain.User) *dto.AuthOutputDT
 }
 
 func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) (*dto.AuthOutputDTO, error) {
-	user, err := s.userRepository.GetUserByMail(ctx, credentials.Login)
-	if err != nil {
+	user := &domain.User{Email: credentials.Login}
+	if err := s.userRepository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 

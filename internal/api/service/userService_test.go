@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"gorm.io/gorm"
 	"testing"
 
-	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/raulaguila/go-api/internal/pkg/mocks"
 )
 
 func TestUserService_GetUserByID(t *testing.T) {
@@ -25,23 +25,8 @@ func TestUserService_GetUserByID(t *testing.T) {
 			name: "success",
 			setupMock: func() {
 				mockRepository.
-					On("GetUserByID", mock.Anything, uint(1)).
-					Return(&domain.User{
-						Base: domain.Base{
-							ID: 1,
-						},
-						Auth: &domain.Auth{
-							Status: false,
-							Profile: &domain.Profile{
-								Base: domain.Base{
-									ID: 1,
-								},
-								Name: "ADMIN",
-							},
-						},
-						Name:  "John Doe",
-						Email: "johndoe@example.com",
-					}, nil).
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
 					Once()
 			},
 			userID:  1,
@@ -51,8 +36,8 @@ func TestUserService_GetUserByID(t *testing.T) {
 			name: "not found",
 			setupMock: func() {
 				mockRepository.
-					On("GetUserByID", mock.Anything, uint(1)).
-					Return(nil, gorm.ErrRecordNotFound).
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
 					Once()
 			},
 			userID:  1,
@@ -64,11 +49,7 @@ func TestUserService_GetUserByID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMock()
 			_, err := service.GetUserByID(context.Background(), tt.userID)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
+			assert.Equal(t, err != nil, tt.wantErr)
 		})
 	}
 }

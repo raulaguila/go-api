@@ -58,14 +58,8 @@ func (s *userRepository) GetUsers(ctx context.Context, filter *filters.UserFilte
 	return users, db.Preload(utils.PGAuthProfile).Find(users).Error
 }
 
-func (s *userRepository) GetUserByID(ctx context.Context, userID uint) (*domain.User, error) {
-	user := new(domain.User)
-	return user, s.db.WithContext(ctx).Preload(utils.PGAuthProfile).First(user, userID).Error
-}
-
-func (s *userRepository) GetUserByMail(ctx context.Context, mail string) (*domain.User, error) {
-	user := new(domain.User)
-	return user, s.db.WithContext(ctx).Preload(utils.PGAuthProfile).First(user, "mail = ?", mail).Error
+func (s *userRepository) GetUser(ctx context.Context, user *domain.User) error {
+	return s.db.WithContext(ctx).Where(user).Preload(utils.PGAuthProfile).First(user).Error
 }
 
 func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*domain.User, error) {
@@ -74,8 +68,8 @@ func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*dom
 		return nil, err
 	}
 
-	user := new(domain.User)
-	return user, s.db.WithContext(ctx).Preload(utils.PGAuthProfile).First(user, "auth_id = ?", auth.ID).Error
+	user := &domain.User{AuthID: auth.ID}
+	return user, s.GetUser(ctx, user)
 }
 
 func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) error {

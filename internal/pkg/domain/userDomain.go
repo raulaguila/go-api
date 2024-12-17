@@ -37,8 +37,7 @@ type (
 	UserRepository interface {
 		CountUsers(context.Context, *filters.UserFilter) (int64, error)
 		GetUsers(context.Context, *filters.UserFilter) (*[]User, error)
-		GetUserByID(context.Context, uint) (*User, error)
-		GetUserByMail(context.Context, string) (*User, error)
+		GetUser(context.Context, *User) error
 		GetUserByToken(context.Context, string) (*User, error)
 		CreateUser(context.Context, *User) error
 		UpdateUser(context.Context, *User) error
@@ -111,6 +110,10 @@ func (u *User) ResetPassword() {
 }
 
 func (u *User) ValidatePassword(password string) bool {
+	if u.Auth.Password == nil {
+		return false
+	}
+
 	return bcrypt.CompareHashAndPassword([]byte(*u.Auth.Password), []byte(password)) == nil
 }
 

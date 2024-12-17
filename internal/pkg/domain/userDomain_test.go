@@ -32,7 +32,6 @@ func TestUserToMap(t *testing.T) {
 		"name":    "Alice",
 		"mail":    "alice@example.com",
 		"auth_id": uint(123),
-		"photo":   nil,
 		"Auth": map[string]interface{}{
 			"status":     true,
 			"profile_id": uint(101),
