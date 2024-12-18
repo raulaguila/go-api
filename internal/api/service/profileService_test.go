@@ -12,7 +12,7 @@ package service
 //
 //	"github.com/raulaguila/go-api/internal/pkg/domain"
 //	"github.com/raulaguila/go-api/internal/pkg/dto"
-//	"github.com/raulaguila/go-api/internal/pkg/mocks"
+//	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 //	"github.com/raulaguila/go-api/pkg/filter"
 //	"github.com/raulaguila/go-api/pkg/utils"
 //)
@@ -70,7 +70,7 @@ package service
 //	var nilFilter *filter.Filter = nil
 //	var nilProfile *domain.Profile = nil
 //
-//	repo := &mocks.ProfileRepositoryMock{}
+//	repo := &_mocks.ProfileRepositoryMock{}
 //	repo.On("GetProfiles", s.ctx, s.filter).Return(&s.items, nil)
 //	repo.On("GetProfiles", s.ctx, nilFilter).Return(&s.items, nil)
 //

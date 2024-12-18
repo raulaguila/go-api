@@ -1,4 +1,4 @@
-COMPOSE_COMMAND = docker compose --env-file configs/.env
+COMPOSE_COMMAND = docker-compose --env-file configs/.env
 
 .PHONY: all
 all: help
@@ -57,8 +57,12 @@ go-run: ## Run application from source code
 
 .PHONY: go-test
 go-test: ## Run tests and generate coverage report
-	@go run gotest.tools/gotestsum@latest --format-hide-empty-pkg -f pkgname-and-test-fails -- ./... -race -count=1 -coverprofile=/tmp/coverage.out -covermode=atomic
-	@go tool cover -func=/tmp/coverage.out
+	@go install github.com/axw/gocov/gocov@v1.2.1
+	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
+	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
+	@gocov test $(packages) | gocov-html -t kit > report.html
+#	@go run gotest.tools/gotestsum@latest --format-hide-empty-pkg -f pkgname-and-test-fails -- ./... -race -count=1 -coverprofile=/tmp/coverage.out -covermode=atomic
+#	@go tool cover -func=/tmp/coverage.out
 	@#go tool cover -html=/tmp/coverage.out
 
 .PHONY: go-build

@@ -13,12 +13,12 @@ import (
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {
+func setupAuthApp(nockService *_mocks.AuthServiceMock) *fiber.App {
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
 		Next:            func(c *fiber.Ctx) bool { return false },
@@ -33,7 +33,7 @@ func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {
 }
 
 func TestAuthHandler_login(t *testing.T) {
-	nockService := new(mocks.AuthServiceMock)
+	nockService := new(_mocks.AuthServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "valid login",
@@ -88,9 +88,9 @@ func TestAuthHandler_login(t *testing.T) {
 }
 
 func TestAuthHandler_me(t *testing.T) {
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &mocks.UserRepositoryMock{})
+	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
 
-	nockService := new(mocks.AuthServiceMock)
+	nockService := new(_mocks.AuthServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "valid request",
@@ -107,9 +107,9 @@ func TestAuthHandler_me(t *testing.T) {
 }
 
 func TestAuthHandler_refresh(t *testing.T) {
-	middleware.MidRefresh = middleware.Auth(os.Getenv("RFRESH_TOKEN_PUBLIC"), &mocks.UserRepositoryMock{})
+	middleware.MidRefresh = middleware.Auth(os.Getenv("RFRESH_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
 
-	nockService := new(mocks.AuthServiceMock)
+	nockService := new(_mocks.AuthServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "valid request",

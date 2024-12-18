@@ -8,11 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 )
 
 func TestUserService_GetUserByID(t *testing.T) {
-	mockRepository := new(mocks.UserRepositoryMock)
+	mockRepository := new(_mocks.UserRepositoryMock)
 	service := NewUserService(mockRepository)
 
 	tests := []struct {
@@ -55,7 +55,7 @@ func TestUserService_GetUserByID(t *testing.T) {
 }
 
 //func TestUserService_CreateUser(t *testing.T) {
-//	mockRepository := new(mocks.UserRepositoryMock)
+//	mockRepository := new(_mocks.UserRepositoryMock)
 //	service := NewUserService(mockRepository)
 //
 //	tests := []struct {

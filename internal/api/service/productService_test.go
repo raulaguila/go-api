@@ -8,7 +8,7 @@ package service
 //
 //	"github.com/raulaguila/go-api/internal/pkg/domain"
 //	"github.com/raulaguila/go-api/internal/pkg/dto"
-//	"github.com/raulaguila/go-api/internal/pkg/mocks"
+//	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 //	"github.com/raulaguila/go-api/pkg/filter"
 //	"github.com/raulaguila/go-api/pkg/utils"
 //)
@@ -35,14 +35,14 @@ package service
 //	tests := []struct {
 //		name     string
 //		id       uint
-//		repo     *mocks.ProductRepositoryMock
+//		repo     *_mocks.ProductRepositoryMock
 //		expected *dto.ProductOutputDTO
 //		err      error
 //	}{
 //		{
 //			name: "product exists",
 //			id:   1,
-//			repo: &mocks.ProductRepositoryMock{
+//			repo: &_mocks.ProductRepositoryMock{
 //				products: []*domain.Product{{ID: 1, Name: "Test Product"}},
 //			},
 //			expected: &dto.ProductOutputDTO{ID: utils.Pointer(uint(1)), Name: utils.Pointer("Test Product")},

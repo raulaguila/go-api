@@ -14,12 +14,12 @@ import (
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 )
 
-func setupProfileApp(mockService *mocks.ProfileServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &mocks.UserRepositoryMock{})
+func setupProfileApp(mockService *_mocks.ProfileServiceMock) *fiber.App {
+	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
@@ -37,7 +37,7 @@ func setupProfileApp(mockService *mocks.ProfileServiceMock) *fiber.App {
 }
 
 func TestProfileHandler_getProfiles(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
+	mockService := new(_mocks.ProfileServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -64,7 +64,7 @@ func TestProfileHandler_getProfiles(t *testing.T) {
 }
 
 func TestProfileHandler_createProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
+	mockService := new(_mocks.ProfileServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -91,7 +91,7 @@ func TestProfileHandler_createProfile(t *testing.T) {
 }
 
 func TestProfileHandler_getProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
+	mockService := new(_mocks.ProfileServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -118,7 +118,7 @@ func TestProfileHandler_getProfile(t *testing.T) {
 }
 
 func TestProfileHandler_updateProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
+	mockService := new(_mocks.ProfileServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -155,7 +155,7 @@ func TestProfileHandler_updateProfile(t *testing.T) {
 }
 
 func TestProfileHandler_deleteProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
+	mockService := new(_mocks.ProfileServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",

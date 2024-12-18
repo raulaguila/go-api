@@ -14,12 +14,12 @@ import (
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 )
 
-func setupUserApp(mockService *mocks.UserServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &mocks.UserRepositoryMock{})
+func setupUserApp(mockService *_mocks.UserServiceMock) *fiber.App {
+	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
@@ -37,7 +37,7 @@ func setupUserApp(mockService *mocks.UserServiceMock) *fiber.App {
 }
 
 func TestUserHandler_getUsers(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -64,7 +64,7 @@ func TestUserHandler_getUsers(t *testing.T) {
 }
 
 func TestUserHandler_createUser(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -91,7 +91,7 @@ func TestUserHandler_createUser(t *testing.T) {
 }
 
 func TestUserHandler_getUser(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -118,7 +118,7 @@ func TestUserHandler_getUser(t *testing.T) {
 }
 
 func TestUserHandler_updateUser(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -155,7 +155,7 @@ func TestUserHandler_updateUser(t *testing.T) {
 }
 
 func TestUserHandler_deleteUser(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -192,7 +192,7 @@ func TestUserHandler_deleteUser(t *testing.T) {
 }
 
 func TestUserHandler_resetUserPassword(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -229,7 +229,7 @@ func TestUserHandler_resetUserPassword(t *testing.T) {
 }
 
 func TestUserHandler_setUserPassword(t *testing.T) {
-	mockService := new(mocks.UserServiceMock)
+	mockService := new(_mocks.UserServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
