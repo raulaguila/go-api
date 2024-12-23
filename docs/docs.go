@@ -1712,8 +1712,10 @@ const docTemplate = `{
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1729,8 +1731,10 @@ const docTemplate = `{
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

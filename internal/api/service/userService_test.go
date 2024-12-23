@@ -2,13 +2,15 @@ package service
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/_mocks"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestUserService_GetUserByID(t *testing.T) {
@@ -54,56 +56,56 @@ func TestUserService_GetUserByID(t *testing.T) {
 	}
 }
 
-//func TestUserService_CreateUser(t *testing.T) {
-//	mockRepository := new(_mocks.UserRepositoryMock)
-//	service := NewUserService(mockRepository)
-//
-//	tests := []struct {
-//		name      string
-//		setupMock func()
-//		userInput *dto.UserInputDTO
-//		wantErr   bool
-//	}{
-//		{
-//			name: "success",
-//			setupMock: func() {
-//				mockRepository.
-//					On("CreateUser", mock.Anything, mock.Anything).
-//					Return(nil).
-//					Once()
-//				mockRepository.
-//					On("GetUserByID", mock.Anything, uint(1)).
-//					Return(&domain.User{Base: domain.Base{ID: 1}, Name: "John Doe", Email: "johndoe@example.com"}, nil).
-//					Once()
-//			},
-//			userInput: &dto.UserInputDTO{Name: helper.StringPtr("John Doe"), Email: helper.StringPtr("johndoe@example.com")},
-//			wantErr:   false,
-//		},
-//		{
-//			name: "create error",
-//			setupMock: func() {
-//				mockRepository.
-//					On("CreateUser", mock.Anything, mock.Anything).
-//					Return(errors.New("create error")).
-//					Once()
-//			},
-//			userInput: &dto.UserInputDTO{Name: helper.StringPtr("John Doe"), Email: helper.StringPtr("johndoe@example.com")},
-//			wantErr:   true,
-//		},
-//	}
-//
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			tt.setupMock()
-//			_, err := service.CreateUser(context.Background(), tt.userInput)
-//			if tt.wantErr {
-//				assert.Error(t, err)
-//			} else {
-//				assert.NoError(t, err)
-//			}
-//		})
-//	}
-//}
+func TestUserService_CreateUser(t *testing.T) {
+	mockRepository := new(_mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
+
+	tests := []struct {
+		name      string
+		setupMock func()
+		userInput *dto.UserInputDTO
+		wantErr   bool
+	}{
+		{
+			name: "success",
+			setupMock: func() {
+				mockRepository.
+					On("CreateUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			userInput: &dto.UserInputDTO{Name: utils.Pointer("John Doe"), Email: utils.Pointer("johndoe@example.com"), ProfileID: utils.Pointer(uint(1))},
+			wantErr:   false,
+		},
+		{
+			name: "create error",
+			setupMock: func() {
+				mockRepository.
+					On("CreateUser", mock.Anything, mock.Anything).
+					Return(gorm.ErrDuplicatedKey).
+					Once()
+			},
+			userInput: &dto.UserInputDTO{Name: utils.Pointer("John Doe"), Email: utils.Pointer("johndoe@example.com"), ProfileID: utils.Pointer(uint(1))},
+			wantErr:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setupMock()
+			_, err := service.CreateUser(context.Background(), tt.userInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
 
 //func TestUserService_SetUserPassword(t *testing.T) {
 //	mockRepo := new(mockUserRepository)

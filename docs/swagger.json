@@ -1704,8 +1704,10 @@
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1721,8 +1723,10 @@
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

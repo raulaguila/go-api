@@ -32,7 +32,7 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 		Profile: &dto.ProfileOutputDTO{
 			ID:          &user.Auth.Profile.ID,
 			Name:        &user.Auth.Profile.Name,
-			Permissions: user.Auth.Profile.Permissions,
+			Permissions: &user.Auth.Profile.Permissions,
 		},
 	}
 }

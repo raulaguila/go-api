@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
@@ -23,7 +24,7 @@ func (s *profileService) GenerateProfileOutputDTO(profile *domain.Profile) *dto.
 	return &dto.ProfileOutputDTO{
 		ID:          &profile.ID,
 		Name:        &profile.Name,
-		Permissions: profile.Permissions,
+		Permissions: &profile.Permissions,
 	}
 }
 
@@ -64,7 +65,7 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 }
 
 func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
-	profile := &domain.Profile{Permissions: map[string]any{}}
+	profile := &domain.Profile{Permissions: pgutils.JSONB{}}
 	if err := profile.Bind(data); err != nil {
 		return nil, err
 	}

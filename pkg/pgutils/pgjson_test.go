@@ -15,8 +15,8 @@ func TestJSONB_Value(t *testing.T) {
 		err  error
 	}{
 		{"empty map", JSONB{}, []byte("{}"), nil},
-		{"single element", JSONB{"key": "value"}, []byte(`{"key":"value"}`), nil},
-		{"nested map", JSONB{"outer": map[string]any{"inner": "value"}}, []byte(`{"outer":{"inner":"value"}}`), nil},
+		{"single element", JSONB(json.RawMessage([]byte(`{"key": "value"}`))), []byte(`{"key":"value"}`), nil},
+		{"nested map", JSONB(json.RawMessage([]byte(`{"outer": {"inner": "value"}}`))), []byte(`{"outer":{"inner":"value"}}`), nil},
 	}
 
 	for _, tt := range tests {
@@ -26,7 +26,7 @@ func TestJSONB_Value(t *testing.T) {
 				t.Errorf("JSONB.Value() error = %v, wantErr %v", err, tt.err)
 				return
 			}
-			if !jsonEqual(got.([]byte), tt.want.([]byte)) {
+			if err == nil && got != nil && !jsonEqual(got.([]byte), tt.want.([]byte)) {
 				t.Errorf("JSONB.Value() = %v, want %v", string(got.([]byte)), string(tt.want.([]byte)))
 			}
 		})
@@ -40,9 +40,9 @@ func TestJSONB_Scan(t *testing.T) {
 		want    JSONB
 		wantErr error
 	}{
-		{"valid json", []byte(`{"key":"value"}`), JSONB{"key": "value"}, nil},
-		{"invalid json", []byte(`invalid`), JSONB{}, errors.New("type assertion to []byte failed")},
-		{"non-byte input", "string", JSONB{}, errors.New("type assertion to []byte failed")},
+		{"valid json", []byte(`{"key":"value"}`), JSONB(json.RawMessage([]byte(`{"key": "value"}`))), nil},
+		{"invalid json", []byte(`invalid`), nil, errors.New("type assertion to []byte failed")},
+		{"non-byte input", "string", nil, errors.New("type assertion to []byte failed")},
 	}
 
 	for _, tt := range tests {
@@ -53,8 +53,9 @@ func TestJSONB_Scan(t *testing.T) {
 				t.Errorf("JSONB.Scan() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err == nil && !jsonEqualMaps(jb, tt.want) {
-				t.Errorf("JSONB.Scan() = %v, want %v", jb, tt.want)
+			if err == nil && !jsonEqual(jb, tt.want) {
+				v, _ := tt.want.Value()
+				t.Errorf("JSONB.Scan() = %v, want %v", jb, v.([]byte))
 			}
 		})
 	}

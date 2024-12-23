@@ -77,8 +77,10 @@ func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) erro
 
 func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
-			return err
+		if user.Auth != nil {
+			if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
+				return err
+			}
 		}
 
 		return s.db.Model(user).Updates(user.ToMap()).Error

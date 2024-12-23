@@ -93,8 +93,9 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: {}
-        type: object
+        items:
+          type: integer
+        type: array
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
     properties:
@@ -105,8 +106,9 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: {}
-        type: object
+        items:
+          type: integer
+        type: array
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
     properties:

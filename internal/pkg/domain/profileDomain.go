@@ -53,7 +53,7 @@ func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
 	if p != nil {
 		s.Name = utils.PointerValue(p.Name, s.Name)
 		if p.Permissions != nil {
-			s.Permissions = p.Permissions
+			s.Permissions = *p.Permissions
 		}
 	}
 

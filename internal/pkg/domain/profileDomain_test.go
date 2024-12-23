@@ -2,13 +2,15 @@ package domain
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"encoding/json"
 	"testing"
 
-	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
 // MockProfileRepository is a mock implementation of ProfileRepository
@@ -61,8 +63,8 @@ func TestProfile_ToMap(t *testing.T) {
 	}{
 		{
 			"ValidProfile",
-			&Profile{Name: "John Doe", Permissions: pgutils.JSONB{"read": true, "write": false}},
-			map[string]any{"name": "John Doe", "permissions": pgutils.JSONB{"read": true, "write": false}},
+			&Profile{Name: "John Doe", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
+			map[string]any{"name": "John Doe", "permissions": pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
 		},
 		{
 			"EmptyProfile",
@@ -80,6 +82,7 @@ func TestProfile_ToMap(t *testing.T) {
 }
 
 func TestProfile_Bind(t *testing.T) {
+	permissions := pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))
 	tests := []struct {
 		name        string
 		profileName string
@@ -91,9 +94,9 @@ func TestProfile_Bind(t *testing.T) {
 		{
 			"ValidInputDTO",
 			"New Name",
-			&dto.ProfileInputDTO{Name: new(string), Permissions: pgutils.JSONB{"create": true}},
+			&dto.ProfileInputDTO{Name: new(string), Permissions: &permissions},
 			&Profile{},
-			&Profile{Name: "New Name", Permissions: pgutils.JSONB{"create": true}},
+			&Profile{Name: "New Name", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
 			false,
 		},
 		{
