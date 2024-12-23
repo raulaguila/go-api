@@ -1,20 +1,17 @@
 package domain
 
 import (
-	"context"
 	"reflect"
 	"testing"
 
-	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestAuth_TableName(t *testing.T) {
-	auth := Auth{}
-	expected := AuthTableName
-
-	if result := auth.TableName(); result != expected {
-		t.Errorf("expected %s, got %s", expected, result)
-	}
+	auth := new(Auth)
+	assert.Equal(t, AuthTableName, auth.TableName())
 }
 
 func TestAuth_ToMap(t *testing.T) {
@@ -43,8 +40,8 @@ func TestAuth_ToMap(t *testing.T) {
 			auth: Auth{
 				Status:    false,
 				ProfileID: 2,
-				Token:     stringPointer("token123"),
-				Password:  stringPointer("password123"),
+				Token:     utils.Pointer("token123"),
+				Password:  utils.Pointer("password123"),
 			},
 			expected: map[string]any{
 				"status":     false,
@@ -63,25 +60,4 @@ func TestAuth_ToMap(t *testing.T) {
 			}
 		})
 	}
-}
-
-func stringPointer(s string) *string {
-	return &s
-}
-
-type mockAuthService struct{}
-
-func (m *mockAuthService) Login(ctx context.Context, input *dto.AuthInputDTO, ip string) (*dto.AuthOutputDTO, error) {
-	// Mock implementation for testing
-	return &dto.AuthOutputDTO{}, nil
-}
-
-func (m *mockAuthService) Refresh(user *User, ip string) *dto.AuthOutputDTO {
-	// Mock implementation for testing
-	return &dto.AuthOutputDTO{}
-}
-
-func (m *mockAuthService) Me(user *User) *dto.UserOutputDTO {
-	// Mock implementation for testing
-	return &dto.UserOutputDTO{}
 }

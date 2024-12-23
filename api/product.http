@@ -50,7 +50,7 @@ Content-Type: application/json
     client.test("Request executed successfully", function () {
         client.assert(response.status === 201, "Wrong status code");
         client.global.set("id", response.body.id);
-        client.global.set("body_create", "{\"name\":\"Product Created\"}");
+        client.global.set("body_create", `{"name":"Product Created"}`);
     });
 %}
 
@@ -89,7 +89,7 @@ Content-Type: application/json
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
         client.global.set("id", response.body.id);
-        client.global.set("body_update", "{\"name\":\"Product Updated\"}");
+        client.global.set("body_update", `{"name":"Product Updated"}`);
     });
 %}
 

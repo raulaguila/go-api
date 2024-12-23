@@ -1,14 +1,17 @@
 package domain
 
 import (
-	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"testing"
+	
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
-	"testing"
+
+	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestUserTableName(t *testing.T) {
-	user := User{}
+	user := new(User)
 	assert.Equal(t, UserTableName, user.TableName())
 }
 
@@ -47,10 +50,10 @@ func TestUserBind(t *testing.T) {
 	auth := &Auth{}
 	user := User{Name: "Old Name", Email: "old@mail.com", Auth: auth}
 	input := dto.UserInputDTO{
-		Name:      stringPtr("New Name"),
-		Email:     stringPtr("new@mail.com"),
-		Status:    boolPtr(true),
-		ProfileID: uintPtr(101),
+		Name:      utils.Pointer("New Name"),
+		Email:     utils.Pointer("new@mail.com"),
+		Status:    utils.Pointer(true),
+		ProfileID: utils.Pointer(uint(101)),
 	}
 
 	err := user.Bind(&input)
@@ -62,21 +65,10 @@ func TestUserBind(t *testing.T) {
 	assert.Equal(t, uint(101), auth.ProfileID)
 }
 
-func boolPtr(b bool) *bool {
-	return &b
-}
-func stringPtr(s string) *string {
-	return &s
-}
-
-func uintPtr(u uint) *uint {
-	return &u
-}
-
 func TestUserValidatePassword(t *testing.T) {
 	password := "password123"
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	auth := &Auth{Password: stringPtr(string(hash))}
+	auth := &Auth{Password: utils.Pointer(string(hash))}
 	user := User{Auth: auth}
 
 	t.Run("CorrectPassword", func(t *testing.T) {
@@ -88,8 +80,9 @@ func TestUserValidatePassword(t *testing.T) {
 	})
 }
 
+//
 //func TestGenerateToken(t *testing.T) {
-//	auth := &Auth{Token: stringPtr("token")}
+//	auth := &Auth{Token: utils.Pointer("token")}
 //	user := User{Auth: auth}
 //	privateKey := `-----BEGIN RSA PRIVATE KEY-----
 //MIIBOgIBAAJBAK5nLGD+TdoG56+GGSZkLq6q3URhOaRUnDJbHt0b9g40kD1F2doY
@@ -103,9 +96,8 @@ func TestUserValidatePassword(t *testing.T) {
 //
 //	encodedKey := base64.StdEncoding.EncodeToString([]byte(privateKey))
 //	expire := "10"
-//	ip := "127.0.0.1"
 //
-//	token, err := user.GenerateToken(expire, encodedKey, ip)
+//	token, err := user.GenerateToken(expire, encodedKey)
 //	fmt.Println("b err: ", err)
 //
 //	assert.NoError(t, err)

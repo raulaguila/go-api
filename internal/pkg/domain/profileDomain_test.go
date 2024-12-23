@@ -1,58 +1,18 @@
 package domain
 
 import (
-	"context"
 	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/filter"
 	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
-// MockProfileRepository is a mock implementation of ProfileRepository
-type MockProfileRepository struct {
-	mock.Mock
-}
-
-func (m *MockProfileRepository) CountProfiles(ctx context.Context, f *filter.Filter) (int64, error) {
-	args := m.Called(ctx, f)
-	return args.Get(0).(int64), args.Error(1)
-}
-
-func (m *MockProfileRepository) GetProfileByID(ctx context.Context, id uint) (*Profile, error) {
-	args := m.Called(ctx, id)
-	return args.Get(0).(*Profile), args.Error(1)
-}
-
-func (m *MockProfileRepository) GetProfiles(ctx context.Context, f *filter.Filter) (*[]Profile, error) {
-	args := m.Called(ctx, f)
-	return args.Get(0).(*[]Profile), args.Error(1)
-}
-
-func (m *MockProfileRepository) CreateProfile(ctx context.Context, p *Profile) error {
-	args := m.Called(ctx, p)
-	return args.Error(0)
-}
-
-func (m *MockProfileRepository) UpdateProfile(ctx context.Context, p *Profile) error {
-	args := m.Called(ctx, p)
-	return args.Error(0)
-}
-
-func (m *MockProfileRepository) DeleteProfiles(ctx context.Context, ids []uint) error {
-	args := m.Called(ctx, ids)
-	return args.Error(0)
-}
-
 func TestProfile_TableName(t *testing.T) {
-	profile := &Profile{}
-	expected := ProfileTableName
-	actual := profile.TableName()
-	assert.Equal(t, expected, actual)
+	profile := new(Profile)
+	assert.Equal(t, ProfileTableName, profile.TableName())
 }
 
 func TestProfile_ToMap(t *testing.T) {
