@@ -92,17 +92,15 @@ make compose-remove
 
 [User module](../api/user.http):
 
-| Endpoint           | HTTP Method |       Description       |
-|:-------------------|:-----------:|:-----------------------:|
-| `/user`            |    `GET`    |     `Get all users`     |
-| `/user`            |   `POST`    |      `Insert user`      |
-| `/user`            |  `DELETE`   |      `Delete user`      |
-| `/user/{id}`       |    `GET`    |    `Get user by ID`     |
-| `/user/{id}`       |    `PUT`    |   `Update user by ID`   |
-| `/user/{id}/photo` |    `GET`    |   `Get user's photo`    |
-| `/user/{id}/photo` |    `PUT`    |   `Set user's photo`    |
-| `/user/pass`       |    `PUT`    |  `Set user's password`  |
-| `/user/pass`       |  `DELETE`   | `Reset user's password` |
+| Endpoint     | HTTP Method |       Description       |
+|:-------------|:-----------:|:-----------------------:|
+| `/user`      |    `GET`    |     `Get all users`     |
+| `/user`      |   `POST`    |      `Insert user`      |
+| `/user`      |  `DELETE`   |      `Delete user`      |
+| `/user/{id}` |    `GET`    |    `Get user by ID`     |
+| `/user/{id}` |    `PUT`    |   `Update user by ID`   |
+| `/user/pass` |    `PUT`    |  `Set user's password`  |
+| `/user/pass` |  `DELETE`   | `Reset user's password` |
 
 [Authentication module](../api/auth.http):
 
