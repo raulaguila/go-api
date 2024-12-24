@@ -19,7 +19,7 @@ type (
 
 	ProductRepository interface {
 		CountProducts(context.Context, *filter.Filter) (int64, error)
-		GetProductByID(context.Context, uint) (*Product, error)
+		GetProduct(context.Context, *Product) error
 		GetProducts(context.Context, *filter.Filter) (*[]Product, error)
 		CreateProduct(context.Context, *Product) error
 		UpdateProduct(context.Context, *Product) error

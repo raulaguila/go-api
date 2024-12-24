@@ -21,7 +21,7 @@ type (
 
 	ProfileRepository interface {
 		CountProfiles(context.Context, *filter.Filter) (int64, error)
-		GetProfileByID(context.Context, uint) (*Profile, error)
+		GetProfile(context.Context, *Profile) error
 		GetProfiles(context.Context, *filter.Filter) (*[]Profile, error)
 		CreateProfile(context.Context, *Profile) error
 		UpdateProfile(context.Context, *Profile) error

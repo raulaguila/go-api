@@ -8,6 +8,10 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+func NewAuthServiceMock() domain.AuthService {
+	return new(AuthServiceMock)
+}
+
 type AuthServiceMock struct {
 	mock.Mock
 }

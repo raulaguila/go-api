@@ -121,7 +121,7 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 	tests := []struct {
 		name         string
 		mockSetup    func()
-		profileID    uint
+		profileInput *domain.Profile
 		expectedName string
 		expectedErr  error
 	}{
@@ -133,7 +133,7 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
 			},
-			profileID:    1,
+			profileInput: &domain.Profile{Base: domain.Base{ID: 1}},
 			expectedName: "Profile 1",
 			expectedErr:  nil,
 		},
@@ -145,7 +145,7 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
 			},
-			profileID:    2,
+			profileInput: &domain.Profile{Base: domain.Base{ID: 2}},
 			expectedName: "Profile 2",
 			expectedErr:  nil,
 		},
@@ -154,10 +154,10 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockSetup()
-			data, err := repository.GetProfileByID(context.Background(), tt.profileID)
+			err = repository.GetProfile(context.Background(), tt.profileInput)
 
 			assert.Equal(t, tt.expectedErr, err)
-			assert.Equal(t, tt.expectedName, data.Name)
+			assert.Equal(t, tt.expectedName, tt.profileInput.Name)
 		})
 	}
 }
@@ -236,7 +236,7 @@ func TestProfileRepository_UpdateProfile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockSetup()
-			err := repository.UpdateProfile(context.Background(), tt.input)
+			err = repository.UpdateProfile(context.Background(), tt.input)
 
 			assert.Equal(t, tt.expectedErr, err)
 		})

@@ -14,41 +14,49 @@ init: ## Create environment file
 	@chmod +x configs/env.sh && configs/env.sh && mv .env configs/
 
 .PHONY: compose-build-services
-compose-build-services: ## Run 'docker compose --profile services up -d --build' to create and start containers
+compose-build-services: ## Run 'docker compose --env-file configs/.env --profile services up -d --build' to create and start services containers
 	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services up -d --build
 	@${COMPOSE_COMMAND} --profile services up -d --build
 
 .PHONY: compose-build-source
-compose-build-source: ## Run 'docker compose --profile services --profile source up -d --build' to create and start containers from source code
+compose-build-source: ## Run 'docker compose --env-file configs/.env --profile services --profile source up -d --build' to create and start containers from source code
 	@${COMPOSE_COMMAND} --profile services --profile source up -d --build
 
 .PHONY: compose-build-binary
-compose-build-binary: ## Run 'docker compose --profile services --profile binary up -d --build' to create and start containers from binary
+compose-build-binary: ## Run 'docker compose --env-file configs/.env --profile services --profile binary up -d --build' to create and start containers from binary
 	@${COMPOSE_COMMAND} --profile services --profile binary up -d --build
 
 .PHONY: compose-down
-compose-down: ## Run 'docker compose --profile all down' to stop and remove containers and networks
+compose-down: ## Run 'docker compose --env-file configs/.env --profile all down' to stop and remove containers and networks
 	@${COMPOSE_COMMAND} --profile all down
 
 .PHONY: compose-remove
-compose-remove: ## Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-remove: ## Run 'docker compose --env-file configs/.env --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 	@${COMPOSE_COMMAND} --profile all down -v --remove-orphans
 
-.PHONY: compose-exec
-compose-exec: ## Run 'docker compose exec -it backend_binary bash' to access container bash
+.PHONY: compose-exec-binary
+compose-exec-binary: ## Run 'docker compose --env-file configs/.env exec -it backend_binary bash' to access container bash
 	@${COMPOSE_COMMAND} exec -it backend_binary bash
 
-.PHONY: compose-log
-compose-log: ## Run 'docker compose logs -f backend_binary' to show container logger
+.PHONY: compose-exec-source
+compose-exec-source: ## Run 'docker compose --env-file configs/.env exec -it backend_source bash' to access container bash
+	@${COMPOSE_COMMAND} exec -it backend_source bash
+
+.PHONY: compose-log-binary
+compose-log-binary: ## Run 'docker compose --env-file configs/.env logs -f backend_binary' to show container logger
 	@${COMPOSE_COMMAND} logs -f backend_binary
 
+.PHONY: compose-log-source
+compose-log-source: ## Run 'docker compose --env-file configs/.env logs -f backend_source' to show container logger
+	@${COMPOSE_COMMAND} logs -f backend_source
+
 .PHONY: compose-top
-compose-top: ## Run 'docker compose top' to display containers processes
+compose-top: ## Run 'docker compose --env-file configs/.env top' to display containers processes
 	@${COMPOSE_COMMAND} top
 
 .PHONY: compose-stats
-compose-stats: ## Run 'docker compose stats' to display containers stats
+compose-stats: ## Run 'docker compose --env-file configs/.env stats' to display containers stats
 	@${COMPOSE_COMMAND} stats
 
 .PHONY: go-run

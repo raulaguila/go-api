@@ -27,8 +27,8 @@ func (s *productService) GenerateProductOutputDTO(product *domain.Product) *dto.
 }
 
 func (s *productService) GetProductByID(ctx context.Context, productID uint) (*dto.ProductOutputDTO, error) {
-	product, err := s.productRepository.GetProductByID(ctx, productID)
-	if err != nil {
+	product := &domain.Product{Base: domain.Base{ID: productID}}
+	if err := s.productRepository.GetProduct(ctx, product); err != nil {
 		return nil, err
 	}
 
@@ -76,8 +76,8 @@ func (s *productService) CreateProduct(ctx context.Context, data *dto.ProductInp
 }
 
 func (s *productService) UpdateProduct(ctx context.Context, productID uint, data *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
-	product, err := s.productRepository.GetProductByID(ctx, productID)
-	if err != nil {
+	product := &domain.Product{Base: domain.Base{ID: productID}}
+	if err := s.productRepository.GetProduct(ctx, product); err != nil {
 		return nil, err
 	}
 

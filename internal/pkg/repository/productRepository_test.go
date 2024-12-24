@@ -111,7 +111,7 @@ func TestProductRepository_GetProducts(t *testing.T) {
 	}
 }
 
-func TestProductRepository_GetProductByID(t *testing.T) {
+func TestProductRepository_GetProduct(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	utils.PanicIfErr(err)
 	repository := NewProductRepository(db)
@@ -119,7 +119,7 @@ func TestProductRepository_GetProductByID(t *testing.T) {
 	tests := []struct {
 		name         string
 		mockSetup    func()
-		productID    uint
+		productInput *domain.Product
 		expectedName string
 		expectedErr  error
 	}{
@@ -131,7 +131,7 @@ func TestProductRepository_GetProductByID(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 1"}).Error)
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 2"}).Error)
 			},
-			productID:    1,
+			productInput: &domain.Product{Base: domain.Base{ID: 1}},
 			expectedName: "Product 1",
 			expectedErr:  nil,
 		},
@@ -143,7 +143,7 @@ func TestProductRepository_GetProductByID(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 1"}).Error)
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 2"}).Error)
 			},
-			productID:    2,
+			productInput: &domain.Product{Base: domain.Base{ID: 2}},
 			expectedName: "Product 2",
 			expectedErr:  nil,
 		},
@@ -152,10 +152,10 @@ func TestProductRepository_GetProductByID(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockSetup()
-			data, err := repository.GetProductByID(context.Background(), tt.productID)
+			err = repository.GetProduct(context.Background(), tt.productInput)
 
 			assert.Equal(t, tt.expectedErr, err)
-			assert.Equal(t, tt.expectedName, data.Name)
+			assert.Equal(t, tt.expectedName, tt.productInput.Name)
 		})
 	}
 }

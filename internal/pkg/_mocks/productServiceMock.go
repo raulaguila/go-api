@@ -10,6 +10,10 @@ import (
 	"github.com/raulaguila/go-api/pkg/filter"
 )
 
+func NewProductServiceMock() domain.ProductService {
+	return new(ProductServiceMock)
+}
+
 type ProductServiceMock struct {
 	mock.Mock
 }

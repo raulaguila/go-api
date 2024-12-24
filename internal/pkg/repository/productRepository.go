@@ -45,9 +45,8 @@ func (s *productRepository) GetProducts(ctx context.Context, filter *filter.Filt
 	return products, db.Find(products).Error
 }
 
-func (s *productRepository) GetProductByID(ctx context.Context, productID uint) (*domain.Product, error) {
-	product := new(domain.Product)
-	return product, s.db.WithContext(ctx).First(product, productID).Error
+func (s *productRepository) GetProduct(ctx context.Context, product *domain.Product) error {
+	return s.db.WithContext(ctx).Where(product).First(product).Error
 }
 
 func (s *productRepository) CreateProduct(ctx context.Context, product *domain.Product) error {

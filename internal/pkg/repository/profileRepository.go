@@ -32,7 +32,7 @@ func (s *profileRepository) applyFilter(ctx context.Context, filter *filter.Filt
 func (s *profileRepository) CountProfiles(ctx context.Context, filter *filter.Filter) (int64, error) {
 	var count int64
 	db := s.applyFilter(ctx, filter)
-	
+
 	return count, db.Model(new(domain.Profile)).Count(&count).Error
 }
 
@@ -46,9 +46,8 @@ func (s *profileRepository) GetProfiles(ctx context.Context, filter *filter.Filt
 	return profiles, db.Find(profiles).Error
 }
 
-func (s *profileRepository) GetProfileByID(ctx context.Context, profileID uint) (*domain.Profile, error) {
-	profile := new(domain.Profile)
-	return profile, s.db.WithContext(ctx).First(profile, profileID).Error
+func (s *profileRepository) GetProfile(ctx context.Context, profile *domain.Profile) error {
+	return s.db.WithContext(ctx).Where(profile).First(profile).Error
 }
 
 func (s *profileRepository) CreateProfile(ctx context.Context, profile *domain.Profile) error {

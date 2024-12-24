@@ -36,15 +36,17 @@ Usage:
 Commands: 
 
 init                           Create environment file
-compose-build-services         Run 'docker compose --profile services up -d --build' to create and start containers
-compose-build-source           Run 'docker compose --profile services --profile source up -d --build' to create and start containers from source code
-compose-build-binary           Run 'docker compose --profile services --profile binary up -d --build' to create and start containers from binary
-compose-down                   Run 'docker compose --profile all down' to stop and remove containers and networks
-compose-remove                 Run 'docker compose --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
-compose-exec                   Run 'docker compose exec -it backend_binary bash' to access container bash
-compose-log                    Run 'docker compose logs -f backend_binary' to show container logger
-compose-top                    Run 'docker compose top' to display containers processes
-compose-stats                  Run 'docker compose stats' to display containers stats
+compose-build-services         Run 'docker compose --env-file configs/.env --profile services up -d --build' to create and start services containers
+compose-build-source           Run 'docker compose --env-file configs/.env --profile services --profile source up -d --build' to create and start containers from source code
+compose-build-binary           Run 'docker compose --env-file configs/.env --profile services --profile binary up -d --build' to create and start containers from binary
+compose-down                   Run 'docker compose --env-file configs/.env --profile all down' to stop and remove containers and networks
+compose-remove                 Run 'docker compose --env-file configs/.env --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-exec-binary            Run 'docker compose --env-file configs/.env exec -it backend_binary bash' to access container bash
+compose-exec-source            Run 'docker compose --env-file configs/.env exec -it backend_source bash' to access container bash
+compose-log-binary             Run 'docker compose --env-file configs/.env logs -f backend_binary' to show container logger
+compose-log-source             Run 'docker compose --env-file configs/.env logs -f backend_source' to show container logger
+compose-top                    Run 'docker compose --env-file configs/.env top' to display containers processes
+compose-stats                  Run 'docker compose --env-file configs/.env stats' to display containers stats
 go-run                         Run application from source code
 go-test                        Run tests and generate coverage report
 go-build                       Build the application from source code

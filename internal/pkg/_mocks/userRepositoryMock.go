@@ -9,6 +9,10 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 )
 
+func NewUserRepositoryMock() domain.UserRepository {
+	return new(UserRepositoryMock)
+}
+
 type UserRepositoryMock struct {
 	mock.Mock
 }
@@ -53,7 +57,7 @@ func (m *UserRepositoryMock) CreateUser(ctx context.Context, user *domain.User) 
 	user.Name = "John Doe"
 	user.Email = "johndoe@example.com"
 	user.Auth = &domain.Auth{Status: true, Profile: &domain.Profile{Base: domain.Base{ID: 1}, Name: "ADMIN"}}
-	
+
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }

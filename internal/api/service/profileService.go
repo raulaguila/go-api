@@ -29,8 +29,8 @@ func (s *profileService) GenerateProfileOutputDTO(profile *domain.Profile) *dto.
 }
 
 func (s *profileService) GetProfileByID(ctx context.Context, profileID uint) (*dto.ProfileOutputDTO, error) {
-	profile, err := s.profileRepository.GetProfileByID(ctx, profileID)
-	if err != nil {
+	profile := &domain.Profile{Base: domain.Base{ID: profileID}}
+	if err := s.profileRepository.GetProfile(ctx, profile); err != nil {
 		return nil, err
 	}
 
@@ -78,8 +78,8 @@ func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInp
 }
 
 func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
-	profile, err := s.profileRepository.GetProfileByID(ctx, profileID)
-	if err != nil {
+	profile := &domain.Profile{Base: domain.Base{ID: profileID}}
+	if err := s.profileRepository.GetProfile(ctx, profile); err != nil {
 		return nil, err
 	}
 
