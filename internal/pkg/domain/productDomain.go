@@ -22,7 +22,7 @@ type (
 		GetProduct(context.Context, *Product) error
 		GetProducts(context.Context, *filter.Filter) (*[]Product, error)
 		CreateProduct(context.Context, *Product) error
-		UpdateProduct(context.Context, *Product) error
+		UpdateProduct(ctx context.Context, product *Product, update map[string]any) error
 		DeleteProducts(context.Context, []uint) error
 	}
 
@@ -30,8 +30,8 @@ type (
 		GenerateProductOutputDTO(*Product) *dto.ProductOutputDTO
 		GetProductByID(context.Context, uint) (*dto.ProductOutputDTO, error)
 		GetProducts(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
-		CreateProduct(context.Context, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
-		UpdateProduct(context.Context, uint, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
+		CreateProduct(context.Context, *dto.ProductInputDTO) error
+		UpdateProduct(context.Context, uint, *dto.ProductInputDTO) error
 		DeleteProducts(context.Context, []uint) error
 	}
 )
@@ -50,4 +50,15 @@ func (s *Product) ToMap() map[string]any {
 	return map[string]any{
 		"name": s.Name,
 	}
+}
+
+func (s *Product) GenerateUpdateMap(data *dto.ProductInputDTO) map[string]any {
+	mapped := map[string]any{}
+	if data != nil {
+		if data.Name != nil {
+			mapped["name"] = *data.Name
+		}
+	}
+
+	return mapped
 }

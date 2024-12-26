@@ -114,12 +114,11 @@ func (s *ProductHandler) getProductByID(c *fiber.Ctx) error {
 // @Security	 Bearer
 func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 	productDTO := c.Locals(utils.LocalDTO).(*dto.ProductInputDTO)
-	product, err := s.productService.CreateProduct(c.Context(), productDTO)
-	if err != nil {
+	if err := s.productService.CreateProduct(c.Context(), productDTO); err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(product)
+	return c.SendStatus(fiber.StatusCreated)
 }
 
 // updateProduct godoc
@@ -141,12 +140,11 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 	id := c.Locals(utils.LocalID).(*filters.IDFilter)
 	productDTO := c.Locals(utils.LocalDTO).(*dto.ProductInputDTO)
-	product, err := s.productService.UpdateProduct(c.Context(), id.ID, productDTO)
-	if err != nil {
+	if err := s.productService.UpdateProduct(c.Context(), id.ID, productDTO); err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(product)
+	return c.SendStatus(fiber.StatusOK)
 }
 
 // deleteProducts godoc
