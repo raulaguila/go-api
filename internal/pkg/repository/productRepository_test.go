@@ -217,6 +217,7 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 		name        string
 		mockSetup   func()
 		input       *domain.Product
+		mapped      map[string]any
 		expectedErr error
 	}{
 		{
@@ -226,7 +227,8 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 1"}).Error)
 			},
-			input:       &domain.Product{Base: domain.Base{ID: 1}, Name: "Updated Product 1"},
+			input:       &domain.Product{Base: domain.Base{ID: 1}},
+			mapped:      map[string]any{"name": "Updated Product 1"},
 			expectedErr: nil,
 		},
 	}
@@ -234,9 +236,7 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockSetup()
-			err := repository.UpdateProduct(context.Background(), tt.input)
-
-			assert.Equal(t, tt.expectedErr, err)
+			assert.Equal(t, tt.expectedErr, repository.UpdateProduct(context.Background(), tt.input, tt.mapped))
 		})
 	}
 }

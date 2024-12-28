@@ -36,8 +36,8 @@ func (s *ProductRepositoryMock) CreateProduct(ctx context.Context, product *doma
 	return ret.Error(0)
 }
 
-func (s *ProductRepositoryMock) UpdateProduct(ctx context.Context, product *domain.Product) error {
-	ret := s.Called(ctx, product)
+func (s *ProductRepositoryMock) UpdateProduct(ctx context.Context, product *domain.Product, update map[string]any) error {
+	ret := s.Called(ctx, product, update)
 	return ret.Error(0)
 }
 

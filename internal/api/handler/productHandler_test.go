@@ -110,7 +110,7 @@ func TestProductHandler_createProduct(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{}, nil).Once()
+				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 			expectedCode: fiber.StatusCreated,
 		},
@@ -120,7 +120,7 @@ func TestProductHandler_createProduct(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(nil, pgutils.ErrDuplicatedKey).Once()
+				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(pgutils.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
@@ -137,7 +137,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{}, nil).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -147,7 +147,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgutils.ErrDuplicatedKey).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(pgutils.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
@@ -157,7 +157,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
