@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/raulaguila/go-api/configs"
 	"os"
 	"strings"
 
@@ -44,8 +45,8 @@ func initServices() {
 
 func initHandlers(app *fiber.App) {
 	// Initialize access middlewares
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), userRepository)
-	middleware.MidRefresh = middleware.Auth(os.Getenv("RFRESH_TOKEN_PUBLIC"), userRepository)
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, userRepository)
+	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, userRepository)
 
 	// Prepare endpoints for the API.
 	handler.NewMiscHandler(app.Group(""))

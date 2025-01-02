@@ -1,22 +1,31 @@
 package configs
 
 import (
+	"crypto/rsa"
 	"embed"
+	"encoding/base64"
 	"os"
 	"path"
 	"runtime"
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
+
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-//go:embed locales/*
-var Locales embed.FS
+var (
+	//go:embed locales/*
+	Locales embed.FS
 
-//go:embed version.txt
-var version string
+	//go:embed version.txt
+	version string
+
+	AccessPrivateKey  *rsa.PrivateKey
+	RefreshPrivateKey *rsa.PrivateKey
+)
 
 func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
@@ -29,4 +38,20 @@ func init() {
 
 	time.Local, err = time.LoadLocation(os.Getenv("TZ"))
 	utils.PanicIfErr(err)
+
+	{
+		accessDecodedKey, err := base64.StdEncoding.DecodeString(os.Getenv("ACCESS_TOKEN_PRIVAT"))
+		utils.PanicIfErr(err)
+
+		AccessPrivateKey, err = jwt.ParseRSAPrivateKeyFromPEM(accessDecodedKey)
+		utils.PanicIfErr(err)
+	}
+
+	{
+		refreshDecodedKey, err := base64.StdEncoding.DecodeString(os.Getenv("RFRESH_TOKEN_PRIVAT"))
+		utils.PanicIfErr(err)
+
+		RefreshPrivateKey, err = jwt.ParseRSAPrivateKeyFromPEM(refreshDecodedKey)
+		utils.PanicIfErr(err)
+	}
 }

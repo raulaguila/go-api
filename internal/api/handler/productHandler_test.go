@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"testing"
 
@@ -20,7 +19,7 @@ import (
 )
 
 func setupProductApp(mockService *_mocks.ProductServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{

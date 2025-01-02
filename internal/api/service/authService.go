@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/configs"
 	"os"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
@@ -38,8 +39,8 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 }
 
 func (s *authService) generateAuthOutputDTO(user *domain.User) *dto.AuthOutputDTO {
-	accessToken, _ := user.GenerateToken(os.Getenv("ACCESS_TOKEN_EXPIRE"), os.Getenv("ACCESS_TOKEN_PRIVAT"))
-	refreshToken, _ := user.GenerateToken(os.Getenv("RFRESH_TOKEN_EXPIRE"), os.Getenv("RFRESH_TOKEN_PRIVAT"))
+	accessToken, _ := user.GenerateToken(os.Getenv("ACCESS_TOKEN_EXPIRE"), configs.AccessPrivateKey)
+	refreshToken, _ := user.GenerateToken(os.Getenv("RFRESH_TOKEN_EXPIRE"), configs.RefreshPrivateKey)
 
 	return &dto.AuthOutputDTO{
 		User:         s.generateUserOutputDTO(user),

@@ -2,8 +2,7 @@ package domain
 
 import (
 	"context"
-	"encoding/base64"
-	"fmt"
+	"crypto/rsa"
 	"io"
 	"time"
 
@@ -117,26 +116,38 @@ func (u *User) ValidatePassword(password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(*u.Auth.Password), []byte(password)) == nil
 }
 
-func (u *User) GenerateToken(expire, originalKey string) (string, error) {
-	decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
-	if err != nil {
-		return "", fmt.Errorf("could not decode key: %v", err.Error())
-	}
-
-	key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
-	if err != nil {
-		return "", fmt.Errorf("could not parse key: %v", err.Error())
-	}
-
-	now := time.Now()
-	claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
-
+func (u *User) GenerateToken(expire string, parsedToken *rsa.PrivateKey) (string, error) {
 	life, err := utils.DurationFromString(expire, time.Minute)
-	if err == nil {
-		claims["exp"] = now.Add(life).Unix()
+	claims := jwt.MapClaims{
+		"token":  u.Auth.Token,
+		"expire": err == nil,
+		"iat":    time.Now().Unix(),
 	}
-	claims["expire"] = err == nil
+	if err == nil {
+		claims["exp"] = time.Now().Add(life).Unix()
+	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	return token.SignedString(key)
+	return jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(parsedToken)
+
+	//decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
+	//if err != nil {
+	//	return "", fmt.Errorf("could not decode key: %v", err.Error())
+	//}
+	//
+	//key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
+	//if err != nil {
+	//	return "", fmt.Errorf("could not parse key: %v", err.Error())
+	//}
+	//
+	//now := time.Now()
+	//claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
+	//
+	//life, err := utils.DurationFromString(expire, time.Minute)
+	//if err == nil {
+	//	claims["exp"] = now.Add(life).Unix()
+	//}
+	//claims["expire"] = err == nil
+	//
+	//token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	//return token.SignedString(key)
 }

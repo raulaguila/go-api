@@ -12,9 +12,7 @@ import (
 func main() {
 	db := database.ConnectPostgresDB()
 
-	utils.PanicIfErr(db.AutoMigrate(new(domain.Profile)))
-	utils.PanicIfErr(db.AutoMigrate(new(domain.Auth)))
-	utils.PanicIfErr(db.AutoMigrate(new(domain.User)))
+	utils.PanicIfErr(db.AutoMigrate(new(domain.Profile), new(domain.Auth), new(domain.User)))
 
 	utils.PanicIfErr(db.AutoMigrate(new(domain.Product)))
 }

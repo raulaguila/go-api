@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"encoding/base64"
+	"crypto/rsa"
 	"errors"
 	"log"
 	"os"
@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/golang-jwt/jwt/v5"
-
+	
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -20,12 +20,12 @@ var (
 	MidRefresh fiber.Handler
 )
 
-func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
-	decodedKey, err := base64.StdEncoding.DecodeString(base64key)
-	utils.PanicIfErr(err)
-
-	parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
-	utils.PanicIfErr(err)
+func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
+	//decodedKey, err := base64.StdEncoding.DecodeString(base64key)
+	//utils.PanicIfErr(err)
+	//
+	//parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
+	//utils.PanicIfErr(err)
 
 	return keyauth.New(keyauth.Config{
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
@@ -46,10 +46,10 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-					return nil, err
+					return nil, jwt.ErrTokenSignatureInvalid
 				}
 
-				return parsedKey, nil
+				return parsedKey.Public(), nil
 			})
 			if err != nil {
 				log.Println(err)

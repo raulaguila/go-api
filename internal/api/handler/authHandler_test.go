@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"os"
 	"strings"
 	"testing"
 
@@ -88,7 +87,7 @@ func TestAuthHandler_login(t *testing.T) {
 }
 
 func TestAuthHandler_me(t *testing.T) {
-	middleware.MidAccess = middleware.Auth(os.Getenv("ACCESS_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
 
 	nockService := new(_mocks.AuthServiceMock)
 	tests := []generalHandlerTest{
@@ -107,7 +106,7 @@ func TestAuthHandler_me(t *testing.T) {
 }
 
 func TestAuthHandler_refresh(t *testing.T) {
-	middleware.MidRefresh = middleware.Auth(os.Getenv("RFRESH_TOKEN_PUBLIC"), &_mocks.UserRepositoryMock{})
+	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, &_mocks.UserRepositoryMock{})
 
 	nockService := new(_mocks.AuthServiceMock)
 	tests := []generalHandlerTest{
