@@ -40,13 +40,13 @@ services:
       - api_network
     profiles: [ all, services ]
 
-  backend_binary:
+  backend_built:
 
-    container_name: api_backend_binary
+    container_name: api_backend_built
     build:
       context: .
-      dockerfile: ./build/package/binary.Dockerfile
-    image: api_backend_binary
+      dockerfile: ./build/package/built.Dockerfile
+    image: api_backend_built
     restart: always
     depends_on:
       postgres:
@@ -58,7 +58,7 @@ services:
       - TZ=${TZ}
     networks:
       - api_network
-    profiles: [ all, binary ]
+    profiles: [ all, built ]
 
   backend_source:
 

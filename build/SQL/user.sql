@@ -42,7 +42,7 @@ CREATE TABLE if not exists public.users_profile (
     CONSTRAINT users_profile_pkey PRIMARY KEY (id)
 );
 
-INSERT INTO public.users_profile (name, permissions) VALUES ('ROOT', '{"*": true}');
+INSERT INTO public.users_profile (name, permissions) VALUES ('ROOT', '["*"]');
 
 -- DROP TABLE public.users_auth;
 

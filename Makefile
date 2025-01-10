@@ -22,9 +22,9 @@ compose-build-services: ## Run 'docker compose --env-file configs/.env --profile
 compose-build-source: ## Run 'docker compose --env-file configs/.env --profile services --profile source up -d --build' to create and start containers from source code
 	@${COMPOSE_COMMAND} --profile services --profile source up -d --build
 
-.PHONY: compose-build-binary
-compose-build-binary: ## Run 'docker compose --env-file configs/.env --profile services --profile binary up -d --build' to create and start containers from binary
-	@${COMPOSE_COMMAND} --profile services --profile binary up -d --build
+.PHONY: compose-build-built
+compose-build-built: ## Run 'docker compose --env-file configs/.env --profile services --profile built up -d --build' to create and start containers from built
+	@${COMPOSE_COMMAND} --profile services --profile built up -d --build
 
 .PHONY: compose-down
 compose-down: ## Run 'docker compose --env-file configs/.env --profile all down' to stop and remove containers and networks
@@ -35,17 +35,17 @@ compose-remove: ## Run 'docker compose --env-file configs/.env --profile all dow
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 	@${COMPOSE_COMMAND} --profile all down -v --remove-orphans
 
-.PHONY: compose-exec-binary
-compose-exec-binary: ## Run 'docker compose --env-file configs/.env exec -it backend_binary bash' to access container bash
-	@${COMPOSE_COMMAND} exec -it backend_binary bash
+.PHONY: compose-exec-built
+compose-exec-built: ## Run 'docker compose --env-file configs/.env exec -it backend_built bash' to access container bash
+	@${COMPOSE_COMMAND} exec -it backend_built bash
 
 .PHONY: compose-exec-source
 compose-exec-source: ## Run 'docker compose --env-file configs/.env exec -it backend_source bash' to access container bash
 	@${COMPOSE_COMMAND} exec -it backend_source bash
 
-.PHONY: compose-log-binary
-compose-log-binary: ## Run 'docker compose --env-file configs/.env logs -f backend_binary' to show container logger
-	@${COMPOSE_COMMAND} logs -f backend_binary
+.PHONY: compose-log-built
+compose-log-built: ## Run 'docker compose --env-file configs/.env logs -f backend_built' to show container logger
+	@${COMPOSE_COMMAND} logs -f backend_built
 
 .PHONY: compose-log-source
 compose-log-source: ## Run 'docker compose --env-file configs/.env logs -f backend_source' to show container logger
