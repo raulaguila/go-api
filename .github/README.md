@@ -1,4 +1,4 @@
-<h1 id="title" style="text-align:center">Go API Template</h1>
+# Go API Template
 
 <p style="text-align:center">
   <a href="https://github.com/raulaguila/go-api/releases" target="_blank" style="text-decoration: none;">
@@ -38,16 +38,16 @@
 
 <h1></h1>
 
-1. #### Description [&uarr;](#title)
+1. #### Description [&uarr;](#summary)
 
    User-friendly API template solution designed as a foundation for more complex APIs.
 
-2. #### Prerequisites [&uarr;](#title)
+2. #### Prerequisites [&uarr;](#summary)
     * Docker
     * Docker Compose
     * Golang 1.23+ (Optional)
 
-3. #### Makefile [&uarr;](#title)
+3. #### Makefile [&uarr;](#summary)
    <details>
    <summary>Makefile commands:</summary>
 
@@ -82,16 +82,16 @@
    ```
    </details>
 
-4. #### Starting the Project [&uarr;](#title)
+4. #### Starting the Project [&uarr;](#summary)
     * Download and extract the latest build [release](https://github.com/raulaguila/go-api/releases)
     * Open the terminal in the release folder
     * Run `make compose-build-built`
 
-5. #### Stopping the Project [&uarr;](#title)
+5. #### Stopping the Project [&uarr;](#summary)
     * Open the terminal in the release folder
     * Run `make compose-remove`
 
-6. #### Features [&uarr;](#title)
+6. #### Features [&uarr;](#summary)
 
     * Get default user email and password on environment file `configs/.env`
     * Test API endpoints using [http files](../api) or accessing [swagger page](http://127.0.0.1:9000/swagger)
@@ -142,15 +142,15 @@
        | `/product/{id}` |    `GET`    |  `Get product by ID`   |
        | `/product/{id}` |    `PUT`    | `Update product by ID` |
 
-7. #### Code Status [&uarr;](#title)
+7. #### Code Status [&uarr;](#summary)
     * Development
 
-8. #### Contributors [&uarr;](#title)
+8. #### Contributors [&uarr;](#summary)
 
    <a href="https://github.com/raulaguila" target="_blank">
      <img src="https://contrib.rocks/image?repo=raulaguila/go-api" alt="raulaguila">
    </a>
 
-9. #### License [&uarr;](#title)
+9. #### License [&uarr;](#summary)
 
    Copyright © 2023 [raulaguila](https://github.com/raulaguila). This project is [MIT](../LICENSE) licensed.
