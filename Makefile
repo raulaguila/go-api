@@ -69,7 +69,7 @@ go-test: ## Run tests and generate coverage report
 	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
 	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
 	@gocov test $(packages) | gocov-html -t kit > report.html
-	-open -a "Google Chrome" ./report.html
+	-#open -a "Google Chrome" ./report.html
 
 .PHONY: go-build
 go-build: ## Build the application from source code
