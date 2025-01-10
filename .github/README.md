@@ -99,7 +99,7 @@
     1. ###### Profile Module ([HTTP](../api/profile.http))
 
        | Endpoint        | HTTP Method |       Description        |
-                    |:----------------|:-----------:|:------------------------:|
+       |:----------------|:-----------:|:------------------------:|
        | `/profile`      |    `GET`    |    `Get all profiles`    |
        | `/profile`      |   `POST`    |   `Insert new profile`   |
        | `/profile`      |  `DELETE`   | `Delete profiles by IDs` |
@@ -109,7 +109,7 @@
     2. ###### User Module ([HTTP](../api/user.http))
 
        | Endpoint     | HTTP Method |       Description       |
-                    |:-------------|:-----------:|:-----------------------:|
+       |:-------------|:-----------:|:-----------------------:|
        | `/user`      |    `GET`    |     `Get all users`     |
        | `/user`      |   `POST`    |      `Insert user`      |
        | `/user`      |  `DELETE`   |      `Delete user`      |
@@ -121,7 +121,7 @@
     3. ###### Authentication Module ([HTTP](../api/auth.http)):
 
        | Endpoint | HTTP Method |               Description               |
-                    |:---------|:-----------:|:---------------------------------------:|
+       |:---------|:-----------:|:---------------------------------------:|
        | `/auth`  |   `POST`    |          `User authentication`          |
        | `/auth`  |    `GET`    |  `User authenticated via access token`  |
        | `/auth`  |    `PUT`    | `User refresh tokens via refresh token` |
@@ -135,7 +135,7 @@
     4. ###### Product Module ([HTTP](../api/product.http))
 
        | Endpoint        | HTTP Method |      Description       |
-                    |:----------------|:-----------:|:----------------------:|
+       |:----------------|:-----------:|:----------------------:|
        | `/product`      |    `GET`    |   `Get all products`   |
        | `/product`      |   `POST`    | `Insert a new product` |
        | `/product`      |  `DELETE`   |   `Delete products`    |
