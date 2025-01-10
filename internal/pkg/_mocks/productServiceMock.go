@@ -1,4 +1,4 @@
-package mocks
+package _mocks
 
 import (
 	"context"
@@ -9,6 +9,10 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
 )
+
+func NewProductServiceMock() domain.ProductService {
+	return new(ProductServiceMock)
+}
 
 type ProductServiceMock struct {
 	mock.Mock
@@ -37,17 +41,14 @@ func (s *ProductServiceMock) GetProducts(ctx context.Context, f *filter.Filter) 
 	return ret.Get(0).(*dto.ItemsOutputDTO[dto.ProductOutputDTO]), ret.Error(1)
 }
 
-func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) error {
 	ret := s.Called(ctx, productDTO)
-	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
+	return ret.Error(0)
 }
 
-func (s *ProductServiceMock) UpdateProduct(ctx context.Context, productID uint, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
+func (s *ProductServiceMock) UpdateProduct(ctx context.Context, productID uint, productDTO *dto.ProductInputDTO) error {
 	ret := s.Called(ctx, productID, productDTO)
-	if ret.Get(0) == nil {
-		return nil, ret.Error(1)
-	}
-	return ret.Get(0).(*dto.ProductOutputDTO), ret.Error(1)
+	return ret.Error(0)
 }
 
 func (s *ProductServiceMock) DeleteProducts(ctx context.Context, productIDs []uint) error {

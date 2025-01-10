@@ -3,7 +3,6 @@ name: api
 volumes:
 
   postgres_volume:
-  minio_volume:
 
 networks:
 
@@ -21,6 +20,7 @@ services:
     restart: always
     volumes:
       - postgres_volume:/var/lib/postgresql/data
+      - ./build/SQL:/docker-entrypoint-initdb.d
     command: -p ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -29,42 +29,28 @@ services:
       - POSTGRES_DB=${POSTGRES_BASE}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_BASE}'" ]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+      start_period: 1s
+      start_interval: 2s
     networks:
       - api_network
     profiles: [ all, services ]
 
-  minio:
+  backend_built:
 
-    hostname: minio
-    container_name: api_minio
-    image: bitnami/minio:2024
-    restart: always
-    volumes:
-      - minio_volume:/bitnami/minio/data
-    ports:
-      - ${MINIO_API_PORT}:${MINIO_API_PORT}
-      - ${MINIO_WEB_PORT}:${MINIO_WEB_PORT}
-    environment:
-      - TZ=${TZ}
-      - MINIO_ROOT_USER=${MINIO_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_PASS}
-      - MINIO_API_PORT_NUMBER=${MINIO_API_PORT}
-      - MINIO_CONSOLE_PORT_NUMBER=${MINIO_WEB_PORT}
-    networks:
-      - api_network
-    profiles: [ all, services ]
-
-  backend_binary:
-
-    container_name: api_backend_binary
+    container_name: api_backend_built
     build:
       context: .
-      dockerfile: ./build/package/binary.Dockerfile
-    image: api_backend_binary
+      dockerfile: ./build/package/built.Dockerfile
+    image: api_backend_built
     restart: always
     depends_on:
-      - postgres
-      - minio
+      postgres:
+        condition: service_healthy
     ports:
       - ${API_PORT}:${API_PORT}
     tty: true
@@ -72,7 +58,7 @@ services:
       - TZ=${TZ}
     networks:
       - api_network
-    profiles: [ all, binary ]
+    profiles: [ all, built ]
 
   backend_source:
 
@@ -83,8 +69,8 @@ services:
     image: api_backend_source
     restart: always
     depends_on:
-      - postgres
-      - minio
+      postgres:
+          condition: service_healthy
     ports:
       - ${API_PORT}:${API_PORT}
     tty: true

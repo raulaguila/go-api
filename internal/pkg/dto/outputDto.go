@@ -1,15 +1,17 @@
 package dto
 
+import "github.com/raulaguila/go-api/pkg/pgutils"
+
 type (
 	ProductOutputDTO struct {
 		ID   *uint   `json:"id,omitempty" example:"1"`
-		Name *string `json:"name,omitempty" example:"Automation"`
+		Name *string `json:"name,omitempty" example:"Product 01"`
 	}
 
 	ProfileOutputDTO struct {
 		ID          *uint          `json:"id" example:"1"`
 		Name        *string        `json:"name" example:"ADMIN"`
-		Permissions map[string]any `json:"permissions,omitempty"`
+		Permissions *pgutils.JSONB `json:"permissions,omitempty"`
 	}
 
 	UserOutputDTO struct {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -18,8 +17,7 @@ import (
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/infra/database"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
-	"github.com/raulaguila/go-api/pkg/helper"
-	"github.com/raulaguila/go-api/pkg/minioutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 // @title 							Go API
@@ -33,24 +31,20 @@ import (
 // @securityDefinitions.apiKey		Bearer
 // @in								header
 // @name							Authorization
-// @description 					Type "Bearer" followed by a space and JWT token.
+// @description 					Type "Bearer" followed by a space and the JWT token.
 func main() {
-	db, err := database.ConnectPostgresDB()
-	helper.PanicIfErr(err)
-
-	minioClient := minioutils.NewMinioClient()
-	helper.PanicIfErr(minioClient.InitBucket(context.Background(), os.Getenv("MINIO_BUCKET_FILES"), "*"))
+	db := database.ConnectPostgresDB()
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
-		Prefork:               os.Getenv("SYS_PREFORK") == "1",
+		Prefork:               os.Getenv("API_ENABLE_PREFORK") == "1",
 		CaseSensitive:         true,
 		StrictRouting:         true,
 		DisableStartupMessage: false,
 		AppName:               "Golang template",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
+			return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
 		},
 		BodyLimit: 50 * 1024 * 1024,
 	})
@@ -79,7 +73,7 @@ func main() {
 	app.Use(
 		cors.New(cors.Config{
 			AllowOrigins:  "*",
-			AllowMethods:  strings.Join([]string{fiber.MethodGet, fiber.MethodPost, fiber.MethodPut, fiber.MethodPatch, fiber.MethodDelete, fiber.MethodOptions}, ","),
+			AllowMethods:  strings.Join([]string{fiber.MethodGet, fiber.MethodPost, fiber.MethodPut, fiber.MethodDelete, fiber.MethodOptions}, ","),
 			AllowHeaders:  "*",
 			ExposeHeaders: "*",
 			MaxAge:        1,
@@ -97,10 +91,10 @@ func main() {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				return helper.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"))
+				return utils.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"))
 			},
 		}),
 	)
 
-	handlers.HandleRequests(app, db, minioClient)
+	handlers.HandleRequests(app, db)
 }

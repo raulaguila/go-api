@@ -2,36 +2,30 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/middleware"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/middleware"
 	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/helper"
 	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// middlewareProfileDTO is a middleware handler that parses HTTP request data into a ProfileInputDTO object.
-// The parsed data is extracted from the request body and stored in the context with the key "localDTO".
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: helper.LocalDTO,
+	ContextKey: utils.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
 
-// ProfileHandler handles HTTP requests related to user profiles, utilizing a ProfileService to manage operations and errors.
 type ProfileHandler struct {
 	profileService domain.ProfileService
 	handlerError   func(*fiber.Ctx, error) error
 }
 
-// NewProfileHandler initializes the profile handler with the given router and profile service.
-// It configures the necessary routes and middleware for handling profile-related operations.
-// The handler includes custom error handling for database-related issues.
-func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHandler {
+func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 	handler := &ProfileHandler{
 		profileService: ps,
 		handlerError: newErrorHandler(map[string]map[error][]any{
@@ -39,6 +33,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHan
 				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 			},
 			"*": {
+				utils.ErrInvalidID:         []any{fiber.StatusBadRequest, "invalidID"},
 				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
@@ -50,11 +45,9 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHan
 
 	route.Get("", middlewareFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
-	route.Get("/:"+helper.ParamID, middlewareIDDTO, handler.getProfile)
-	route.Put("/:"+helper.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
-	route.Delete("", handler.deleteProfiles)
-
-	return handler
+	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProfile)
+	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
+	route.Delete("", middlewareIDsDTO, handler.deleteProfiles)
 }
 
 // getProfiles godoc
@@ -63,14 +56,15 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) *ProfileHan
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        filter				query	filter.Filter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
-	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(helper.LocalFilter).(*filter.Filter))
+	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(utils.LocalFilter).(*filter.Filter))
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -84,16 +78,17 @@ func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
 // @Success      201  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      409  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      409  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [post]
 // @Security	 Bearer
 func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
-	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
+	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
 	profile, err := s.profileService.CreateProfile(c.Context(), profileDTO)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -108,16 +103,17 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile/{id} [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*filters.IDFilter)
 	profile, err := s.profileService.GetProfileByID(c.Context(), id.ID)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -132,18 +128,19 @@ func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	helper.HTTPResponse
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      400  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
 func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
-	id := c.Locals(helper.LocalID).(*filters.IDFilter)
-	profileDTO := c.Locals(helper.LocalDTO).(*dto.ProfileInputDTO)
+	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
 	profile, err := s.profileService.UpdateProfile(c.Context(), id.ID, profileDTO)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -158,19 +155,16 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					body	dto.IDsInputDTO     true	"Profile ID"
 // @Success      204  {object}  	nil
-// @Failure      404  {object}  	helper.HTTPResponse
-// @Failure      500  {object}  	helper.HTTPResponse
+// @Failure      404  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
-	toDelete := &dto.IDsInputDTO{}
-	if err := c.BodyParser(toDelete); err != nil {
-		return s.handlerError(c, err)
-	}
-
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
 	if err := s.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}

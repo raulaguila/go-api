@@ -1,35 +1,57 @@
 package configs
 
 import (
+	"crypto/rsa"
 	"embed"
+	"encoding/base64"
 	"os"
 	"path"
 	"runtime"
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
-	"github.com/raulaguila/go-api/pkg/helper"
+
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-//go:embed locales/*
-var Locales embed.FS
+var (
+	//go:embed locales/*
+	Locales embed.FS
 
-//go:embed version.txt
-var version string
+	//go:embed version.txt
+	version string
 
-// init initializes the environment configuration by loading variables from a .env file and setting system properties.
-// It panics if any error occurs during the loading of environment variables or setting time location.
+	AccessPrivateKey  *rsa.PrivateKey
+	RefreshPrivateKey *rsa.PrivateKey
+)
+
 func init() {
 	err := godotenv.Load(path.Join("configs", ".env"))
-	helper.PanicIfErr(err)
 	if err != nil {
 		_, b, _, _ := runtime.Caller(0)
-		helper.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
+		utils.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
 	}
 
-	helper.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))
+	utils.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))
 
 	time.Local, err = time.LoadLocation(os.Getenv("TZ"))
-	helper.PanicIfErr(err)
+	utils.PanicIfErr(err)
+
+	{
+		accessDecodedKey, err := base64.StdEncoding.DecodeString(os.Getenv("ACCESS_TOKEN_PRIVAT"))
+		utils.PanicIfErr(err)
+
+		AccessPrivateKey, err = jwt.ParseRSAPrivateKeyFromPEM(accessDecodedKey)
+		utils.PanicIfErr(err)
+	}
+
+	{
+		refreshDecodedKey, err := base64.StdEncoding.DecodeString(os.Getenv("RFRESH_TOKEN_PRIVAT"))
+		utils.PanicIfErr(err)
+
+		RefreshPrivateKey, err = jwt.ParseRSAPrivateKeyFromPEM(refreshDecodedKey)
+		utils.PanicIfErr(err)
+	}
 }

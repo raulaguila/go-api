@@ -2,32 +2,29 @@ package domain
 
 import (
 	"context"
-	"encoding/base64"
-	"fmt"
+	"crypto/rsa"
 	"io"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-// UserTableName specifies the database table name for storing User entities.
 const UserTableName string = "users"
 
-// User represents a user entity containing basic information and associated authentication details.
 type (
 	User struct {
 		Base
-		Name      string  `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
-		Email     string  `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		PhotoPath *string `gorm:"column:photo;type:varchar(150);null;default:null;"`
-		AuthID    uint    `gorm:"column:auth_id;type:bigint;not null;index;"`
-		Auth      *Auth   `gorm:"constraint:OnDelete:CASCADE"`
+		Name   string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
+		Email  string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
+		AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
+		Auth   *Auth  `gorm:"constraint:OnDelete:CASCADE"`
 	}
 
 	File struct {
@@ -39,16 +36,11 @@ type (
 	UserRepository interface {
 		CountUsers(context.Context, *filters.UserFilter) (int64, error)
 		GetUsers(context.Context, *filters.UserFilter) (*[]User, error)
-		GetUserByID(context.Context, uint) (*User, error)
-		GetUserByMail(context.Context, string) (*User, error)
+		GetUser(context.Context, *User) error
 		GetUserByToken(context.Context, string) (*User, error)
 		CreateUser(context.Context, *User) error
 		UpdateUser(context.Context, *User) error
 		DeleteUsers(context.Context, []uint) error
-		ResetUserPassword(context.Context, *User) error
-		SetUserPassword(context.Context, *User, *dto.PasswordInputDTO) error
-		SetUserPhoto(context.Context, *User, *File) error
-		GenerateUserPhotoURL(context.Context, *User) (string, error)
 	}
 
 	UserService interface {
@@ -60,33 +52,24 @@ type (
 		DeleteUsers(context.Context, []uint) error
 		ResetUserPassword(context.Context, string) error
 		SetUserPassword(context.Context, string, *dto.PasswordInputDTO) error
-		SetUserPhoto(context.Context, uint, *File) error
-		GenerateUserPhotoURL(context.Context, uint) (string, error)
 	}
 )
 
-// TableName returns the name of the database table associated with the User struct.
 func (u *User) TableName() string {
 	return UserTableName
 }
 
-// ToMap converts the User struct into a map with string keys and dynamic value types, representing its fields.
 func (u *User) ToMap() *map[string]any {
 	mapped := map[string]any{
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
-		"photo":   nil,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
 			"token":      nil,
 			"password":   nil,
 		},
-	}
-
-	if u.PhotoPath != nil {
-		mapped["photo"] = *u.PhotoPath
 	}
 
 	if u.Auth.Password != nil {
@@ -97,56 +80,74 @@ func (u *User) ToMap() *map[string]any {
 	return &mapped
 }
 
-// Bind updates the User fields with values from the provided UserInputDTO if they are not nil.
-// Returns an error if the updated User does not pass validation.
 func (u *User) Bind(p *dto.UserInputDTO) error {
 	if p != nil {
-		if p.Name != nil {
-			u.Name = *p.Name
-		}
-		if p.Email != nil {
-			u.Email = *p.Email
-		}
-		if p.Status != nil {
-			u.Auth.Status = *p.Status
-		}
-		if p.ProfileID != nil {
-			u.Auth.ProfileID = *p.ProfileID
-		}
+		u.Name = utils.PointerValue(p.Name, u.Name)
+		u.Email = utils.PointerValue(p.Email, u.Email)
+		u.Auth.Status = utils.PointerValue(p.Status, u.Auth.Status)
+		u.Auth.ProfileID = utils.PointerValue(p.ProfileID, u.Auth.ProfileID)
 	}
 
 	return validator.StructValidator.Validate(u)
 }
 
-// ValidatePassword compares the provided password with the stored hashed password for the user.
-// Returns true if the password matches, otherwise false.
+func (u *User) SetPassword(password string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	u.Auth.Token = utils.Pointer(uuid.New().String())
+	u.Auth.Password = utils.Pointer(string(hash))
+
+	return nil
+}
+
+func (u *User) ResetPassword() {
+	u.Auth.Token = nil
+	u.Auth.Password = nil
+}
+
 func (u *User) ValidatePassword(password string) bool {
+	if u.Auth.Password == nil {
+		return false
+	}
+
 	return bcrypt.CompareHashAndPassword([]byte(*u.Auth.Password), []byte(password)) == nil
 }
 
-// GenerateToken creates a JWT token for a user with a specified expiration, private key, and IP address.
-// It returns the signed token string or an error if the process fails.
-// The expiration duration is parsed from a string format and used to set the token's expiration claim.
-func (u *User) GenerateToken(expire, originalKey, ip string) (string, error) {
-	decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
-	if err != nil {
-		return "", fmt.Errorf("could not decode key: %v", err.Error())
+func (u *User) GenerateToken(expire string, parsedToken *rsa.PrivateKey) (string, error) {
+	life, err := utils.DurationFromString(expire, time.Minute)
+	claims := jwt.MapClaims{
+		"token":  u.Auth.Token,
+		"expire": err == nil,
+		"iat":    time.Now().Unix(),
 	}
-
-	key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
-	if err != nil {
-		return "", fmt.Errorf("could not parse key: %v", err.Error())
-	}
-
-	now := time.Now()
-	claims := jwt.MapClaims{"token": u.Auth.Token, "ip": ip, "iat": now.Unix()}
-
-	life, err := helper.DurationFromString(expire, time.Minute)
 	if err == nil {
-		claims["exp"] = now.Add(life).Unix()
+		claims["exp"] = time.Now().Add(life).Unix()
 	}
-	claims["expire"] = err == nil
 
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	return token.SignedString(key)
+	return jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(parsedToken)
+
+	//decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
+	//if err != nil {
+	//	return "", fmt.Errorf("could not decode key: %v", err.Error())
+	//}
+	//
+	//key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
+	//if err != nil {
+	//	return "", fmt.Errorf("could not parse key: %v", err.Error())
+	//}
+	//
+	//now := time.Now()
+	//claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
+	//
+	//life, err := utils.DurationFromString(expire, time.Minute)
+	//if err == nil {
+	//	claims["exp"] = now.Add(life).Unix()
+	//}
+	//claims["expire"] = err == nil
+	//
+	//token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	//return token.SignedString(key)
 }

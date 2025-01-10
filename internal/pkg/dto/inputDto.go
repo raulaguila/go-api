@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"github.com/raulaguila/go-api/pkg/pgutils"
+)
+
 type (
 	IDsInputDTO struct {
 		IDs []uint `json:"ids"`
@@ -7,7 +11,7 @@ type (
 
 	ProfileInputDTO struct {
 		Name        *string        `json:"name" example:"ADMIN"`
-		Permissions map[string]any `json:"permissions"`
+		Permissions *pgutils.JSONB `json:"permissions"`
 	}
 
 	UserInputDTO struct {
@@ -28,6 +32,6 @@ type (
 	}
 
 	ProductInputDTO struct {
-		Name *string `json:"name" example:"Automation"`
+		Name *string `json:"name" example:"Product 01"`
 	}
 )

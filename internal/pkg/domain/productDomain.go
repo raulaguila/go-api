@@ -5,13 +5,12 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-// ProductTableName is a constant that specifies the database table name for storing product data.
 const ProductTableName string = "product"
 
-// Product is a struct representing a product entity with a base and a unique name field.
 type (
 	Product struct {
 		Base
@@ -20,10 +19,10 @@ type (
 
 	ProductRepository interface {
 		CountProducts(context.Context, *filter.Filter) (int64, error)
-		GetProductByID(context.Context, uint) (*Product, error)
+		GetProduct(context.Context, *Product) error
 		GetProducts(context.Context, *filter.Filter) (*[]Product, error)
 		CreateProduct(context.Context, *Product) error
-		UpdateProduct(context.Context, *Product) error
+		UpdateProduct(ctx context.Context, product *Product, update map[string]any) error
 		DeleteProducts(context.Context, []uint) error
 	}
 
@@ -31,31 +30,35 @@ type (
 		GenerateProductOutputDTO(*Product) *dto.ProductOutputDTO
 		GetProductByID(context.Context, uint) (*dto.ProductOutputDTO, error)
 		GetProducts(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
-		CreateProduct(context.Context, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
-		UpdateProduct(context.Context, uint, *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
+		CreateProduct(context.Context, *dto.ProductInputDTO) error
+		UpdateProduct(context.Context, uint, *dto.ProductInputDTO) error
 		DeleteProducts(context.Context, []uint) error
 	}
 )
 
-// TableName returns the table name associated with the Product struct.
 func (s *Product) TableName() string { return ProductTableName }
 
-// Bind updates the Product fields based on the provided ProductInputDTO and validates the updated Product structure.
-// If the p.Name is non-nil, it assigns the dereferenced p.Name to the Product's Name field.
-// The method returns any validation error encountered during the update process.
 func (s *Product) Bind(p *dto.ProductInputDTO) error {
 	if p != nil {
-		if p.Name != nil {
-			s.Name = *p.Name
-		}
+		s.Name = utils.PointerValue(p.Name, s.Name)
 	}
 
 	return validator.StructValidator.Validate(s)
 }
 
-// ToMap converts the Product struct into a map, with the key as the field name and the value as the field's value.
 func (s *Product) ToMap() map[string]any {
 	return map[string]any{
 		"name": s.Name,
 	}
+}
+
+func (s *Product) GenerateUpdateMap(data *dto.ProductInputDTO) map[string]any {
+	mapped := map[string]any{}
+	if data != nil {
+		if data.Name != nil {
+			mapped["name"] = *data.Name
+		}
+	}
+
+	return mapped
 }

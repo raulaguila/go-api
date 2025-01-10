@@ -88,13 +88,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -140,13 +140,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -195,13 +195,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -226,6 +226,17 @@ const docTemplate = `{
                 ],
                 "summary": "List products",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -270,7 +281,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -288,7 +299,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -311,6 +322,17 @@ const docTemplate = `{
                 ],
                 "summary": "Insert product",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -342,19 +364,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -377,6 +399,17 @@ const docTemplate = `{
                 ],
                 "summary": "Delete products by IDs",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -405,13 +438,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -436,6 +469,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get product by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -466,19 +510,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -501,6 +545,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update product by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -540,19 +595,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -577,6 +632,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get profiles",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -621,7 +687,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -639,7 +705,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -662,6 +728,17 @@ const docTemplate = `{
                 ],
                 "summary": "Insert profile",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -693,19 +770,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -728,6 +805,17 @@ const docTemplate = `{
                 ],
                 "summary": "Delete profiles by IDs",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -756,13 +844,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -787,6 +875,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get profile by ID",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -817,19 +916,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -852,6 +951,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update profile",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -891,19 +1001,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -928,6 +1038,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get users",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -978,7 +1099,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "default": "updated_at",
-                        "example": "'updated_at', 'created_at', 'name' or some other field from response object",
+                        "example": "updated_at",
                         "name": "sort",
                         "in": "query"
                     }
@@ -996,7 +1117,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1019,6 +1140,17 @@ const docTemplate = `{
                 ],
                 "summary": "Insert user",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1050,19 +1182,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1085,6 +1217,17 @@ const docTemplate = `{
                 ],
                 "summary": "Delete user",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1113,13 +1256,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1139,6 +1282,17 @@ const docTemplate = `{
                 ],
                 "summary": "Set user password",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1175,13 +1329,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1204,6 +1358,17 @@ const docTemplate = `{
                 ],
                 "summary": "Reset user password",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1230,13 +1395,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1261,6 +1426,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get user",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1291,19 +1467,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1326,6 +1502,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update user",
                 "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
                     {
                         "enum": [
                             "en-US",
@@ -1365,128 +1552,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/{id}/photo": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get user photo",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get user photo",
-                "parameters": [
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Set user photo",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Set user photo",
-                "parameters": [
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "profile photo",
-                        "name": "photo",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
                         }
                     }
                 }
@@ -1609,7 +1687,7 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string",
-                    "example": "Automation"
+                    "example": "Product 01"
                 }
             }
         },
@@ -1622,7 +1700,7 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "example": "Automation"
+                    "example": "Product 01"
                 }
             }
         },
@@ -1634,8 +1712,10 @@ const docTemplate = `{
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1651,8 +1731,10 @@ const docTemplate = `{
                     "example": "ADMIN"
                 },
                 "permissions": {
-                    "type": "object",
-                    "additionalProperties": {}
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1701,7 +1783,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_pkg_helper.HTTPResponse": {
+        "github_com_raulaguila_go-api_pkg_utils.HTTPResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1717,7 +1799,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "Bearer": {
-            "description": "Type \"Bearer\" followed by a space and JWT token.",
+            "description": "Type \"Bearer\" followed by a space and the JWT token.",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

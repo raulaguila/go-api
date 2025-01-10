@@ -1,135 +1,108 @@
 package datatransferobject
 
 import (
+	"fmt"
 	"io"
-	"net/http"
-	"strconv"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/google/uuid"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
+
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-type (
-	ProductDTO struct {
-		Name     string  `json:"name"`
-		Price    float64 `json:"price"`
-		Quantity uint64  `json:"quantity"`
-	}
+type TestModel struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
 
-	Product struct {
-		ID string `json:"id"`
-		ProductDTO
-	}
-
-	HttpErrorResponse struct {
-		Code    uint64 `json:"code"`
-		Message string `json:"message"`
-	}
-)
-
-const (
-	endpoint   = "/product"
-	contextKey = "localDTO"
-	errorBody  = `{"code":400,"message":"error to decode dto"}`
-)
-
-func createAppWithMiddleware2Body() *fiber.App {
-	// Create a new app
-	app := fiber.New()
-
-	// Add middleware to app
-	app.Use(New(Config{
-		ContextKey: contextKey,
-		OnLookup:   Body,
-		Model:      &ProductDTO{},
-		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-			return ctx.Status(fiber.StatusBadRequest).JSON(&HttpErrorResponse{
-				Code:    fiber.StatusBadRequest,
-				Message: "error to decode dto",
-			})
+func TestNew(t *testing.T) {
+	tests := []struct {
+		name         string
+		body         io.Reader
+		query        *string
+		config       []Config
+		expectedCode int
+	}{
+		{
+			name: "valid body parser",
+			body: strings.NewReader(`{"name":"John","age":20}`),
+			config: []Config{{
+				OnLookup: Body,
+				Model:    &TestModel{},
+				ErrorHandler: func(c *fiber.Ctx, err error) error {
+					return c.SendStatus(fiber.StatusBadRequest)
+				},
+			}},
+			expectedCode: fiber.StatusOK,
 		},
-	}))
+		{
+			name: "invalid body parser",
+			body: strings.NewReader(`{"name":"John","age":"wrong age type"}`),
+			config: []Config{{
+				OnLookup: Body,
+				Model:    &TestModel{},
+				ErrorHandler: func(c *fiber.Ctx, err error) error {
+					return c.SendStatus(fiber.StatusBadRequest)
+				},
+			}},
+			expectedCode: fiber.StatusBadRequest,
+		},
+		{
+			name:  "valid query parser",
+			query: utils.Pointer("name=John&age=20"),
+			config: []Config{{
+				OnLookup: Query,
+				Model:    &TestModel{},
+				ErrorHandler: func(c *fiber.Ctx, err error) error {
+					return c.SendStatus(fiber.StatusBadRequest)
+				},
+			}},
+			expectedCode: fiber.StatusOK,
+		},
+		{
+			name: "default config",
+			body: strings.NewReader(`{"name":"John","age":20}`),
+			config: []Config{{
+				Model: &TestModel{},
+			}},
+			expectedCode: fiber.StatusOK,
+		},
+		{
+			name: "default config with error",
+			body: strings.NewReader(`{"name":"John","age":"wrong age type"}`),
+			config: []Config{{
+				Model: &TestModel{},
+			}},
+			expectedCode: fiber.StatusBadRequest,
+		},
+	}
 
-	// Create a handler to path "/product"
-	app.Post(endpoint, func(c *fiber.Ctx) error {
-		product := &Product{ID: uuid.New().String(), ProductDTO: *c.Locals(contextKey).(*ProductDTO)}
-		return c.Status(fiber.StatusCreated).JSON(product)
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			app := fiber.New()
+			app.Use(New(tt.config...))
 
-	return app
-}
+			app.Post("/test", func(c *fiber.Ctx) error {
+				obj, ok := c.Locals("localDTO").(*TestModel)
+				if !ok {
+					return c.SendStatus(fiber.StatusBadRequest)
+				}
+				return c.Status(fiber.StatusOK).JSON(obj)
+			})
 
-// go test -run Test_WithoutBodyDTO
-func Test_WithoutBodyDTO(t *testing.T) {
-	// Create a new app
-	app := createAppWithMiddleware2Body()
+			endpoint := "/test"
+			if tt.query != nil {
+				endpoint += "?" + *tt.query
+			}
+			req := httptest.NewRequest(fiber.MethodPost, endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
-	// Create a request without body
-	req, _ := http.NewRequest(fiber.MethodPost, endpoint, nil)
-	req.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-	req.Header.Add(fiber.HeaderContentLength, strconv.FormatInt(req.ContentLength, 10))
-
-	// Send request to the app
-	res, err := app.Test(req)
-	require.NoError(t, err)
-
-	// Read the response body into a string
-	body, err := io.ReadAll(res.Body)
-	require.NoError(t, err)
-
-	// Check that the response has the expected status code and body
-	require.Equal(t, http.StatusBadRequest, res.StatusCode)
-	require.Equal(t, errorBody, string(body))
-}
-
-// go test -run Test_WithCorrectBodyDTO
-func Test_WithCorrectBodyDTO(t *testing.T) {
-	// Create a new app
-	app := createAppWithMiddleware2Body()
-
-	// Create a request with correct body
-	payload := `{"name":"computer","price":5000.5,"quantity":100}`
-	req, _ := http.NewRequest(fiber.MethodPost, endpoint, strings.NewReader(payload))
-	req.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-	req.Header.Add(fiber.HeaderContentLength, strconv.FormatInt(req.ContentLength, 10))
-
-	// Send request to the app
-	res, err := app.Test(req)
-	require.NoError(t, err)
-
-	// Read the response body into a string
-	body, err := io.ReadAll(res.Body)
-	require.NoError(t, err)
-
-	// Check that the response has the expected status code and body
-	require.Equal(t, http.StatusCreated, res.StatusCode)
-	require.Contains(t, string(body), payload[1:])
-}
-
-// go test -run Test_WithInvalidDataDTO
-func Test_WithInvalidDataDTO(t *testing.T) {
-	// Create a new app
-	app := createAppWithMiddleware2Body()
-
-	// Create a request with wrong body
-	payload := `{"name":"computer","price":5000.5,"quantity":"100"}`
-	req, _ := http.NewRequest(fiber.MethodPost, endpoint, strings.NewReader(payload))
-	req.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-	req.Header.Add(fiber.HeaderContentLength, strconv.FormatInt(req.ContentLength, 10))
-
-	// Send request to the app
-	res, err := app.Test(req)
-	require.NoError(t, err)
-
-	// Read the response body into a string
-	body, err := io.ReadAll(res.Body)
-	require.NoError(t, err)
-
-	// Check that the response has the expected status code and body
-	require.Equal(t, http.StatusBadRequest, res.StatusCode)
-	require.Equal(t, errorBody, string(body))
+			resp, err := app.Test(req)
+			require.NoError(t, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(t, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }

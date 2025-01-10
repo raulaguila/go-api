@@ -75,7 +75,7 @@ definitions:
   github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO:
     properties:
       name:
-        example: Automation
+        example: Product 01
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO:
@@ -84,7 +84,7 @@ definitions:
         example: 1
         type: integer
       name:
-        example: Automation
+        example: Product 01
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
@@ -93,8 +93,9 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: {}
-        type: object
+        items:
+          type: integer
+        type: array
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
     properties:
@@ -105,8 +106,9 @@ definitions:
         example: ADMIN
         type: string
       permissions:
-        additionalProperties: {}
-        type: object
+        items:
+          type: integer
+        type: array
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
     properties:
@@ -140,7 +142,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  github_com_raulaguila_go-api_pkg_helper.HTTPResponse:
+  github_com_raulaguila_go-api_pkg_utils.HTTPResponse:
     properties:
       code:
         example: 400
@@ -200,11 +202,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: User authenticated
@@ -239,11 +241,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: User authentication
       tags:
       - Auth
@@ -274,11 +276,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: User refresh
       tags:
       - Auth
@@ -288,6 +290,14 @@ paths:
       - application/json
       description: Delete products by IDs
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -310,11 +320,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete products by IDs
@@ -325,6 +335,14 @@ paths:
       - application/json
       description: List products
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -355,8 +373,7 @@ paths:
         name: search
         type: string
       - default: updated_at
-        example: '''updated_at'', ''created_at'', ''name'' or some other field from
-          response object'
+        example: updated_at
         in: query
         name: sort
         type: string
@@ -372,7 +389,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: List products
@@ -383,6 +400,14 @@ paths:
       - application/json
       description: Insert product
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -407,15 +432,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert product
@@ -427,6 +452,14 @@ paths:
       - application/json
       description: Get product by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -451,15 +484,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get product by ID
@@ -470,6 +503,14 @@ paths:
       - application/json
       description: Update product by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -500,15 +541,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update product by ID
@@ -520,6 +561,14 @@ paths:
       - application/json
       description: Delete profiles by IDs
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -542,11 +591,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete profiles by IDs
@@ -557,6 +606,14 @@ paths:
       - application/json
       description: Get profiles
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -587,8 +644,7 @@ paths:
         name: search
         type: string
       - default: updated_at
-        example: '''updated_at'', ''created_at'', ''name'' or some other field from
-          response object'
+        example: updated_at
         in: query
         name: sort
         type: string
@@ -604,7 +660,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profiles
@@ -615,6 +671,14 @@ paths:
       - application/json
       description: Insert profile
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -639,15 +703,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert profile
@@ -659,6 +723,14 @@ paths:
       - application/json
       description: Get profile by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -683,15 +755,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profile by ID
@@ -702,6 +774,14 @@ paths:
       - application/json
       description: Update profile by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -732,15 +812,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update profile
@@ -752,6 +832,14 @@ paths:
       - application/json
       description: Delete user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -774,11 +862,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete user
@@ -789,6 +877,14 @@ paths:
       - application/json
       description: Get all users
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -823,8 +919,7 @@ paths:
         name: search
         type: string
       - default: updated_at
-        example: '''updated_at'', ''created_at'', ''name'' or some other field from
-          response object'
+        example: updated_at
         in: query
         name: sort
         type: string
@@ -840,7 +935,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get users
@@ -851,6 +946,14 @@ paths:
       - application/json
       description: Insert user
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -875,15 +978,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert user
@@ -895,6 +998,14 @@ paths:
       - application/json
       description: Get user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -919,15 +1030,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get user
@@ -938,6 +1049,14 @@ paths:
       - application/json
       description: Update user by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -968,90 +1087,18 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update user
-      tags:
-      - User
-  /user/{id}/photo:
-    get:
-      consumes:
-      - application/json
-      description: Get user photo
-      parameters:
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
-      security:
-      - Bearer: []
-      summary: Get user photo
-      tags:
-      - User
-    put:
-      consumes:
-      - application/json
-      description: Set user photo
-      parameters:
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      - description: profile photo
-        in: formData
-        name: photo
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
-      security:
-      - Bearer: []
-      summary: Set user photo
       tags:
       - User
   /user/pass:
@@ -1060,6 +1107,14 @@ paths:
       - application/json
       description: Reset user password by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -1081,11 +1136,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Reset user password
@@ -1096,6 +1151,14 @@ paths:
       - application/json
       description: Set user password by ID
       parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
       - default: en-US
         description: Request language
         enum:
@@ -1124,17 +1187,17 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_helper.HTTPResponse'
+            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
       summary: Set user password
       tags:
       - User
 securityDefinitions:
   Bearer:
-    description: Type "Bearer" followed by a space and JWT token.
+    description: Type "Bearer" followed by a space and the JWT token.
     in: header
     name: Authorization
     type: apiKey

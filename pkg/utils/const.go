@@ -1,4 +1,4 @@
-package helper
+package utils
 
 const (
 	LocalID     string = "localID"
@@ -8,4 +8,8 @@ const (
 
 	ParamID   string = "id"
 	ParamMail string = "email"
+
+	PGAuth        string = "Auth"
+	PGProfile     string = "Profile"
+	PGAuthProfile        = PGAuth + "." + PGProfile
 )

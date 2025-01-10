@@ -1,59 +1,55 @@
 package middleware
 
 import (
-	"encoding/base64"
+	"crypto/rsa"
 	"errors"
 	"log"
+	"os"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/golang-jwt/jwt/v5"
-
+	
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/helper"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-// MidAccess is a fiber.Handler middleware for handling access controls.
 var (
 	MidAccess  fiber.Handler
 	MidRefresh fiber.Handler
 )
 
-// Auth initializes a Fiber middleware for JWT authentication.
-// It decodes a base64-encoded public key and leverages it for validating JWT tokens.
-// The function configures keyauth with custom handlers for failed and successful authentications.
-// It uses a UserRepository to fetch user details based on the token claims.
-// Auth stores the fetched user in the Fiber context locals for subsequent middlewares or handlers.
-func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
-	decodedKey, err := base64.StdEncoding.DecodeString(base64key)
-	helper.PanicIfErr(err)
-
-	parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
-	helper.PanicIfErr(err)
+func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
+	//decodedKey, err := base64.StdEncoding.DecodeString(base64key)
+	//utils.PanicIfErr(err)
+	//
+	//parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
+	//utils.PanicIfErr(err)
 
 	return keyauth.New(keyauth.Config{
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
 		AuthScheme: "Bearer",
 		ContextKey: "token",
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(c *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
-			return false
+			c.Locals(utils.LocalUser, new(domain.User))
+			return os.Getenv("API_ACCEPT_SKIP_AUTH") == "1" && c.Get("X-Skip-Auth", "false") == "true"
 		},
 		SuccessHandler: func(c *fiber.Ctx) error {
 			return c.Next()
 		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return helper.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error())
+			return utils.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error())
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-					return nil, err
+					return nil, jwt.ErrTokenSignatureInvalid
 				}
 
-				return parsedKey, nil
+				return parsedKey.Public(), nil
 			})
 			if err != nil {
 				log.Println(err)
@@ -75,7 +71,7 @@ func Auth(base64key string, repo domain.UserRepository) fiber.Handler {
 				return false, errors.New(fiberi18n.MustLocalize(c, "disabledUser"))
 			}
 
-			c.Locals(helper.LocalUser, user)
+			c.Locals(utils.LocalUser, user)
 			return true, nil
 		},
 	})
