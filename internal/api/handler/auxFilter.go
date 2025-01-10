@@ -26,6 +26,9 @@ var middlewareIDDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalID,
 	OnLookup:   datatransferobject.Params,
 	Model:      &filters.IDFilter{},
+	ErrorHandler: func(c *fiber.Ctx, err error) error {
+		return utils.NewHTTPResponse(c, fiber.StatusBadRequest, "invalidID")
+	},
 })
 
 var middlewareIDsDTO = datatransferobject.New(datatransferobject.Config{
