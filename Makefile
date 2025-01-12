@@ -92,7 +92,7 @@ go-audit: ## Conduct quality checks
 
 .PHONY: go-swag
 go-swag: ## Update swagger files
-	@go run github.com/swaggo/swag/cmd/swag@v1.16.3 init -g cmd/go-api/go-api.go --parseDependency
+	@go run github.com/swaggo/swag/cmd/swag@v1.16.4 init -g cmd/go-api/go-api.go --parseDependency
 
 .PHONY: go-format
 go-format: ## Fix code format issues

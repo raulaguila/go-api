@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -106,7 +107,7 @@ func (s *ProductHandler) getProductByID(c *fiber.Ctx) error {
 // @Param        X-Skip-Auth		header	bool					false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string					false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        product 		body	dto.ProductInputDTO	true	"Product model"
-// @Success      201  {object}  	dto.ProductOutputDTO
+// @Success      201  {object}  	utils.HTTPResponse
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      409  {object} 		utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
@@ -118,7 +119,7 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusCreated)
+	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "productCreated"))
 }
 
 // updateProduct godoc
@@ -131,7 +132,7 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Product ID"
 // @Param        product 		body dto.ProductInputDTO true "Product model"
-// @Success      200  {object}  	dto.ProductOutputDTO
+// @Success      200  {object}  	utils.HTTPResponse
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      404  {object}  	utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
@@ -144,7 +145,7 @@ func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "productUpdated"))
 }
 
 // deleteProducts godoc
@@ -155,8 +156,8 @@ func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					body	dto.IDsInputDTO		true	"Product ID"
-// @Success      204  {object}  	nil
+// @Param        ids				body	dto.IDsInputDTO		true	"Products ID"
+// @Success      204  {object}  	utils.HTTPResponse
 // @Failure      404  {object}  	utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /product [delete]
@@ -167,5 +168,5 @@ func (s *ProductHandler) deleteProducts(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return utils.NewHTTPResponse(c, fiber.StatusNoContent, fiberi18n.MustLocalize(c, "productDeleted"))
 }

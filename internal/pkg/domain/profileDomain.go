@@ -20,21 +20,21 @@ type (
 	}
 
 	ProfileRepository interface {
-		CountProfiles(context.Context, *filter.Filter) (int64, error)
-		GetProfile(context.Context, *Profile) error
-		GetProfiles(context.Context, *filter.Filter) (*[]Profile, error)
-		CreateProfile(context.Context, *Profile) error
-		UpdateProfile(context.Context, *Profile) error
-		DeleteProfiles(context.Context, []uint) error
+		CountProfiles(ctx context.Context, f *filter.Filter) (int64, error)
+		GetProfile(ctx context.Context, p *Profile) error
+		GetProfiles(ctx context.Context, f *filter.Filter) (*[]Profile, error)
+		CreateProfile(ctx context.Context, p *Profile) error
+		UpdateProfile(ctx context.Context, p *Profile, m map[string]any) error
+		DeleteProfiles(ctx context.Context, i []uint) error
 	}
 
 	ProfileService interface {
-		GenerateProfileOutputDTO(*Profile) *dto.ProfileOutputDTO
-		GetProfileByID(context.Context, uint) (*dto.ProfileOutputDTO, error)
-		GetProfiles(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
-		CreateProfile(context.Context, *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
-		UpdateProfile(context.Context, uint, *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
-		DeleteProfiles(context.Context, []uint) error
+		GenerateProfileOutputDTO(p *Profile) *dto.ProfileOutputDTO
+		GetProfileByID(ctx context.Context, id uint) (*dto.ProfileOutputDTO, error)
+		GetProfiles(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
+		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) error
+		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) error
+		DeleteProfiles(ctx context.Context, ids []uint) error
 	}
 )
 
@@ -58,4 +58,18 @@ func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
 	}
 
 	return validator.StructValidator.Validate(s)
+}
+
+func (s *Profile) GenerateUpdateMap(data *dto.ProfileInputDTO) map[string]any {
+	mapped := map[string]any{}
+	if data != nil {
+		if data.Name != nil {
+			mapped["name"] = *data.Name
+		}
+		if data.Permissions != nil {
+			mapped["permissions"] = *data.Permissions
+		}
+	}
+
+	return mapped
 }

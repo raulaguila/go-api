@@ -76,37 +76,25 @@ func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) erro
 }
 
 func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) error {
-	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if user.Auth != nil {
-			if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
-				return err
-			}
-		}
-
-		return s.db.Model(user).Updates(user.ToMap()).Error
-	})
+	tx := s.db.WithContext(ctx).Session(&gorm.Session{FullSaveAssociations: true}).Model(user).Updates(user.ToMap())
+	if tx.Error != nil {
+		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
 }
 
 func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error {
-	if len(toDelete) == 0 {
-		return nil
-	}
-
-	users := make([]*domain.User, len(toDelete))
-	if err := s.db.WithContext(ctx).Find(&users, toDelete).Error; err != nil {
-		return err
-	}
-
-	auths := make([]uint, len(toDelete))
-	for _, user := range users {
-		auths = append(auths, user.AuthID)
-	}
-
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.WithContext(ctx).Delete(users).Error; err != nil {
-			return err
+		result := tx.Delete(new(domain.User), "id IN ?", toDelete)
+		if result.Error != nil {
+			return result.Error
 		}
-
-		return tx.WithContext(ctx).Delete(new(domain.Auth), auths).Error
+		if result.RowsAffected == 0 {
+			return gorm.ErrRecordNotFound
+		}
+		return nil
 	})
 }

@@ -21,10 +21,10 @@ const UserTableName string = "users"
 type (
 	User struct {
 		Base
-		Name   string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
-		Email  string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
-		Auth   *Auth  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+		Name  string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
+		Email string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
+		//AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
+		Auth *Auth `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	}
 
 	File struct {
@@ -61,9 +61,9 @@ func (u *User) TableName() string {
 
 func (u *User) ToMap() *map[string]any {
 	mapped := map[string]any{
-		"name":    u.Name,
-		"mail":    u.Email,
-		"auth_id": u.AuthID,
+		"name": u.Name,
+		"mail": u.Email,
+		//"auth_id": u.AuthID,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
@@ -128,26 +128,4 @@ func (u *User) GenerateToken(expire string, parsedToken *rsa.PrivateKey) (string
 	}
 
 	return jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(parsedToken)
-
-	//decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
-	//if err != nil {
-	//	return "", fmt.Errorf("could not decode key: %v", err.Error())
-	//}
-	//
-	//key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
-	//if err != nil {
-	//	return "", fmt.Errorf("could not parse key: %v", err.Error())
-	//}
-	//
-	//now := time.Now()
-	//claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
-	//
-	//life, err := utils.DurationFromString(expire, time.Minute)
-	//if err == nil {
-	//	claims["exp"] = now.Add(life).Unix()
-	//}
-	//claims["expire"] = err == nil
-	//
-	//token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	//return token.SignedString(key)
 }

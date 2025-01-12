@@ -18,21 +18,21 @@ type (
 	}
 
 	ProductRepository interface {
-		CountProducts(context.Context, *filter.Filter) (int64, error)
-		GetProduct(context.Context, *Product) error
-		GetProducts(context.Context, *filter.Filter) (*[]Product, error)
-		CreateProduct(context.Context, *Product) error
-		UpdateProduct(ctx context.Context, product *Product, update map[string]any) error
-		DeleteProducts(context.Context, []uint) error
+		CountProducts(ctx context.Context, f *filter.Filter) (int64, error)
+		GetProduct(ctx context.Context, p *Product) error
+		GetProducts(ctx context.Context, f *filter.Filter) (*[]Product, error)
+		CreateProduct(ctx context.Context, p *Product) error
+		UpdateProduct(ctx context.Context, p *Product, m map[string]any) error
+		DeleteProducts(ctx context.Context, i []uint) error
 	}
 
 	ProductService interface {
 		GenerateProductOutputDTO(*Product) *dto.ProductOutputDTO
-		GetProductByID(context.Context, uint) (*dto.ProductOutputDTO, error)
-		GetProducts(context.Context, *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
-		CreateProduct(context.Context, *dto.ProductInputDTO) error
-		UpdateProduct(context.Context, uint, *dto.ProductInputDTO) error
-		DeleteProducts(context.Context, []uint) error
+		GetProductByID(ctx context.Context, id uint) (*dto.ProductOutputDTO, error)
+		GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
+		CreateProduct(ctx context.Context, pdto *dto.ProductInputDTO) error
+		UpdateProduct(ctx context.Context, id uint, pdto *dto.ProductInputDTO) error
+		DeleteProducts(ctx context.Context, ids []uint) error
 	}
 )
 

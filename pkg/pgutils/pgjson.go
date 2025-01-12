@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	
+
 	"database/sql/driver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"

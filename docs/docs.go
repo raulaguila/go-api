@@ -82,19 +82,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                            "$ref": "#/definitions/dto.UserOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -134,19 +134,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
+                            "$ref": "#/definitions/dto.AuthOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -181,7 +181,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO"
+                            "$ref": "#/definitions/dto.AuthInputDTO"
                         }
                     }
                 ],
@@ -189,19 +189,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
+                            "$ref": "#/definitions/dto.AuthOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -292,14 +292,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO"
+                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_ProductOutputDTO"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -350,7 +350,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO"
+                            "$ref": "#/definitions/dto.ProductInputDTO"
                         }
                     }
                 ],
@@ -358,25 +358,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -427,24 +427,27 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO"
                         }
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -504,25 +507,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
+                            "$ref": "#/definitions/dto.ProductOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -581,7 +584,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO"
+                            "$ref": "#/definitions/dto.ProductInputDTO"
                         }
                     }
                 ],
@@ -589,25 +592,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -698,14 +701,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO"
+                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_ProfileOutputDTO"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -756,7 +759,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
+                            "$ref": "#/definitions/dto.ProfileInputDTO"
                         }
                     }
                 ],
@@ -764,25 +767,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -833,24 +836,27 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO"
                         }
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -910,25 +916,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                            "$ref": "#/definitions/dto.ProfileOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -987,7 +993,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
+                            "$ref": "#/definitions/dto.ProfileInputDTO"
                         }
                     }
                 ],
@@ -995,25 +1001,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1110,14 +1116,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO"
+                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_UserOutputDTO"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1168,7 +1174,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
+                            "$ref": "#/definitions/dto.UserInputDTO"
                         }
                     }
                 ],
@@ -1176,25 +1182,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                            "$ref": "#/definitions/dto.UserOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1245,7 +1251,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO"
                         }
                     }
                 ],
@@ -1256,13 +1262,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1318,7 +1324,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO"
+                            "$ref": "#/definitions/dto.PasswordInputDTO"
                         }
                     }
                 ],
@@ -1329,13 +1335,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1395,13 +1401,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1461,25 +1467,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                            "$ref": "#/definitions/dto.UserOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1538,7 +1544,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
+                            "$ref": "#/definitions/dto.UserInputDTO"
                         }
                     }
                 ],
@@ -1546,25 +1552,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                            "$ref": "#/definitions/dto.UserOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse"
+                            "$ref": "#/definitions/utils.HTTPResponse"
                         }
                     }
                 }
@@ -1572,7 +1578,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO": {
+        "dto.AuthInputDTO": {
             "type": "object",
             "properties": {
                 "login": {
@@ -1585,7 +1591,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO": {
+        "dto.AuthOutputDTO": {
             "type": "object",
             "properties": {
                 "accesstoken": {
@@ -1595,11 +1601,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                    "$ref": "#/definitions/dto.UserOutputDTO"
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO": {
+        "dto.IDsInputDTO": {
             "type": "object",
             "properties": {
                 "ids": {
@@ -1610,49 +1616,49 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO": {
+        "dto.ItemsOutputDTO-dto_ProductOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO"
+                        "$ref": "#/definitions/dto.ProductOutputDTO"
                     }
                 },
                 "pagination": {
-                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
+                    "$ref": "#/definitions/dto.PaginationDTO"
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO": {
+        "dto.ItemsOutputDTO-dto_ProfileOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                        "$ref": "#/definitions/dto.ProfileOutputDTO"
                     }
                 },
                 "pagination": {
-                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
+                    "$ref": "#/definitions/dto.PaginationDTO"
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO": {
+        "dto.ItemsOutputDTO-dto_UserOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
+                        "$ref": "#/definitions/dto.UserOutputDTO"
                     }
                 },
                 "pagination": {
-                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
+                    "$ref": "#/definitions/dto.PaginationDTO"
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO": {
+        "dto.PaginationDTO": {
             "type": "object",
             "properties": {
                 "current_page": {
@@ -1669,7 +1675,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO": {
+        "dto.PasswordInputDTO": {
             "type": "object",
             "properties": {
                 "password": {
@@ -1682,7 +1688,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO": {
+        "dto.ProductInputDTO": {
             "type": "object",
             "properties": {
                 "name": {
@@ -1691,7 +1697,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO": {
+        "dto.ProductOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1704,7 +1710,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO": {
+        "dto.ProfileInputDTO": {
             "type": "object",
             "properties": {
                 "name": {
@@ -1719,7 +1725,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO": {
+        "dto.ProfileOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1738,7 +1744,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO": {
+        "dto.UserInputDTO": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1759,7 +1765,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO": {
+        "dto.UserOutputDTO": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1775,7 +1781,7 @@ const docTemplate = `{
                     "example": "John Cena"
                 },
                 "profile": {
-                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
+                    "$ref": "#/definitions/dto.ProfileOutputDTO"
                 },
                 "status": {
                     "type": "boolean",
@@ -1783,7 +1789,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raulaguila_go-api_pkg_utils.HTTPResponse": {
+        "utils.HTTPResponse": {
             "type": "object",
             "properties": {
                 "code": {

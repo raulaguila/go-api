@@ -1,14 +1,23 @@
 productNotFound: Product not found.
 productRegistered: Product already registered.
 productUsed: Product is being used.
+productCreated: Product created successfully.
+productUpdated: Product updated successfully.
+productDeleted: Product(s) deleted successfully.
 
 profileNotFound: Profile not found.
 profileRegistered: Profile already registered.
 profileUsed: Profile is being used.
+profileCreated: Profile created successfully.
+profileUpdated: Profile updated successfully.
+profileDeleted: Profile(s) deleted successfully.
 
 userNotFound: User not found.
 userRegistered: User already registered.
 userUsed: User is being used.
+userCreated: User created successfully.
+userUpdated: User updated successfully.
+usertDeleted: User(s) deleted successfully.
 
 itemNotFound: Item not found.
 passNotMatch: Passwords does not match.

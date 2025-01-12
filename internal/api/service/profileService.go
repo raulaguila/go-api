@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/pkg/pgutils"
-	"github.com/raulaguila/go-api/pkg/utils"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func NewProfileService(r domain.ProfileRepository) domain.ProfileService {
@@ -48,9 +48,9 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 		return nil, err
 	}
 
-	outputProfiles := make([]dto.ProfileOutputDTO, 0)
-	for _, profile := range *profiles {
-		outputProfiles = append(outputProfiles, *s.GenerateProfileOutputDTO(&profile))
+	outputProfiles := make([]dto.ProfileOutputDTO, len(*profiles))
+	for i, profile := range *profiles {
+		outputProfiles[i] = *s.GenerateProfileOutputDTO(&profile)
 	}
 
 	return &dto.ItemsOutputDTO[dto.ProfileOutputDTO]{
@@ -64,34 +64,18 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 	}, nil
 }
 
-func (s *profileService) CreateProfile(ctx context.Context, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
+func (s *profileService) CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) error {
 	profile := &domain.Profile{Permissions: pgutils.JSONB{}}
-	if err := profile.Bind(data); err != nil {
-		return nil, err
+	if err := profile.Bind(pdto); err != nil {
+		return err
 	}
 
-	if err := s.profileRepository.CreateProfile(ctx, profile); err != nil {
-		return nil, err
-	}
-
-	return s.GenerateProfileOutputDTO(profile), nil
+	return s.profileRepository.CreateProfile(ctx, profile)
 }
 
-func (s *profileService) UpdateProfile(ctx context.Context, profileID uint, data *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
-	profile := &domain.Profile{Base: domain.Base{ID: profileID}}
-	if err := s.profileRepository.GetProfile(ctx, profile); err != nil {
-		return nil, err
-	}
-
-	if err := profile.Bind(data); err != nil {
-		return nil, err
-	}
-
-	if err := s.profileRepository.UpdateProfile(ctx, profile); err != nil {
-		return nil, err
-	}
-
-	return s.GenerateProfileOutputDTO(profile), nil
+func (s *profileService) UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) error {
+	profile := &domain.Profile{Base: domain.Base{ID: id}}
+	return s.profileRepository.UpdateProfile(ctx, profile, profile.GenerateUpdateMap(pdto))
 }
 
 func (s *profileService) DeleteProfiles(ctx context.Context, ids []uint) error {

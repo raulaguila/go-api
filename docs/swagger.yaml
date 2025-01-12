@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO:
+  dto.AuthInputDTO:
     properties:
       login:
         example: admin@admin.com
@@ -9,50 +9,50 @@ definitions:
         example: "12345678"
         type: string
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO:
+  dto.AuthOutputDTO:
     properties:
       accesstoken:
         type: string
       refreshtoken:
         type: string
       user:
-        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+        $ref: '#/definitions/dto.UserOutputDTO'
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO:
+  dto.IDsInputDTO:
     properties:
       ids:
         items:
           type: integer
         type: array
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO:
+  dto.ItemsOutputDTO-dto_ProductOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
+          $ref: '#/definitions/dto.ProductOutputDTO'
         type: array
       pagination:
-        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
+        $ref: '#/definitions/dto.PaginationDTO'
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO:
+  dto.ItemsOutputDTO-dto_ProfileOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+          $ref: '#/definitions/dto.ProfileOutputDTO'
         type: array
       pagination:
-        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
+        $ref: '#/definitions/dto.PaginationDTO'
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO:
+  dto.ItemsOutputDTO-dto_UserOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+          $ref: '#/definitions/dto.UserOutputDTO'
         type: array
       pagination:
-        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
+        $ref: '#/definitions/dto.PaginationDTO'
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO:
+  dto.PaginationDTO:
     properties:
       current_page:
         type: integer
@@ -63,7 +63,7 @@ definitions:
       total_pages:
         type: integer
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO:
+  dto.PasswordInputDTO:
     properties:
       password:
         example: secret
@@ -72,13 +72,13 @@ definitions:
         example: secret
         type: string
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO:
+  dto.ProductInputDTO:
     properties:
       name:
         example: Product 01
         type: string
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO:
+  dto.ProductOutputDTO:
     properties:
       id:
         example: 1
@@ -87,7 +87,7 @@ definitions:
         example: Product 01
         type: string
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
+  dto.ProfileInputDTO:
     properties:
       name:
         example: ADMIN
@@ -97,7 +97,7 @@ definitions:
           type: integer
         type: array
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
+  dto.ProfileOutputDTO:
     properties:
       id:
         example: 1
@@ -110,7 +110,7 @@ definitions:
           type: integer
         type: array
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
+  dto.UserInputDTO:
     properties:
       email:
         example: john.cena@email.com
@@ -125,7 +125,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO:
+  dto.UserOutputDTO:
     properties:
       email:
         example: john.cena@email.com
@@ -137,12 +137,12 @@ definitions:
         example: John Cena
         type: string
       profile:
-        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+        $ref: '#/definitions/dto.ProfileOutputDTO'
       status:
         example: true
         type: boolean
     type: object
-  github_com_raulaguila_go-api_pkg_utils.HTTPResponse:
+  utils.HTTPResponse:
     properties:
       code:
         example: 400
@@ -198,15 +198,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+            $ref: '#/definitions/dto.UserOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: User authenticated
@@ -230,22 +230,22 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO'
+          $ref: '#/definitions/dto.AuthInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
+            $ref: '#/definitions/dto.AuthOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       summary: User authentication
       tags:
       - Auth
@@ -272,15 +272,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
+            $ref: '#/definitions/dto.AuthOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       summary: User refresh
       tags:
       - Auth
@@ -311,20 +311,22 @@ paths:
         name: id
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
+          schema:
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete products by IDs
@@ -384,12 +386,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProductOutputDTO'
+              $ref: '#/definitions/dto.ItemsOutputDTO-dto_ProductOutputDTO'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: List products
@@ -421,26 +423,26 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO'
+          $ref: '#/definitions/dto.ProductInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
+            $ref: '#/definitions/utils.HTTPResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert product
@@ -480,19 +482,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
+            $ref: '#/definitions/dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get product by ID
@@ -530,26 +532,26 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductInputDTO'
+          $ref: '#/definitions/dto.ProductInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProductOutputDTO'
+            $ref: '#/definitions/utils.HTTPResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update product by ID
@@ -582,20 +584,22 @@ paths:
         name: id
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
+          schema:
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete profiles by IDs
@@ -655,12 +659,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO'
+              $ref: '#/definitions/dto.ItemsOutputDTO-dto_ProfileOutputDTO'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profiles
@@ -692,26 +696,26 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
+          $ref: '#/definitions/dto.ProfileInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+            $ref: '#/definitions/utils.HTTPResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert profile
@@ -751,19 +755,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+            $ref: '#/definitions/dto.ProfileOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get profile by ID
@@ -801,26 +805,26 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
+          $ref: '#/definitions/dto.ProfileInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
+            $ref: '#/definitions/utils.HTTPResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update profile
@@ -853,7 +857,7 @@ paths:
         name: id
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO'
       produces:
       - application/json
       responses:
@@ -862,11 +866,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Delete user
@@ -930,12 +934,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO'
+              $ref: '#/definitions/dto.ItemsOutputDTO-dto_UserOutputDTO'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get users
@@ -967,26 +971,26 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
+          $ref: '#/definitions/dto.UserInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+            $ref: '#/definitions/dto.UserOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Insert user
@@ -1026,19 +1030,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+            $ref: '#/definitions/dto.UserOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Get user
@@ -1076,26 +1080,26 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
+          $ref: '#/definitions/dto.UserInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
+            $ref: '#/definitions/dto.UserOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Update user
@@ -1136,11 +1140,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       security:
       - Bearer: []
       summary: Reset user password
@@ -1178,7 +1182,7 @@ paths:
         name: password
         required: true
         schema:
-          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO'
+          $ref: '#/definitions/dto.PasswordInputDTO'
       produces:
       - application/json
       responses:
@@ -1187,11 +1191,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_raulaguila_go-api_pkg_utils.HTTPResponse'
+            $ref: '#/definitions/utils.HTTPResponse'
       summary: Set user password
       tags:
       - User
