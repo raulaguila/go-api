@@ -45,6 +45,7 @@ translate.*.toml
 *.sh
 !env.sh
 backend
+generator
 qodana.yaml
 .golangci.yml
 *.puml
