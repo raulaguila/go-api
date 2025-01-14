@@ -38,13 +38,13 @@ CREATE TABLE if not exists public.users_profile
     created_at  timestamptz default NOW()                                     NOT NULL,
     updated_at  timestamptz default NOW()                                     NOT NULL,
     "name"      varchar(100)                                                  NOT NULL,
-    permissions jsonb                                                         NOT NULL,
+    permissions text[]                                                        NOT NULL,
     CONSTRAINT uni_users_profile_name UNIQUE (name),
     CONSTRAINT users_profile_pkey PRIMARY KEY (id)
 );
 
 INSERT INTO public.users_profile (name, permissions)
-VALUES ('ROOT', '["*"]');
+VALUES ('ROOT', ARRAY ['*']);
 
 
 -- DROP TABLE public.users;
@@ -56,7 +56,6 @@ CREATE TABLE if not exists public.users
     updated_at timestamptz default NOW()                             NOT NULL,
     "name"     varchar(90)                                           NOT NULL,
     mail       varchar(50)                                           NOT NULL,
---     auth_id    int8                                                  NOT NULL,
     CONSTRAINT uni_users_mail UNIQUE (mail),
     CONSTRAINT users_pkey PRIMARY KEY (id)
 --     CONSTRAINT fk_users_auth FOREIGN KEY (auth_id) REFERENCES public.users_auth (id) ON DELETE CASCADE

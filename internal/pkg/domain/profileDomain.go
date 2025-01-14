@@ -3,9 +3,10 @@ package domain
 import (
 	"context"
 
+	"github.com/lib/pq"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
@@ -15,8 +16,8 @@ const ProfileTableName string = "users_profile"
 type (
 	Profile struct {
 		Base
-		Name        string        `gorm:"column:name;type:varchar(100);unique;not null;" validate:"required,min=4"`
-		Permissions pgutils.JSONB `gorm:"column:permissions;type:jsonb;not null;" validate:"required"`
+		Name        string         `gorm:"column:name;type:varchar(100);unique;not null;" validate:"required,min=4"`
+		Permissions pq.StringArray `gorm:"column:permissions;type:text[];not null;" validate:"required"`
 	}
 
 	ProfileRepository interface {

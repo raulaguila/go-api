@@ -422,8 +422,8 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
-                        "description": "Product ID",
-                        "name": "id",
+                        "description": "Products ID",
+                        "name": "ids",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -831,8 +831,8 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
-                        "description": "Profile ID",
-                        "name": "id",
+                        "description": "Profiles ID",
+                        "name": "ids",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1720,7 +1720,7 @@ const docTemplate = `{
                 "permissions": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "type": "string"
                     }
                 }
             }
@@ -1739,7 +1739,7 @@ const docTemplate = `{
                 "permissions": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "type": "string"
                     }
                 }
             }

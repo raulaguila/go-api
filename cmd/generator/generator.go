@@ -31,7 +31,7 @@ func generateRSAPrivateToken() {
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	utils.PanicIfErr(err)
 
-	fmt.Printf("Private key: %v\n", base64.StdEncoding.EncodeToString(pem.EncodeToMemory(&pem.Block{
+	fmt.Printf("Private key: %v\n\n", base64.StdEncoding.EncodeToString(pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 	})))
@@ -45,7 +45,7 @@ func hashPassword() {
 	hash, err := bcrypt.GenerateFromPassword([]byte(scanner.Text()), bcrypt.DefaultCost)
 	utils.PanicIfErr(err)
 
-	fmt.Printf("Hash: %s\n", hash)
+	fmt.Printf("Hash: %s\n\n", hash)
 }
 
 func printMenu() string {

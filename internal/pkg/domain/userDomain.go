@@ -23,8 +23,7 @@ type (
 		Base
 		Name  string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
 		Email string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		//AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
-		Auth *Auth `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+		Auth  *Auth  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	}
 
 	File struct {

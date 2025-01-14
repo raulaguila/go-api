@@ -414,8 +414,8 @@
                         "in": "header"
                     },
                     {
-                        "description": "Product ID",
-                        "name": "id",
+                        "description": "Products ID",
+                        "name": "ids",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -823,8 +823,8 @@
                         "in": "header"
                     },
                     {
-                        "description": "Profile ID",
-                        "name": "id",
+                        "description": "Profiles ID",
+                        "name": "ids",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1712,7 +1712,7 @@
                 "permissions": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "type": "string"
                     }
                 }
             }
@@ -1731,7 +1731,7 @@
                 "permissions": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "type": "string"
                     }
                 }
             }

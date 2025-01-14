@@ -6,7 +6,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -65,7 +64,7 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 }
 
 func (s *profileService) CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) error {
-	profile := &domain.Profile{Permissions: pgutils.JSONB{}}
+	profile := &domain.Profile{Permissions: []string{}}
 	if err := profile.Bind(pdto); err != nil {
 		return err
 	}

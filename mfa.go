@@ -1,9 +1,6 @@
 package main
 
 import (
-	"github.com/pquerna/otp"
-	"github.com/pquerna/otp/totp"
-
 	"bufio"
 	"bytes"
 	"encoding/base32"
@@ -11,6 +8,9 @@ import (
 	"image/png"
 	"os"
 	"time"
+
+	"github.com/pquerna/otp"
+	"github.com/pquerna/otp/totp"
 )
 
 func display(key *otp.Key, data []byte) {
@@ -18,7 +18,7 @@ func display(key *otp.Key, data []byte) {
 	fmt.Printf("Account Name: %s\n", key.AccountName())
 	fmt.Printf("Secret:       %s\n", key.Secret())
 	fmt.Println("Writing PNG to qr-code.png....")
-	os.WriteFile("qr-code.png", data, 0644)
+	_ = os.WriteFile("qr-code.png", data, 0644)
 	fmt.Println("")
 	fmt.Println("Please add your TOTP to your OTP Application now!")
 	fmt.Println("")
@@ -70,6 +70,7 @@ func main() {
 	fmt.Println("Validating TOTP...")
 	passcode := promptForPasscode()
 	valid := totp.Validate(passcode, key.Secret())
+
 	if valid {
 		println("Valid passcode!")
 		os.Exit(0)

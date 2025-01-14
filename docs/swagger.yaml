@@ -94,7 +94,7 @@ definitions:
         type: string
       permissions:
         items:
-          type: integer
+          type: string
         type: array
     type: object
   dto.ProfileOutputDTO:
@@ -107,7 +107,7 @@ definitions:
         type: string
       permissions:
         items:
-          type: integer
+          type: string
         type: array
     type: object
   dto.UserInputDTO:
@@ -306,9 +306,9 @@ paths:
         in: header
         name: Accept-Language
         type: string
-      - description: Product ID
+      - description: Products ID
         in: body
-        name: id
+        name: ids
         required: true
         schema:
           $ref: '#/definitions/dto.IDsInputDTO'
@@ -579,9 +579,9 @@ paths:
         in: header
         name: Accept-Language
         type: string
-      - description: Profile ID
+      - description: Profiles ID
         in: body
-        name: id
+        name: ids
         required: true
         schema:
           $ref: '#/definitions/dto.IDsInputDTO'
