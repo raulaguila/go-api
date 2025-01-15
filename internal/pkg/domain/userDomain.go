@@ -21,9 +21,10 @@ const UserTableName string = "users"
 type (
 	User struct {
 		Base
-		Name  string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
-		Email string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		Auth  *Auth  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+		Name   string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
+		Email  string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
+		AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
+		Auth   *Auth  `gorm:"constraint:OnDelete:CASCADE"`
 	}
 
 	File struct {
@@ -60,9 +61,9 @@ func (u *User) TableName() string {
 
 func (u *User) ToMap() *map[string]any {
 	mapped := map[string]any{
-		"name": u.Name,
-		"mail": u.Email,
-		//"auth_id": u.AuthID,
+		"name":    u.Name,
+		"mail":    u.Email,
+		"auth_id": u.AuthID,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,

@@ -53,15 +53,8 @@ func (s *productRepository) CreateProduct(ctx context.Context, p *domain.Product
 	return s.db.WithContext(ctx).Create(p).Error
 }
 
-func (s *productRepository) UpdateProduct(ctx context.Context, p *domain.Product, m map[string]any) error {
-	tx := s.db.WithContext(ctx).Table(p.TableName()).Where(p).Updates(m)
-	if tx.Error != nil {
-		return tx.Error
-	}
-	if tx.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
-	}
-	return nil
+func (s *productRepository) UpdateProduct(ctx context.Context, p *domain.Product) error {
+	return s.db.WithContext(ctx).Model(p).Updates(p.ToMap()).Error
 }
 
 func (s *productRepository) DeleteProducts(ctx context.Context, i []uint) error {

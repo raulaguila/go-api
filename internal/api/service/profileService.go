@@ -63,18 +63,34 @@ func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.
 	}, nil
 }
 
-func (s *profileService) CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) error {
+func (s *profileService) CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
 	profile := &domain.Profile{Permissions: []string{}}
 	if err := profile.Bind(pdto); err != nil {
-		return err
+		return nil, err
 	}
 
-	return s.profileRepository.CreateProfile(ctx, profile)
+	if err := s.profileRepository.CreateProfile(ctx, profile); err != nil {
+		return nil, err
+	}
+
+	return s.GenerateProfileOutputDTO(profile), nil
 }
 
-func (s *profileService) UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) error {
+func (s *profileService) UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error) {
 	profile := &domain.Profile{Base: domain.Base{ID: id}}
-	return s.profileRepository.UpdateProfile(ctx, profile, profile.GenerateUpdateMap(pdto))
+	if err := s.profileRepository.GetProfile(ctx, profile); err != nil {
+		return nil, err
+	}
+
+	if err := profile.Bind(pdto); err != nil {
+		return nil, err
+	}
+
+	if err := s.profileRepository.UpdateProfile(ctx, profile); err != nil {
+		return nil, err
+	}
+
+	return s.GenerateProfileOutputDTO(profile), nil
 }
 
 func (s *profileService) DeleteProfiles(ctx context.Context, ids []uint) error {

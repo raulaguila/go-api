@@ -62,18 +62,34 @@ func (s *productService) GetProducts(ctx context.Context, f *filter.Filter) (*dt
 	}, nil
 }
 
-func (s *productService) CreateProduct(ctx context.Context, pdto *dto.ProductInputDTO) error {
+func (s *productService) CreateProduct(ctx context.Context, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
 	product := new(domain.Product)
 	if err := product.Bind(pdto); err != nil {
-		return err
+		return nil, err
 	}
 
-	return s.productRepository.CreateProduct(ctx, product)
+	if err := s.productRepository.CreateProduct(ctx, product); err != nil {
+		return nil, err
+	}
+
+	return s.GenerateProductOutputDTO(product), nil
 }
 
-func (s *productService) UpdateProduct(ctx context.Context, id uint, pdto *dto.ProductInputDTO) error {
+func (s *productService) UpdateProduct(ctx context.Context, id uint, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
 	product := &domain.Product{Base: domain.Base{ID: id}}
-	return s.productRepository.UpdateProduct(ctx, product, product.GenerateUpdateMap(pdto))
+	if err := s.productRepository.GetProduct(ctx, product); err != nil {
+		return nil, err
+	}
+
+	if err := product.Bind(pdto); err != nil {
+		return nil, err
+	}
+
+	if err := s.productRepository.UpdateProduct(ctx, product); err != nil {
+		return nil, err
+	}
+
+	return s.GenerateProductOutputDTO(product), nil
 }
 
 func (s *productService) DeleteProducts(ctx context.Context, ids []uint) error {

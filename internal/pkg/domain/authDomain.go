@@ -11,7 +11,6 @@ const AuthTableName string = "users_auth"
 type (
 	Auth struct {
 		Base
-		UserID    uint `gorm:"column:user_id;type:bigint;not null;index;"`
 		Status    bool `gorm:"column:status;type:bool;not null;"`
 		ProfileID uint `gorm:"column:profile_id;type:bigint;not null;index;" validate:"required,min=1"`
 		Profile   *Profile

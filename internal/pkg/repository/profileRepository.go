@@ -54,15 +54,8 @@ func (s *profileRepository) CreateProfile(ctx context.Context, p *domain.Profile
 	return s.db.WithContext(ctx).Create(p).Error
 }
 
-func (s *profileRepository) UpdateProfile(ctx context.Context, p *domain.Profile, m map[string]any) error {
-	tx := s.db.WithContext(ctx).Table(p.TableName()).Where(p).Updates(m)
-	if tx.Error != nil {
-		return tx.Error
-	}
-	if tx.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
-	}
-	return nil
+func (s *profileRepository) UpdateProfile(ctx context.Context, p *domain.Profile) error {
+	return s.db.WithContext(ctx).Model(p).Updates(p.ToMap()).Error
 }
 
 func (s *profileRepository) DeleteProfiles(ctx context.Context, ids []uint) error {

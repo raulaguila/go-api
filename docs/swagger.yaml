@@ -430,7 +430,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -539,7 +539,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/dto.ProductOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -703,7 +703,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/dto.ProfileOutputDTO'
         "400":
           description: Bad Request
           schema:
@@ -812,7 +812,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/dto.ProfileOutputDTO'
         "400":
           description: Bad Request
           schema:

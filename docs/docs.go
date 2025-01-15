@@ -358,7 +358,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/utils.HTTPResponse"
+                            "$ref": "#/definitions/dto.ProductOutputDTO"
                         }
                     },
                     "400": {
@@ -592,7 +592,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.HTTPResponse"
+                            "$ref": "#/definitions/dto.ProductOutputDTO"
                         }
                     },
                     "400": {
@@ -767,7 +767,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/utils.HTTPResponse"
+                            "$ref": "#/definitions/dto.ProfileOutputDTO"
                         }
                     },
                     "400": {
@@ -1001,7 +1001,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.HTTPResponse"
+                            "$ref": "#/definitions/dto.ProfileOutputDTO"
                         }
                     },
                     "400": {

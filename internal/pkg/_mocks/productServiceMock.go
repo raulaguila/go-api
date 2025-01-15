@@ -41,12 +41,12 @@ func (s *ProductServiceMock) GetProducts(ctx context.Context, f *filter.Filter) 
 	return ret.Get(0).(*dto.ItemsOutputDTO[dto.ProductOutputDTO]), ret.Error(1)
 }
 
-func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) error {
+func (s *ProductServiceMock) CreateProduct(ctx context.Context, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
 	ret := s.Called(ctx, productDTO)
 	return ret.Error(0)
 }
 
-func (s *ProductServiceMock) UpdateProduct(ctx context.Context, productID uint, productDTO *dto.ProductInputDTO) error {
+func (s *ProductServiceMock) UpdateProduct(ctx context.Context, productID uint, productDTO *dto.ProductInputDTO) (*dto.ProductOutputDTO, error) {
 	ret := s.Called(ctx, productID, productDTO)
 	return ret.Error(0)
 }

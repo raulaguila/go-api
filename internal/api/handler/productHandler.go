@@ -107,19 +107,19 @@ func (s *ProductHandler) getProductByID(c *fiber.Ctx) error {
 // @Param        X-Skip-Auth		header	bool					false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string					false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        product 		body	dto.ProductInputDTO	true	"Product model"
-// @Success      201  {object}  	utils.HTTPResponse
+// @Success      201  {object}  	dto.ProductOutputDTO
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      409  {object} 		utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /product [post]
 // @Security	 Bearer
 func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
-	productDTO := c.Locals(utils.LocalDTO).(*dto.ProductInputDTO)
-	if err := s.productService.CreateProduct(c.Context(), productDTO); err != nil {
+	productDTO, err := s.productService.CreateProduct(c.Context(), c.Locals(utils.LocalDTO).(*dto.ProductInputDTO))
+	if err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "productCreated"))
+	return c.Status(fiber.StatusCreated).JSON(productDTO)
 }
 
 // updateProduct godoc
@@ -132,7 +132,7 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Product ID"
 // @Param        product 		body dto.ProductInputDTO true "Product model"
-// @Success      200  {object}  	utils.HTTPResponse
+// @Success      200  {object}  	dto.ProductOutputDTO
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      404  {object}  	utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
@@ -140,12 +140,12 @@ func (s *ProductHandler) createProduct(c *fiber.Ctx) error {
 // @Security	 Bearer
 func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 	id := c.Locals(utils.LocalID).(*filters.IDFilter)
-	productDTO := c.Locals(utils.LocalDTO).(*dto.ProductInputDTO)
-	if err := s.productService.UpdateProduct(c.Context(), id.ID, productDTO); err != nil {
+	productDTO, err := s.productService.UpdateProduct(c.Context(), id.ID, c.Locals(utils.LocalDTO).(*dto.ProductInputDTO))
+	if err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "productUpdated"))
+	return c.Status(fiber.StatusOK).JSON(productDTO)
 }
 
 // deleteProducts godoc

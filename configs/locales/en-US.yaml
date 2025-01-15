@@ -1,15 +1,11 @@
 productNotFound: Product not found.
 productRegistered: Product already registered.
 productUsed: Product is being used.
-productCreated: Product created successfully.
-productUpdated: Product updated successfully.
 productDeleted: Product(s) deleted successfully.
 
 profileNotFound: Profile not found.
 profileRegistered: Profile already registered.
 profileUsed: Profile is being used.
-profileCreated: Profile created successfully.
-profileUpdated: Profile updated successfully.
 profileDeleted: Profile(s) deleted successfully.
 
 userNotFound: User not found.

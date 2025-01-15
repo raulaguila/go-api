@@ -107,19 +107,19 @@ func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
-// @Success      201  {object}  	utils.HTTPResponse
+// @Success      201  {object}  	dto.ProfileOutputDTO
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      409  {object}  	utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [post]
 // @Security	 Bearer
 func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
-	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
-	if err := s.profileService.CreateProfile(c.Context(), profileDTO); err != nil {
+	profileDTO, err := s.profileService.CreateProfile(c.Context(), c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO))
+	if err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "profileCreated"))
+	return c.Status(fiber.StatusCreated).JSON(profileDTO)
 }
 
 // updateProfile godoc
@@ -132,7 +132,7 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					path    filters.IDFilter	true	"Profile ID"
 // @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
-// @Success      200  {object}  	utils.HTTPResponse
+// @Success      200  {object}  	dto.ProfileOutputDTO
 // @Failure      400  {object}  	utils.HTTPResponse
 // @Failure      404  {object}  	utils.HTTPResponse
 // @Failure      500  {object}  	utils.HTTPResponse
@@ -140,12 +140,12 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Security	 Bearer
 func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 	id := c.Locals(utils.LocalID).(*filters.IDFilter)
-	profileDTO := c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO)
-	if err := s.profileService.UpdateProfile(c.Context(), id.ID, profileDTO); err != nil {
+	profileDTO, err := s.profileService.UpdateProfile(c.Context(), id.ID, c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO))
+	if err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileUpdated"))
+	return c.Status(fiber.StatusOK).JSON(profileDTO)
 }
 
 // deleteProfiles godoc
@@ -168,5 +168,5 @@ func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusAccepted, fiberi18n.MustLocalize(c, "profileDeleted"))
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileDeleted"))
 }

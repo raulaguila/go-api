@@ -25,7 +25,7 @@ type (
 		GetProfile(ctx context.Context, p *Profile) error
 		GetProfiles(ctx context.Context, f *filter.Filter) (*[]Profile, error)
 		CreateProfile(ctx context.Context, p *Profile) error
-		UpdateProfile(ctx context.Context, p *Profile, m map[string]any) error
+		UpdateProfile(ctx context.Context, p *Profile) error
 		DeleteProfiles(ctx context.Context, i []uint) error
 	}
 
@@ -33,8 +33,8 @@ type (
 		GenerateProfileOutputDTO(p *Profile) *dto.ProfileOutputDTO
 		GetProfileByID(ctx context.Context, id uint) (*dto.ProfileOutputDTO, error)
 		GetProfiles(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
-		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) error
-		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) error
+		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
+		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
 		DeleteProfiles(ctx context.Context, ids []uint) error
 	}
 )
@@ -53,24 +53,8 @@ func (s *Profile) ToMap() *map[string]any {
 func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
 	if p != nil {
 		s.Name = utils.PointerValue(p.Name, s.Name)
-		if p.Permissions != nil {
-			s.Permissions = *p.Permissions
-		}
+		s.Permissions = utils.PointerValue(p.Permissions, s.Permissions)
 	}
 
 	return validator.StructValidator.Validate(s)
-}
-
-func (s *Profile) GenerateUpdateMap(data *dto.ProfileInputDTO) map[string]any {
-	mapped := map[string]any{}
-	if data != nil {
-		if data.Name != nil {
-			mapped["name"] = *data.Name
-		}
-		if data.Permissions != nil {
-			mapped["permissions"] = *data.Permissions
-		}
-	}
-
-	return mapped
 }
