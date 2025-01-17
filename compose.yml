@@ -45,7 +45,7 @@ services:
     container_name: api_backend_built
     build:
       context: .
-      dockerfile: ./build/package/built.Dockerfile
+      dockerfile: build/docker/built.Dockerfile
     image: api_backend_built
     restart: always
     depends_on:
@@ -65,7 +65,7 @@ services:
     container_name: api_backend_source
     build:
       context: .
-      dockerfile: ./build/package/source.Dockerfile
+      dockerfile: build/docker/source.Dockerfile
     image: api_backend_source
     restart: always
     depends_on:

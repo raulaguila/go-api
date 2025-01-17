@@ -5,6 +5,7 @@ const (
 	LocalUser   string = "localUser"
 	LocalDTO    string = "localDTO"
 	LocalFilter string = "localFilter"
+	LocalLang   string = "localLang"
 
 	ParamID   string = "id"
 	ParamMail string = "email"

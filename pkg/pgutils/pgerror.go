@@ -3,6 +3,7 @@ package pgutils
 import (
 	"errors"
 	"fmt"
+
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -15,13 +16,9 @@ var (
 )
 
 func HandlerError(err error) error {
-	if err == nil {
-		return nil
-	}
-
 	var pgError *pgconn.PgError
 	if errors.As(err, &pgError) {
-		switch pgError.Code {
+		switch pgError.SQLState() {
 		case "23505":
 			return ErrDuplicatedKey
 		case "23503":

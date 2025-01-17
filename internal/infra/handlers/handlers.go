@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"github.com/raulaguila/go-api/configs"
+	handler2 "github.com/raulaguila/go-api/internal/api/rest/handler"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	service2 "github.com/raulaguila/go-api/internal/api/rest/service"
 	"os"
 	"strings"
 
@@ -11,9 +14,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/docs"
-	"github.com/raulaguila/go-api/internal/api/handler"
-	"github.com/raulaguila/go-api/internal/api/middleware"
-	"github.com/raulaguila/go-api/internal/api/service"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/pkg/utils"
@@ -37,10 +37,10 @@ func initRepositories(db *gorm.DB) {
 }
 
 func initServices() {
-	profileService = service.NewProfileService(profileRepository)
-	userService = service.NewUserService(userRepository)
-	authService = service.NewAuthService(userRepository)
-	productService = service.NewProductService(productRepository)
+	profileService = service2.NewProfileService(profileRepository)
+	userService = service2.NewUserService(userRepository)
+	authService = service2.NewAuthService(userRepository)
+	productService = service2.NewProductService(productRepository)
 }
 
 func initHandlers(app *fiber.App) {
@@ -49,11 +49,11 @@ func initHandlers(app *fiber.App) {
 	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, userRepository)
 
 	// Prepare endpoints for the API.
-	handler.NewMiscHandler(app.Group(""))
-	handler.NewAuthHandler(app.Group("/auth"), authService)
-	handler.NewProfileHandler(app.Group("/profile"), profileService)
-	handler.NewUserHandler(app.Group("/user"), userService)
-	handler.NewProductHandler(app.Group("/product"), productService)
+	handler2.NewMiscHandler(app.Group(""))
+	handler2.NewAuthHandler(app.Group("/auth"), authService)
+	handler2.NewProfileHandler(app.Group("/profile"), profileService)
+	handler2.NewUserHandler(app.Group("/user"), userService)
+	handler2.NewProductHandler(app.Group("/product"), productService)
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {

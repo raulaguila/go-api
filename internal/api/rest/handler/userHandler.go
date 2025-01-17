@@ -1,13 +1,13 @@
 package handler
 
 import (
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	datatransferobject2 "github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"github.com/raulaguila/go-api/internal/api/middleware"
-	"github.com/raulaguila/go-api/internal/api/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -15,15 +15,15 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
+var middlewareUserDTO = datatransferobject2.New(datatransferobject2.Config{
 	ContextKey: utils.LocalDTO,
-	OnLookup:   datatransferobject.Body,
+	OnLookup:   datatransferobject2.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
-var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
+var middlewarePasswordDTO = datatransferobject2.New(datatransferobject2.Config{
 	ContextKey: utils.LocalDTO,
-	OnLookup:   datatransferobject.Body,
+	OnLookup:   datatransferobject2.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
 
