@@ -3,9 +3,9 @@ package handler
 import (
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/utils"
@@ -48,7 +48,7 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := new(dto.AuthInputDTO)
 	if err := c.BodyParser(credentials); err != nil {
-		return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
+		return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 	}
 
 	authResponse, err := s.authService.Login(c.Context(), credentials)

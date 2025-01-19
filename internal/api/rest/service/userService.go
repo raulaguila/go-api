@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -64,8 +66,8 @@ func (s *userService) GetUsers(ctx context.Context, userFilter *filters.UserFilt
 	return &dto.ItemsOutputDTO[dto.UserOutputDTO]{
 		Items: outputUsers,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(utils.Max(userFilter.Page, 1)),
-			PageSize:    uint(utils.Max(userFilter.Limit, len(outputUsers))),
+			CurrentPage: uint(packhub.Max(userFilter.Page, 1)),
+			PageSize:    uint(packhub.Max(userFilter.Limit, len(outputUsers))),
 			TotalItems:  uint(count),
 			TotalPages:  uint(userFilter.CalcPages(count)),
 		},

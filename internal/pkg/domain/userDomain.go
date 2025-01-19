@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"crypto/rsa"
+	"github.com/raulaguila/packhub"
 	"io"
 	"time"
 
@@ -60,32 +61,25 @@ func (u *User) TableName() string {
 }
 
 func (u *User) ToMap() *map[string]any {
-	mapped := map[string]any{
+	return &map[string]any{
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
-			"token":      nil,
-			"password":   nil,
+			"token":      u.Auth.Token,
+			"password":   u.Auth.Password,
 		},
 	}
-
-	if u.Auth.Password != nil {
-		mapped["Auth"].(map[string]any)["token"] = *u.Auth.Token
-		mapped["Auth"].(map[string]any)["password"] = *u.Auth.Password
-	}
-
-	return &mapped
 }
 
 func (u *User) Bind(p *dto.UserInputDTO) error {
 	if p != nil {
-		u.Name = utils.PointerValue(p.Name, u.Name)
-		u.Email = utils.PointerValue(p.Email, u.Email)
-		u.Auth.Status = utils.PointerValue(p.Status, u.Auth.Status)
-		u.Auth.ProfileID = utils.PointerValue(p.ProfileID, u.Auth.ProfileID)
+		u.Name = packhub.PointerValue(p.Name, u.Name)
+		u.Email = packhub.PointerValue(p.Email, u.Email)
+		u.Auth.Status = packhub.PointerValue(p.Status, u.Auth.Status)
+		u.Auth.ProfileID = packhub.PointerValue(p.ProfileID, u.Auth.ProfileID)
 	}
 
 	return validator.StructValidator.Validate(u)
@@ -97,8 +91,8 @@ func (u *User) SetPassword(password string) error {
 		return err
 	}
 
-	u.Auth.Token = utils.Pointer(uuid.New().String())
-	u.Auth.Password = utils.Pointer(string(hash))
+	u.Auth.Token = packhub.Pointer(uuid.New().String())
+	u.Auth.Password = packhub.Pointer(string(hash))
 
 	return nil
 }

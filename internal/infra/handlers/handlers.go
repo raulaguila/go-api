@@ -1,10 +1,6 @@
 package handlers
 
 import (
-	"github.com/raulaguila/go-api/configs"
-	handler2 "github.com/raulaguila/go-api/internal/api/rest/handler"
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
-	service2 "github.com/raulaguila/go-api/internal/api/rest/service"
 	"os"
 	"strings"
 
@@ -13,7 +9,11 @@ import (
 	"github.com/gofiber/swagger"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/docs"
+	"github.com/raulaguila/go-api/internal/api/rest/handler"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/api/rest/service"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/pkg/utils"
@@ -30,17 +30,17 @@ var (
 	productService domain.ProductService
 )
 
-func initRepositories(db *gorm.DB) {
-	profileRepository = repository.NewProfileRepository(db)
-	userRepository = repository.NewUserRepository(db)
-	productRepository = repository.NewProductRepository(db)
+func initRepositories(postgresDB *gorm.DB) {
+	profileRepository = repository.NewProfileRepository(postgresDB)
+	userRepository = repository.NewUserRepository(postgresDB)
+	productRepository = repository.NewProductRepository(postgresDB)
 }
 
 func initServices() {
-	profileService = service2.NewProfileService(profileRepository)
-	userService = service2.NewUserService(userRepository)
-	authService = service2.NewAuthService(userRepository)
-	productService = service2.NewProductService(productRepository)
+	profileService = service.NewProfileService(profileRepository)
+	userService = service.NewUserService(userRepository)
+	authService = service.NewAuthService(userRepository)
+	productService = service.NewProductService(productRepository)
 }
 
 func initHandlers(app *fiber.App) {
@@ -49,19 +49,19 @@ func initHandlers(app *fiber.App) {
 	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, userRepository)
 
 	// Prepare endpoints for the API.
-	handler2.NewMiscHandler(app.Group(""))
-	handler2.NewAuthHandler(app.Group("/auth"), authService)
-	handler2.NewProfileHandler(app.Group("/profile"), profileService)
-	handler2.NewUserHandler(app.Group("/user"), userService)
-	handler2.NewProductHandler(app.Group("/product"), productService)
+	handler.NewMiscHandler(app.Group(""))
+	handler.NewAuthHandler(app.Group("/auth"), authService)
+	handler.NewProfileHandler(app.Group("/profile"), profileService)
+	handler.NewUserHandler(app.Group("/user"), userService)
+	handler.NewProductHandler(app.Group("/product"), productService)
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		return utils.NewHTTPResponse(c, fiber.StatusNotFound, fiberi18n.MustLocalize(c, "nonExistentRoute"))
+		return utils.NewHTTPResponse(c, fiber.StatusNotFound, fiberi18n.MustLocalize(c, "nonExistentRoute"), nil)
 	})
 }
 
-func HandleRequests(app *fiber.App, db *gorm.DB) {
+func HandleRequests(app *fiber.App, postgresDB *gorm.DB) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "1" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 
@@ -73,7 +73,7 @@ func HandleRequests(app *fiber.App, db *gorm.DB) {
 		}))
 	}
 
-	initRepositories(db)
+	initRepositories(postgresDB)
 	initServices()
 	initHandlers(app)
 

@@ -3,10 +3,10 @@ package handler
 import (
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
-	datatransferobject2 "github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -15,9 +15,9 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-var middlewareProfileDTO = datatransferobject2.New(datatransferobject2.Config{
+var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
-	OnLookup:   datatransferobject2.Body,
+	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
 
@@ -119,7 +119,7 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(profileDTO)
+	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "profileCreated"), profileDTO)
 }
 
 // updateProfile godoc
@@ -145,7 +145,7 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(profileDTO)
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileUpdated"), profileDTO)
 }
 
 // deleteProfiles godoc
@@ -168,5 +168,5 @@ func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileDeleted"))
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileDeleted"), nil)
 }

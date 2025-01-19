@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func NewProductService(r domain.ProductRepository) domain.ProductService {
@@ -54,8 +55,8 @@ func (s *productService) GetProducts(ctx context.Context, f *filter.Filter) (*dt
 	return &dto.ItemsOutputDTO[dto.ProductOutputDTO]{
 		Items: outputProducts,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(utils.Max(f.Page, 1)),
-			PageSize:    uint(utils.Max(f.Limit, len(outputProducts))),
+			CurrentPage: uint(packhub.Max(f.Page, 1)),
+			PageSize:    uint(packhub.Max(f.Limit, len(outputProducts))),
 			TotalItems:  uint(count),
 			TotalPages:  uint(f.CalcPages(count)),
 		},

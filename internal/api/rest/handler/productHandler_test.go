@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"strings"
 	"testing"
 
@@ -13,6 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/pgutils"

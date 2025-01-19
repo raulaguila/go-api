@@ -15,7 +15,7 @@ import (
 	"golang.org/x/text/language"
 
 	"github.com/raulaguila/go-api/configs"
-	"github.com/raulaguila/go-api/internal/infra/database"
+	"github.com/raulaguila/go-api/internal/infra/database/pgsql"
 	"github.com/raulaguila/go-api/internal/infra/handlers"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -33,7 +33,7 @@ import (
 // @name							Authorization
 // @description 					Type "Bearer" followed by a space and the JWT token.
 func main() {
-	db := database.ConnectPostgresDB()
+	postgresDB := pgsql.ConnectPostgresDB()
 
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
@@ -44,7 +44,7 @@ func main() {
 		AppName:               "Golang template",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error())
+			return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error(), nil)
 		},
 		BodyLimit: 50 * 1024 * 1024,
 	})
@@ -91,10 +91,10 @@ func main() {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				return utils.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"))
+				return utils.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"), nil)
 			},
 		}),
 	)
 
-	handlers.HandleRequests(app, db)
+	handlers.HandleRequests(app, postgresDB)
 }

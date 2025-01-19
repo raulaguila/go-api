@@ -3,9 +3,10 @@ package domain
 import (
 	"context"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -19,17 +20,17 @@ type (
 
 	ProductRepository interface {
 		CountProducts(ctx context.Context, f *filter.Filter) (int64, error)
-		GetProduct(ctx context.Context, p *Product) error
 		GetProducts(ctx context.Context, f *filter.Filter) (*[]Product, error)
+		GetProduct(ctx context.Context, p *Product) error
 		CreateProduct(ctx context.Context, p *Product) error
 		UpdateProduct(ctx context.Context, p *Product) error
-		DeleteProducts(ctx context.Context, i []uint) error
+		DeleteProducts(ctx context.Context, ids []uint) error
 	}
 
 	ProductService interface {
 		GenerateProductOutputDTO(*Product) *dto.ProductOutputDTO
-		GetProductByID(ctx context.Context, id uint) (*dto.ProductOutputDTO, error)
 		GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
+		GetProductByID(ctx context.Context, id uint) (*dto.ProductOutputDTO, error)
 		CreateProduct(ctx context.Context, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
 		UpdateProduct(ctx context.Context, id uint, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
 		DeleteProducts(ctx context.Context, ids []uint) error
@@ -40,7 +41,7 @@ func (s *Product) TableName() string { return ProductTableName }
 
 func (s *Product) Bind(p *dto.ProductInputDTO) error {
 	if p != nil {
-		s.Name = utils.PointerValue(p.Name, s.Name)
+		s.Name = packhub.PointerValue(p.Name, s.Name)
 	}
 
 	return validator.StructValidator.Validate(s)

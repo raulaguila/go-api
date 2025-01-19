@@ -1,9 +1,9 @@
 module github.com/raulaguila/go-api
 
-go 1.23
+go 1.23.4
 
 require (
-	github.com/go-playground/validator/v10 v10.23.0
+	github.com/go-playground/validator/v10 v10.24.0
 	github.com/gofiber/contrib/fiberi18n/v2 v2.0.5
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/gofiber/swagger v1.1.1
@@ -14,6 +14,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/nexidian/gocliselect v1.0.0
 	github.com/pquerna/otp v1.4.0
+	github.com/raulaguila/packhub v0.0.0-20250117040039-cc1e0f61ec39
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/swag v1.16.4
 	golang.org/x/crypto v0.32.0

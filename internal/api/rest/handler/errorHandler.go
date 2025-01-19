@@ -19,13 +19,13 @@ func newErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx
 				for key, value := range mapper {
 					switch pgErr := pgutils.HandlerError(err); {
 					case errors.Is(pgErr, key):
-						return utils.NewHTTPResponse(c, value[0].(int), fiberi18n.MustLocalize(c, value[1].(string)))
+						return utils.NewHTTPResponse(c, value[0].(int), fiberi18n.MustLocalize(c, value[1].(string)), nil)
 					}
 				}
 			}
 		}
 
 		log.Printf("Undected error '%v': %s\n", reflect.TypeOf(err), err.Error())
-		return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, fiberi18n.MustLocalize(c, "errGeneric"))
+		return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, fiberi18n.MustLocalize(c, "errGeneric"), nil)
 	}
 }

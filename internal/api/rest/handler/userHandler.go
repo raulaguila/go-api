@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
-	datatransferobject2 "github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
-	"strings"
-
+	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"net/url"
 
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
@@ -15,15 +15,15 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-var middlewareUserDTO = datatransferobject2.New(datatransferobject2.Config{
+var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
-	OnLookup:   datatransferobject2.Body,
+	OnLookup:   datatransferobject.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
-var middlewarePasswordDTO = datatransferobject2.New(datatransferobject2.Config{
+var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalDTO,
-	OnLookup:   datatransferobject2.Body,
+	OnLookup:   datatransferobject.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
 
@@ -113,7 +113,7 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(user)
+	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "userCreated"), user)
 }
 
 // getUser godoc
@@ -165,7 +165,7 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userUpdated"), user)
 }
 
 // deleteUser godoc
@@ -188,7 +188,7 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userDeleted"), nil)
 }
 
 // resetUser godoc
@@ -206,12 +206,16 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Router       /user/pass [delete]
 // @Security	 Bearer
 func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
-	mail := strings.ReplaceAll(c.Query(utils.ParamMail), "%40", "@")
-	if err := h.userService.ResetUserPassword(c.Context(), mail); err != nil {
+	email, err := url.QueryUnescape(c.Query(utils.ParamMail, ""))
+	if err != nil {
 		return h.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	if err := h.userService.ResetUserPassword(c.Context(), email); err != nil {
+		return h.handlerError(c, err)
+	}
+
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passReset"), nil)
 }
 
 // passwordUser godoc
@@ -229,15 +233,19 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /user/pass [put]
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
+	email, err := url.QueryUnescape(c.Query(utils.ParamMail, ""))
+	if err != nil {
+		return h.handlerError(c, err)
+	}
+
 	pass := c.Locals(utils.LocalDTO).(*dto.PasswordInputDTO)
 	if pass.Password == nil || pass.PasswordConfirm == nil || *pass.Password != *pass.PasswordConfirm {
 		return h.handlerError(c, utils.ErrPasswordsDoNotMatch)
 	}
 
-	mail := strings.ReplaceAll(c.Query(utils.ParamMail), "%40", "@")
-	if err := h.userService.SetUserPassword(c.Context(), mail, pass); err != nil {
+	if err := h.userService.SetUserPassword(c.Context(), email, pass); err != nil {
 		return h.handlerError(c, err)
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passSet"), nil)
 }

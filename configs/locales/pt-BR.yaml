@@ -1,11 +1,15 @@
 productNotFound: Produto não encontrado.
 productRegistered: Produto já cadastrado.
 productUsed: Produto em uso.
+productCreated: Produto criado com sucesso.
+productUpdated: Produto atualizado com sucesso.
 productDeleted: Produto(s) deletado(s) com sucesso.
 
 profileNotFound: Perfil não encontrado.
 profileRegistered: Perfil já registrado.
 profileUsed: Perfil em uso.
+profileCreated: Perfil criado com sucesso.
+profileUpdated: Perfil atualizado com sucesso.
 profileDeleted: Perfil(s) deletado(s) com sucesso.
 
 userNotFound: Usuário não encontrado.
@@ -14,6 +18,8 @@ userUsed: Usuário em uso.
 userCreated: Usuário criado com sucesso.
 userUpdated: Usuário atualizado com sucesso.
 userDeleted: Usuário(s) deletado(s) com sucesso.
+passSet: Senha definida com sucesso.
+passReset: Senha redefinida com sucesso.
 
 itemNotFound: Item não encontrado.
 passNotMatch: Senhas não correspondem.

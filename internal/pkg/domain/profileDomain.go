@@ -2,12 +2,12 @@ package domain
 
 import (
 	"context"
+	"github.com/raulaguila/packhub"
 
 	"github.com/lib/pq"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -52,8 +52,8 @@ func (s *Profile) ToMap() *map[string]any {
 
 func (s *Profile) Bind(p *dto.ProfileInputDTO) error {
 	if p != nil {
-		s.Name = utils.PointerValue(p.Name, s.Name)
-		s.Permissions = utils.PointerValue(p.Permissions, s.Permissions)
+		s.Name = packhub.PointerValue(p.Name, s.Name)
+		s.Permissions = packhub.PointerValue(p.Permissions, s.Permissions)
 	}
 
 	return validator.StructValidator.Validate(s)

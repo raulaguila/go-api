@@ -21,12 +21,12 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
+			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 		}
 
 		f, err := file.Open()
 		if err != nil {
-			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"))
+			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 		}
 		defer func(f multipart.File) {
 			if err := f.Close(); err != nil {
