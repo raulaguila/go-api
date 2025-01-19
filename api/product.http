@@ -49,7 +49,7 @@ Content-Type: application/json
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 201, "Wrong status code");
-        client.global.set("id", response.body.id);
+        client.global.set("id", response.body.object.id);
         client.global.set("body_create", `{"name":"Product Created"}`);
     });
 %}
@@ -66,9 +66,9 @@ Content-Type: application/json
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
         let auxSend = JSON.parse(client.global.get("body_create"));
-        let auxRecv = response.body;
+        let auxReceived = response.body;
         for (let key in auxSend) {
-            client.assert(auxSend[key] === auxRecv[key], "Wrong key value: " + key + "(" + auxSend[key] + " != " + auxRecv[key] + ")");
+            client.assert(auxSend[key] === auxReceived[key], "Wrong key value: " + key + "(" + auxSend[key] + " != " + auxReceived[key] + ")");
         }
     });
 %}
@@ -88,7 +88,7 @@ Content-Type: application/json
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 200, "Wrong status code");
-        client.global.set("id", response.body.id);
+        client.global.set("id", response.body.object.id);
         client.global.set("body_update", `{"name":"Product Updated"}`);
     });
 %}
@@ -126,7 +126,7 @@ Content-Type: application/json
 
 > {%
     client.test("Request executed successfully", function () {
-        client.assert(response.status === 204, "Wrong status code");
+        client.assert(response.status === 200, "Wrong status code");
     });
 %}
 

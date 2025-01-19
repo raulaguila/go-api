@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/pgerror"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -17,7 +17,7 @@ func newErrorHandler(possiblesErrors map[string]map[error][]any) func(*fiber.Ctx
 		for method, mapper := range possiblesErrors {
 			if method == c.Method() || method == "*" {
 				for key, value := range mapper {
-					switch pgErr := pgutils.HandlerError(err); {
+					switch pgErr := pgerror.HandlerError(err); {
 					case errors.Is(pgErr, key):
 						return utils.NewHTTPResponse(c, value[0].(int), fiberi18n.MustLocalize(c, value[1].(string)), nil)
 					}

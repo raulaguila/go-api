@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/pgerror"
 )
 
 func TestProfile_TableName(t *testing.T) {
@@ -23,13 +23,13 @@ func TestProfile_ToMap(t *testing.T) {
 	}{
 		{
 			"ValidProfile",
-			&Profile{Name: "John Doe", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
-			map[string]any{"name": "John Doe", "permissions": pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
+			&Profile{Name: "John Doe", Permissions: pgerror.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
+			map[string]any{"name": "John Doe", "permissions": pgerror.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
 		},
 		{
 			"EmptyProfile",
 			&Profile{},
-			map[string]any{"name": "", "permissions": pgutils.JSONB(nil)},
+			map[string]any{"name": "", "permissions": pgerror.JSONB(nil)},
 		},
 	}
 
@@ -42,7 +42,7 @@ func TestProfile_ToMap(t *testing.T) {
 }
 
 func TestProfile_Bind(t *testing.T) {
-	permissions := pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))
+	permissions := pgerror.JSONB(json.RawMessage([]byte(`{"read": true}`)))
 	tests := []struct {
 		name        string
 		profileName string
@@ -56,7 +56,7 @@ func TestProfile_Bind(t *testing.T) {
 			"New Name",
 			&dto.ProfileInputDTO{Name: new(string), Permissions: &permissions},
 			&Profile{},
-			&Profile{Name: "New Name", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
+			&Profile{Name: "New Name", Permissions: pgerror.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
 			false,
 		},
 		{

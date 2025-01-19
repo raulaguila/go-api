@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 > {%
-    client.global.set("id", response.body.id);
+    client.global.set("id", response.body.object.id);
     client.test("Request executed successfully", function () {
         client.assert(response.status === 201, "Wrong status code");
     });

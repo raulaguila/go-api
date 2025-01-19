@@ -10,8 +10,8 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/pkg/pgerror"
 	"github.com/raulaguila/go-api/pkg/pgfilter"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -31,12 +31,12 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 		profileService: ps,
 		handlerError: newErrorHandler(map[string]map[error][]any{
 			fiber.MethodDelete: {
-				pgutils.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
+				pgerror.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 			},
 			"*": {
 				utils.ErrInvalidID:         []any{fiber.StatusBadRequest, "invalidID"},
-				pgutils.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
-				pgutils.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
+				pgerror.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
+				pgerror.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
 			},
 		}),

@@ -1,4 +1,4 @@
-package pgutils
+package pgerror
 
 import (
 	"errors"
