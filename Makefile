@@ -69,11 +69,12 @@ go-test: ## Run tests and generate coverage report
 	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
 	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
 	@gocov test $(packages) | gocov-html -t kit > report.html
-	-#open -a "Google Chrome" ./report.html
+	-open ./report.html
 
 .PHONY: go-build
 go-build: ## Build the application from source code
 	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o generator cmd/generator/generator.go
 
 .PHONY: go-benchmark
 go-benchmark: ## Benchmark code performance
@@ -91,7 +92,7 @@ go-audit: ## Conduct quality checks
 
 .PHONY: go-swag
 go-swag: ## Update swagger files
-	@go run github.com/swaggo/swag/cmd/swag@v1.16.3 init -g cmd/go-api/go-api.go --parseDependency
+	@go run github.com/swaggo/swag/cmd/swag@v1.16.4 init -g cmd/go-api/go-api.go --parseDependency
 
 .PHONY: go-format
 go-format: ## Fix code format issues

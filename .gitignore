@@ -31,9 +31,10 @@ coverage.html
 .docker/
 .vscode/
 .run/
-!build/
 bin/
 docker/
+!build/
+!build/docker
 
 # Files
 *.7z
@@ -45,6 +46,7 @@ translate.*.toml
 *.sh
 !env.sh
 backend
+generator
 qodana.yaml
 .golangci.yml
 *.puml

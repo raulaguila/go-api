@@ -1,8 +1,6 @@
 package dto
 
-import (
-	"github.com/raulaguila/go-api/pkg/pgutils"
-)
+import "github.com/lib/pq"
 
 type (
 	IDsInputDTO struct {
@@ -10,8 +8,8 @@ type (
 	}
 
 	ProfileInputDTO struct {
-		Name        *string        `json:"name" example:"ADMIN"`
-		Permissions *pgutils.JSONB `json:"permissions"`
+		Name        *string         `json:"name" example:"ADMIN"`
+		Permissions *pq.StringArray `json:"permissions"`
 	}
 
 	UserInputDTO struct {

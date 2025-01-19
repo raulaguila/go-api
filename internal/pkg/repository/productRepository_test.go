@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -23,7 +23,7 @@ func TestProductRepository_CountProducts(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filter.Filter
+		filter        *pgfilter.Filter
 		expectedCount int64
 		expectedError error
 	}{
@@ -70,7 +70,7 @@ func TestProductRepository_GetProducts(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filter.Filter
+		filter        *pgfilter.Filter
 		expectedNames []string
 		expectedErr   error
 	}{
@@ -82,7 +82,7 @@ func TestProductRepository_GetProducts(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 1"}).Error)
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 2"}).Error)
 			},
-			filter:        filter.New("name", "asc"),
+			filter:        pgfilter.New("name", "asc"),
 			expectedNames: []string{"Product 1", "Product 2"},
 			expectedErr:   nil,
 		},
@@ -92,7 +92,7 @@ func TestProductRepository_GetProducts(t *testing.T) {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Product{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 			},
-			filter:        filter.New("name", "asc"),
+			filter:        pgfilter.New("name", "asc"),
 			expectedNames: []string{},
 			expectedErr:   nil,
 		},
@@ -217,7 +217,6 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 		name        string
 		mockSetup   func()
 		input       *domain.Product
-		mapped      map[string]any
 		expectedErr error
 	}{
 		{
@@ -227,8 +226,7 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 1"}).Error)
 			},
-			input:       &domain.Product{Base: domain.Base{ID: 1}},
-			mapped:      map[string]any{"name": "Updated Product 1"},
+			input:       &domain.Product{Base: domain.Base{ID: 1}, Name: "Updated Product 1"},
 			expectedErr: nil,
 		},
 	}
@@ -236,7 +234,7 @@ func TestProductRepository_UpdateProduct(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockSetup()
-			assert.Equal(t, tt.expectedErr, repository.UpdateProduct(context.Background(), tt.input, tt.mapped))
+			assert.Equal(t, tt.expectedErr, repository.UpdateProduct(context.Background(), tt.input))
 		})
 	}
 }

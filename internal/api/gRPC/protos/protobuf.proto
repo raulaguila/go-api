@@ -1,0 +1,3 @@
+message IDFilter {
+  required int32 uid = 1;
+}

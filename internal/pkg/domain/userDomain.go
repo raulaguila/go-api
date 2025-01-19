@@ -10,8 +10,9 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
@@ -34,8 +35,8 @@ type (
 	}
 
 	UserRepository interface {
-		CountUsers(context.Context, *filters.UserFilter) (int64, error)
-		GetUsers(context.Context, *filters.UserFilter) (*[]User, error)
+		CountUsers(context.Context, *dto.UserFilter) (int64, error)
+		GetUsers(context.Context, *dto.UserFilter) (*[]User, error)
 		GetUser(context.Context, *User) error
 		GetUserByToken(context.Context, string) (*User, error)
 		CreateUser(context.Context, *User) error
@@ -46,7 +47,7 @@ type (
 	UserService interface {
 		GenerateUserOutputDTO(*User) *dto.UserOutputDTO
 		GetUserByID(context.Context, uint) (*dto.UserOutputDTO, error)
-		GetUsers(context.Context, *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error)
+		GetUsers(context.Context, *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error)
 		CreateUser(context.Context, *dto.UserInputDTO) (*dto.UserOutputDTO, error)
 		UpdateUser(context.Context, uint, *dto.UserInputDTO) (*dto.UserOutputDTO, error)
 		DeleteUsers(context.Context, []uint) error
@@ -60,32 +61,25 @@ func (u *User) TableName() string {
 }
 
 func (u *User) ToMap() *map[string]any {
-	mapped := map[string]any{
+	return &map[string]any{
 		"name":    u.Name,
 		"mail":    u.Email,
 		"auth_id": u.AuthID,
 		"Auth": map[string]any{
 			"status":     u.Auth.Status,
 			"profile_id": u.Auth.ProfileID,
-			"token":      nil,
-			"password":   nil,
+			"token":      u.Auth.Token,
+			"password":   u.Auth.Password,
 		},
 	}
-
-	if u.Auth.Password != nil {
-		mapped["Auth"].(map[string]any)["token"] = *u.Auth.Token
-		mapped["Auth"].(map[string]any)["password"] = *u.Auth.Password
-	}
-
-	return &mapped
 }
 
 func (u *User) Bind(p *dto.UserInputDTO) error {
 	if p != nil {
-		u.Name = utils.PointerValue(p.Name, u.Name)
-		u.Email = utils.PointerValue(p.Email, u.Email)
-		u.Auth.Status = utils.PointerValue(p.Status, u.Auth.Status)
-		u.Auth.ProfileID = utils.PointerValue(p.ProfileID, u.Auth.ProfileID)
+		u.Name = packhub.PointerValue(p.Name, u.Name)
+		u.Email = packhub.PointerValue(p.Email, u.Email)
+		u.Auth.Status = packhub.PointerValue(p.Status, u.Auth.Status)
+		u.Auth.ProfileID = packhub.PointerValue(p.ProfileID, u.Auth.ProfileID)
 	}
 
 	return validator.StructValidator.Validate(u)
@@ -97,8 +91,8 @@ func (u *User) SetPassword(password string) error {
 		return err
 	}
 
-	u.Auth.Token = utils.Pointer(uuid.New().String())
-	u.Auth.Password = utils.Pointer(string(hash))
+	u.Auth.Token = packhub.Pointer(uuid.New().String())
+	u.Auth.Password = packhub.Pointer(string(hash))
 
 	return nil
 }
@@ -128,26 +122,4 @@ func (u *User) GenerateToken(expire string, parsedToken *rsa.PrivateKey) (string
 	}
 
 	return jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(parsedToken)
-
-	//decodedKey, err := base64.StdEncoding.DecodeString(originalKey)
-	//if err != nil {
-	//	return "", fmt.Errorf("could not decode key: %v", err.Error())
-	//}
-	//
-	//key, err := jwt.ParseRSAPrivateKeyFromPEM(decodedKey)
-	//if err != nil {
-	//	return "", fmt.Errorf("could not parse key: %v", err.Error())
-	//}
-	//
-	//now := time.Now()
-	//claims := jwt.MapClaims{"token": u.Auth.Token, "iat": now.Unix()}
-	//
-	//life, err := utils.DurationFromString(expire, time.Minute)
-	//if err == nil {
-	//	claims["exp"] = now.Add(life).Unix()
-	//}
-	//claims["expire"] = err == nil
-	//
-	//token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	//return token.SignedString(key)
 }

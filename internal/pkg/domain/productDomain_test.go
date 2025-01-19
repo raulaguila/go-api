@@ -7,7 +7,7 @@ package domain
 //	"testing"
 //
 //	"github.com/raulaguila/go-api/internal/pkg/dto"
-//	"github.com/raulaguila/go-api/pkg/filter"
+//	"github.com/raulaguila/go-api/pkg/pgfilter"
 //	"github.com/stretchr/testify/assert"
 //)
 //
@@ -65,7 +65,7 @@ package domain
 //	err      error
 //}
 //
-//func (repo *mockProductRepository) CountProducts(ctx context.Context, f *filter.Filter) (int64, error) {
+//func (repo *mockProductRepository) CountProducts(ctx context.Context, f *pgfilter.Filter) (int64, error) {
 //	if repo.err != nil {
 //		return 0, repo.err
 //	}
@@ -79,7 +79,7 @@ package domain
 //	return repo.products[id], nil
 //}
 //
-//func (repo *mockProductRepository) GetProducts(ctx context.Context, f *filter.Filter) (*[]Product, error) {
+//func (repo *mockProductRepository) GetProducts(ctx context.Context, f *pgfilter.Filter) (*[]Product, error) {
 //	if repo.err != nil {
 //		return nil, repo.err
 //	}

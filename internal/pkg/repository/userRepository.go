@@ -6,8 +6,10 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -21,37 +23,38 @@ type userRepository struct {
 	db *gorm.DB
 }
 
-func (s *userRepository) applyFilter(ctx context.Context, filter *filters.UserFilter) *gorm.DB {
+func (s *userRepository) applyFilter(ctx context.Context, f *dto.UserFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
-	if filter != nil {
-		if filter.ProfileID != 0 {
-			db = db.Where(domain.AuthTableName+".profile_id = ?", filter.ProfileID)
+	if f != nil {
+		if f.ProfileID != 0 {
+			db = db.Where(domain.AuthTableName+".profile_id = ?", f.ProfileID)
 		}
 		db = db.Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.auth_id", domain.AuthTableName, domain.AuthTableName, domain.UserTableName))
 		db = db.Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.profile_id", domain.ProfileTableName, domain.ProfileTableName, domain.AuthTableName))
-		db = filter.ApplySearchLike(db,
+		if where := f.ApplySearchLike(
 			domain.UserTableName+".name",
 			domain.UserTableName+".mail",
 			domain.ProfileTableName+".name",
-		)
-		tbName := domain.UserTableName
-		db = filter.ApplyOrder(db, &tbName)
+		); where != "" {
+			db = db.Where(where)
+		}
+		db = db.Order(f.ApplyOrder(packhub.Pointer(domain.UserTableName)))
 	}
 
 	return db.Group(domain.UserTableName + ".id")
 }
 
-func (s *userRepository) CountUsers(ctx context.Context, filter *filters.UserFilter) (int64, error) {
+func (s *userRepository) CountUsers(ctx context.Context, f *dto.UserFilter) (int64, error) {
 	var count int64
-
-	db := s.applyFilter(ctx, filter)
-	return count, db.Model(new(domain.User)).Count(&count).Error
+	return count, s.applyFilter(ctx, f).Model(new(domain.User)).Count(&count).Error
 }
 
-func (s *userRepository) GetUsers(ctx context.Context, filter *filters.UserFilter) (*[]domain.User, error) {
-	db := s.applyFilter(ctx, filter)
-	if filter != nil {
-		db = filter.ApplyPagination(db)
+func (s *userRepository) GetUsers(ctx context.Context, f *dto.UserFilter) (*[]domain.User, error) {
+	db := s.applyFilter(ctx, f)
+	if f != nil {
+		if ok, offset, limit := f.ApplyPagination(); ok {
+			db = db.Offset(offset).Limit(limit)
+		}
 	}
 
 	users := new([]domain.User)
@@ -77,10 +80,8 @@ func (s *userRepository) CreateUser(ctx context.Context, user *domain.User) erro
 
 func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if user.Auth != nil {
-			if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
-				return err
-			}
+		if err := s.db.Model(user.Auth).Updates(user.Auth.ToMap()).Error; err != nil {
+			return err
 		}
 
 		return s.db.Model(user).Updates(user.ToMap()).Error
@@ -88,25 +89,14 @@ func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) erro
 }
 
 func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error {
-	if len(toDelete) == 0 {
-		return nil
-	}
-
-	users := make([]*domain.User, len(toDelete))
-	if err := s.db.WithContext(ctx).Find(&users, toDelete).Error; err != nil {
-		return err
-	}
-
-	auths := make([]uint, len(toDelete))
-	for _, user := range users {
-		auths = append(auths, user.AuthID)
-	}
-
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.WithContext(ctx).Delete(users).Error; err != nil {
-			return err
+		result := tx.Delete(new(domain.User), "id IN ?", toDelete)
+		if result.Error != nil {
+			return result.Error
 		}
-
-		return tx.WithContext(ctx).Delete(new(domain.Auth), auths).Error
+		if result.RowsAffected == 0 {
+			return gorm.ErrRecordNotFound
+		}
+		return nil
 	})
 }

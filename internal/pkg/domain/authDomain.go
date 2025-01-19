@@ -28,17 +28,10 @@ type (
 func (s *Auth) TableName() string { return AuthTableName }
 
 func (s *Auth) ToMap() *map[string]any {
-	mapped := map[string]any{
+	return &map[string]any{
 		"status":     s.Status,
 		"profile_id": s.ProfileID,
-		"token":      nil,
-		"password":   nil,
+		"token":      s.Token,
+		"password":   s.Password,
 	}
-
-	if s.Token != nil {
-		mapped["token"] = *s.Token
-		mapped["password"] = *s.Password
-	}
-
-	return &mapped
 }

@@ -7,7 +7,6 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 )
 
 func NewUserServiceMock() domain.UserService {
@@ -33,7 +32,7 @@ func (m *UserServiceMock) SetUserPhoto(ctx context.Context, userID uint, file *d
 	return args.Error(0)
 }
 
-func (m *UserServiceMock) GetUsers(ctx context.Context, filter *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
+func (m *UserServiceMock) GetUsers(ctx context.Context, filter *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
 	args := m.Called(ctx, filter)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)

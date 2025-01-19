@@ -2,19 +2,19 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/pgutils"
-	"gorm.io/gorm/logger"
 	"testing"
 
-	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
+	"github.com/raulaguila/go-api/internal/pkg/domain"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
+	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestUserRepository_CountUsers(t *testing.T) {
@@ -25,7 +25,7 @@ func TestUserRepository_CountUsers(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filters.UserFilter
+		filter        *dto.UserFilter
 		expectedCount int64
 		expectedError error
 	}{
@@ -76,7 +76,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filters.UserFilter
+		filter        *dto.UserFilter
 		expectedNames []string
 		expectedErr   error
 	}{
@@ -89,11 +89,11 @@ func TestUserRepository_GetUsers(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
-			filter:        &filters.UserFilter{Filter: *filter.New("name", "asc")},
+			filter:        &dto.UserFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{"User 1", "User 2"},
 			expectedErr:   nil,
 		},
@@ -105,7 +105,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 			},
-			filter:        &filters.UserFilter{Filter: *filter.New("name", "asc")},
+			filter:        &dto.UserFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{},
 			expectedErr:   nil,
 		},
@@ -145,7 +145,7 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
@@ -162,7 +162,7 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
@@ -205,7 +205,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 			},
 			input:       &domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}},
 			expectedErr: nil,
@@ -219,7 +219,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
 			input:       &domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}},
@@ -261,7 +261,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
 			input:       &domain.User{Base: domain.Base{ID: 1}, Name: "Updated User 1", Email: "user1@email.com", Auth: &domain.Auth{Base: domain.Base{ID: 1}, Status: false, ProfileID: 1}},
@@ -299,7 +299,7 @@ func TestUserRepository_DeleteUsers(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 3", Email: "user3@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)

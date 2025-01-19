@@ -1,13 +1,12 @@
 package domain
 
 import (
-	"encoding/json"
+	"github.com/lib/pq"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgutils"
 )
 
 func TestProfile_TableName(t *testing.T) {
@@ -23,13 +22,13 @@ func TestProfile_ToMap(t *testing.T) {
 	}{
 		{
 			"ValidProfile",
-			&Profile{Name: "John Doe", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
-			map[string]any{"name": "John Doe", "permissions": pgutils.JSONB(json.RawMessage([]byte(`{"read": true, "write": false}`)))},
+			&Profile{Name: "John Doe", Permissions: pq.StringArray{"read", "write"}},
+			map[string]any{"name": "John Doe", "permissions": pq.StringArray{"read", "write"}},
 		},
 		{
 			"EmptyProfile",
 			&Profile{},
-			map[string]any{"name": "", "permissions": pgutils.JSONB(nil)},
+			map[string]any{"name": "", "permissions": pq.StringArray(nil)},
 		},
 	}
 
@@ -42,7 +41,7 @@ func TestProfile_ToMap(t *testing.T) {
 }
 
 func TestProfile_Bind(t *testing.T) {
-	permissions := pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))
+	permissions := pq.StringArray{"read"}
 	tests := []struct {
 		name        string
 		profileName string
@@ -56,7 +55,7 @@ func TestProfile_Bind(t *testing.T) {
 			"New Name",
 			&dto.ProfileInputDTO{Name: new(string), Permissions: &permissions},
 			&Profile{},
-			&Profile{Name: "New Name", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
+			&Profile{Name: "New Name", Permissions: pq.StringArray{"read"}},
 			false,
 		},
 		{

@@ -51,8 +51,8 @@ Content-Type: application/json
 > {%
     client.test("Request executed successfully", function () {
         client.assert(response.status === 201, "Wrong status code");
-        client.global.set("id", response.body.id);
-        client.global.set("mail", response.body.email);
+        client.global.set("id", response.body.object.id);
+        client.global.set("mail", response.body.object.email);
     });
 %}
 
@@ -173,7 +173,7 @@ Content-Type: application/json
 
 > {%
     client.test("Request executed successfully", function () {
-        client.assert(response.status === 204, "Wrong status code");
+        client.assert(response.status === 200, "Wrong status code");
     });
 %}
 
