@@ -9,8 +9,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
-
-	"github.com/raulaguila/go-api/pkg/utils"
+	
+	"github.com/raulaguila/packhub"
 )
 
 type TestModel struct {
@@ -52,7 +52,7 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name:  "valid query parser",
-			query: utils.Pointer("name=John&age=20"),
+			query: packhub.Pointer("name=John&age=20"),
 			config: []Config{{
 				OnLookup: Query,
 				Model:    &TestModel{},

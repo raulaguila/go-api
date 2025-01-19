@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"strings"
 	"testing"
 
@@ -13,6 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
@@ -164,7 +164,7 @@ func TestProfileHandler_deleteProfile(t *testing.T) {
 			setupMocks: func() {
 				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4}).Return(nil).Once()
 			},
-			expectedCode: fiber.StatusNoContent,
+			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "bad request",

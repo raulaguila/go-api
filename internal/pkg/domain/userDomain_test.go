@@ -2,12 +2,13 @@ package domain
 
 import (
 	"testing"
-	
+
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/raulaguila/packhub"
+
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestUserTableName(t *testing.T) {
@@ -25,8 +26,8 @@ func TestUserToMap(t *testing.T) {
 		Auth: &Auth{
 			Status:    true,
 			ProfileID: 101,
-			Token:     &token,
-			Password:  &password,
+			Token:     packhub.Pointer(token),
+			Password:  packhub.Pointer(password),
 		},
 	}
 
@@ -38,8 +39,8 @@ func TestUserToMap(t *testing.T) {
 		"Auth": map[string]interface{}{
 			"status":     true,
 			"profile_id": uint(101),
-			"token":      token,
-			"password":   password,
+			"token":      packhub.Pointer(token),
+			"password":   packhub.Pointer(password),
 		},
 	}
 
@@ -50,10 +51,10 @@ func TestUserBind(t *testing.T) {
 	auth := &Auth{}
 	user := User{Name: "Old Name", Email: "old@mail.com", Auth: auth}
 	input := dto.UserInputDTO{
-		Name:      utils.Pointer("New Name"),
-		Email:     utils.Pointer("new@mail.com"),
-		Status:    utils.Pointer(true),
-		ProfileID: utils.Pointer(uint(101)),
+		Name:      packhub.Pointer("New Name"),
+		Email:     packhub.Pointer("new@mail.com"),
+		Status:    packhub.Pointer(true),
+		ProfileID: packhub.Pointer(uint(101)),
 	}
 
 	err := user.Bind(&input)
@@ -68,7 +69,7 @@ func TestUserBind(t *testing.T) {
 func TestUserValidatePassword(t *testing.T) {
 	password := "password123"
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	auth := &Auth{Password: utils.Pointer(string(hash))}
+	auth := &Auth{Password: packhub.Pointer(string(hash))}
 	user := User{Auth: auth}
 
 	t.Run("CorrectPassword", func(t *testing.T) {

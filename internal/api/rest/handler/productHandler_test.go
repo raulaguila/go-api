@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"github.com/raulaguila/packhub"
 	"strings"
 	"testing"
 
@@ -109,7 +110,10 @@ func TestProductHandler_createProduct(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(nil).Once()
+				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{
+					ID:   packhub.Pointer(uint(1)),
+					Name: packhub.Pointer("Product 01"),
+				}, nil).Once()
 			},
 			expectedCode: fiber.StatusCreated,
 		},
@@ -119,7 +123,7 @@ func TestProductHandler_createProduct(t *testing.T) {
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(pgerror.ErrDuplicatedKey).Once()
+				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
@@ -136,7 +140,10 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{
+					ID:   packhub.Pointer(uint(1)),
+					Name: packhub.Pointer("Product 01"),
+				}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -146,7 +153,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(pgerror.ErrDuplicatedKey).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
@@ -156,7 +163,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setupMocks: func() {
-				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(gorm.ErrRecordNotFound).Once()
+				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
@@ -175,7 +182,7 @@ func TestProductHandler_deleteProduct(t *testing.T) {
 			setupMocks: func() {
 				mockService.On("DeleteProducts", mock.Anything, []uint{1, 2, 3}).Return(nil).Once()
 			},
-			expectedCode: fiber.StatusNoContent,
+			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "bad request",

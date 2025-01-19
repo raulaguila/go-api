@@ -164,7 +164,7 @@ func TestUserHandler_deleteUser(t *testing.T) {
 			setupMocks: func() {
 				mockService.On("DeleteUsers", mock.Anything, []uint{1, 2, 3, 4}).Return(nil).Once()
 			},
-			expectedCode: fiber.StatusNoContent,
+			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "bad request",
