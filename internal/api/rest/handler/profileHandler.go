@@ -7,9 +7,9 @@ import (
 
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/pgerror"
 	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
@@ -61,7 +61,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        pgfilter				query	pgfilter.Filter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
@@ -81,15 +81,15 @@ func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path    filters.IDFilter	true	"Profile ID"
+// @Param        id					path    dto.IDFilter		true	"Profile ID"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile/{id} [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*dto.IDFilter)
 	profile, err := s.profileService.GetProfileByID(c.Context(), id.ID)
 	if err != nil {
 		return s.handlerError(c, err)
@@ -108,9 +108,9 @@ func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        profile			body	dto.ProfileInputDTO	true	"Profile model"
 // @Success      201  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      409  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      409  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [post]
 // @Security	 Bearer
 func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
@@ -119,7 +119,7 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "profileCreated"), profileDTO)
+	return HTTPResponse.New(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "profileCreated"), profileDTO)
 }
 
 // updateProfile godoc
@@ -130,22 +130,22 @@ func (s *ProfileHandler) createProfile(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path    filters.IDFilter	true	"Profile ID"
+// @Param        id					path    dto.IDFilter		true	"Profile ID"
 // @Param        profile			body	dto.ProfileInputDTO true	"Profile model"
 // @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
 func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*dto.IDFilter)
 	profileDTO, err := s.profileService.UpdateProfile(c.Context(), id.ID, c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO))
 	if err != nil {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileUpdated"), profileDTO)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileUpdated"), profileDTO)
 }
 
 // deleteProfiles godoc
@@ -157,9 +157,9 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        ids				body	dto.IDsInputDTO     true	"Profiles ID"
-// @Success      204  {object}  	utils.HTTPResponse
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Success      204  {object}  	HTTPResponse.Response
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
@@ -168,5 +168,5 @@ func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
 		return s.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileDeleted"), nil)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "profileDeleted"), nil)
 }

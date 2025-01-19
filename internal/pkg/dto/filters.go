@@ -1,4 +1,4 @@
-package filters
+package dto
 
 import (
 	"github.com/raulaguila/go-api/pkg/pgfilter"

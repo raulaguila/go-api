@@ -7,9 +7,9 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/packhub"
-	
+
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -23,7 +23,7 @@ type userRepository struct {
 	db *gorm.DB
 }
 
-func (s *userRepository) applyFilter(ctx context.Context, f *filters.UserFilter) *gorm.DB {
+func (s *userRepository) applyFilter(ctx context.Context, f *dto.UserFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
 	if f != nil {
 		if f.ProfileID != 0 {
@@ -44,12 +44,12 @@ func (s *userRepository) applyFilter(ctx context.Context, f *filters.UserFilter)
 	return db.Group(domain.UserTableName + ".id")
 }
 
-func (s *userRepository) CountUsers(ctx context.Context, f *filters.UserFilter) (int64, error) {
+func (s *userRepository) CountUsers(ctx context.Context, f *dto.UserFilter) (int64, error) {
 	var count int64
 	return count, s.applyFilter(ctx, f).Model(new(domain.User)).Count(&count).Error
 }
 
-func (s *userRepository) GetUsers(ctx context.Context, f *filters.UserFilter) (*[]domain.User, error) {
+func (s *userRepository) GetUsers(ctx context.Context, f *dto.UserFilter) (*[]domain.User, error) {
 	db := s.applyFilter(ctx, f)
 	if f != nil {
 		if ok, offset, limit := f.ApplyPagination(); ok {

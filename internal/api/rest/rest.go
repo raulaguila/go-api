@@ -20,10 +20,10 @@ import (
 	"github.com/raulaguila/go-api/docs"
 	"github.com/raulaguila/go-api/internal/api/rest/handler"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/internal/pkg/service"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 var (
@@ -64,7 +64,7 @@ func initHandlers(app *fiber.App) {
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
-		return utils.NewHTTPResponse(c, fiber.StatusNotFound, fiberi18n.MustLocalize(c, "nonExistentRoute"), nil)
+		return HTTPResponse.New(c, fiber.StatusNotFound, fiberi18n.MustLocalize(c, "nonExistentRoute"), nil)
 	})
 }
 
@@ -97,7 +97,7 @@ func New(postgresDB *gorm.DB) {
 		AppName:               "Golang template",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return utils.NewHTTPResponse(c, fiber.StatusInternalServerError, err.Error(), nil)
+			return HTTPResponse.New(c, fiber.StatusInternalServerError, err.Error(), nil)
 		},
 		BodyLimit: 50 * 1024 * 1024,
 	})
@@ -144,7 +144,7 @@ func New(postgresDB *gorm.DB) {
 			Max:        100,
 			Expiration: time.Minute,
 			LimitReached: func(c *fiber.Ctx) error {
-				return utils.NewHTTPResponse(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"), nil)
+				return HTTPResponse.New(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"), nil)
 			},
 		}),
 	)

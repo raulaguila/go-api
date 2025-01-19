@@ -8,7 +8,6 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -45,7 +44,7 @@ func (s *userService) GetUserByID(ctx context.Context, userID uint) (*dto.UserOu
 	return s.GenerateUserOutputDTO(user), nil
 }
 
-func (s *userService) GetUsers(ctx context.Context, userFilter *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
+func (s *userService) GetUsers(ctx context.Context, userFilter *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
 	users, err := s.userRepository.GetUsers(ctx, userFilter)
 	if err != nil {
 		fmt.Printf("GetUsers Error: %v\n", err)

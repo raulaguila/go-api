@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -25,7 +25,7 @@ func TestUserRepository_CountUsers(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filters.UserFilter
+		filter        *dto.UserFilter
 		expectedCount int64
 		expectedError error
 	}{
@@ -76,7 +76,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filters.UserFilter
+		filter        *dto.UserFilter
 		expectedNames []string
 		expectedErr   error
 	}{
@@ -93,7 +93,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
 			},
-			filter:        &filters.UserFilter{Filter: *pgfilter.New("name", "asc")},
+			filter:        &dto.UserFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{"User 1", "User 2"},
 			expectedErr:   nil,
 		},
@@ -105,7 +105,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
 			},
-			filter:        &filters.UserFilter{Filter: *pgfilter.New("name", "asc")},
+			filter:        &dto.UserFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{},
 			expectedErr:   nil,
 		},

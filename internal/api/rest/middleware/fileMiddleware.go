@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -21,12 +22,12 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
+			return HTTPResponse.New(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 		}
 
 		f, err := file.Open()
 		if err != nil {
-			return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
+			return HTTPResponse.New(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 		}
 		defer func(f multipart.File) {
 			if err := f.Close(); err != nil {

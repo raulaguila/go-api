@@ -8,9 +8,9 @@ import (
 
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/pgerror"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -76,13 +76,13 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 // @Produce      json
 // @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        pgfilter				query		filters.UserFilter	false	"Optional Filter"
+// @Param        pgfilter			query		dto.UserFilter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user [get]
 // @Security	 Bearer
 func (h *UserHandler) getUsers(c *fiber.Ctx) error {
-	response, err := h.userService.GetUsers(c.Context(), c.Locals(utils.LocalFilter).(*filters.UserFilter))
+	response, err := h.userService.GetUsers(c.Context(), c.Locals(utils.LocalFilter).(*dto.UserFilter))
 	if err != nil {
 		return h.handlerError(c, err)
 	}
@@ -100,9 +100,9 @@ func (h *UserHandler) getUsers(c *fiber.Ctx) error {
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        user				body		dto.UserInputDTO	true	"User model"
 // @Success      201  {object}  	dto.UserOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      409  {object}  	utils.HTTPResponse
-// @Failure      500  {object} 		utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      409  {object}  	HTTPResponse.Response
+// @Failure      500  {object} 		HTTPResponse.Response
 // @Router       /user [post]
 // @Security	 Bearer
 func (h *UserHandler) createUser(c *fiber.Ctx) error {
@@ -112,7 +112,7 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "userCreated"), user)
+	return HTTPResponse.New(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "userCreated"), user)
 }
 
 // getUser godoc
@@ -123,15 +123,15 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path		filters.IDFilter	true	"User ID"
+// @Param        id					path		dto.IDFilter		true	"User ID"
 // @Success      200  {object}  	dto.UserOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user/{id} [get]
 // @Security	 Bearer
 func (h *UserHandler) getUser(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*dto.IDFilter)
 	user, err := h.userService.GetUserByID(c.Context(), id.ID)
 	if err != nil {
 		return h.handlerError(c, err)
@@ -148,23 +148,23 @@ func (h *UserHandler) getUser(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path		filters.IDFilter	true	"User ID"
+// @Param        id					path		dto.IDFilter		true	"User ID"
 // @Param        user				body		dto.UserInputDTO	true	"User model"
 // @Success      200  {object}  	dto.UserOutputDTO
-// @Failure      400  {object}  	utils.HTTPResponse
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      400  {object}  	HTTPResponse.Response
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user/{id} [put]
 // @Security	 Bearer
 func (h *UserHandler) updateUser(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*filters.IDFilter)
+	id := c.Locals(utils.LocalID).(*dto.IDFilter)
 	userDTO := c.Locals(utils.LocalDTO).(*dto.UserInputDTO)
 	user, err := h.userService.UpdateUser(c.Context(), id.ID, userDTO)
 	if err != nil {
 		return h.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userUpdated"), user)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userUpdated"), user)
 }
 
 // deleteUser godoc
@@ -177,8 +177,8 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        id					body		dto.IDsInputDTO		true	"User ID"
 // @Success      204  {object}  	nil
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
@@ -187,7 +187,7 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userDeleted"), nil)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "userDeleted"), nil)
 }
 
 // resetUser godoc
@@ -200,8 +200,8 @@ func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        email				query		string				true 	"User email"
 // @Success      200  {object}  	nil
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user/pass [delete]
 // @Security	 Bearer
 func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
@@ -214,7 +214,7 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passReset"), nil)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passReset"), nil)
 }
 
 // passwordUser godoc
@@ -228,8 +228,8 @@ func (h *UserHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Param        email				query		string					true	"User email" Format(email)
 // @Param        password			body		dto.PasswordInputDTO	true	"Password model"
 // @Success      200  {object}  	nil
-// @Failure      404  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      404  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user/pass [put]
 func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 	email, err := url.QueryUnescape(c.Query(utils.ParamMail, ""))
@@ -246,5 +246,5 @@ func (h *UserHandler) setUserPassword(c *fiber.Ctx) error {
 		return h.handlerError(c, err)
 	}
 
-	return utils.NewHTTPResponse(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passSet"), nil)
+	return HTTPResponse.New(c, fiber.StatusOK, fiberi18n.MustLocalize(c, "passSet"), nil)
 }

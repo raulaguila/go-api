@@ -1,5 +1,15 @@
 basePath: /
 definitions:
+  HTTPResponse.Response:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+      object: {}
+    type: object
   dto.AuthInputDTO:
     properties:
       login:
@@ -142,16 +152,6 @@ definitions:
         example: true
         type: boolean
     type: object
-  utils.HTTPResponse:
-    properties:
-      code:
-        example: 400
-        type: integer
-      message:
-        example: status bad request
-        type: string
-      object: {}
-    type: object
 info:
   contact:
     email: email@email.com
@@ -203,11 +203,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: User authenticated
@@ -242,11 +242,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       summary: User authentication
       tags:
       - Auth
@@ -277,11 +277,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       summary: User refresh
       tags:
       - Auth
@@ -319,15 +319,15 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Delete products by IDs
@@ -392,7 +392,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: List products
@@ -435,15 +435,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Insert product
@@ -487,15 +487,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get product by ID
@@ -544,15 +544,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Update product by ID
@@ -592,15 +592,15 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Delete profiles by IDs
@@ -665,7 +665,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get profiles
@@ -708,15 +708,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Insert profile
@@ -760,15 +760,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get profile by ID
@@ -817,15 +817,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Update profile
@@ -867,11 +867,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Delete user
@@ -940,7 +940,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get users
@@ -983,15 +983,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Insert user
@@ -1035,15 +1035,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get user
@@ -1092,15 +1092,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Update user
@@ -1141,11 +1141,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Reset user password
@@ -1192,11 +1192,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPResponse'
+            $ref: '#/definitions/HTTPResponse.Response'
       summary: Set user password
       tags:
       - User

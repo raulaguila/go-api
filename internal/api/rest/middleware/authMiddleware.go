@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	"github.com/golang-jwt/jwt/v5"
 
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -41,7 +42,7 @@ func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
 			return c.Next()
 		},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return utils.NewHTTPResponse(c, fiber.StatusUnauthorized, err.Error(), nil)
+			return HTTPResponse.New(c, fiber.StatusUnauthorized, err.Error(), nil)
 		},
 		Validator: func(c *fiber.Ctx, key string) (bool, error) {
 			parsedToken, err := jwt.Parse(key, func(token *jwt.Token) (any, error) {

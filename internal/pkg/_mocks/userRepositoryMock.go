@@ -6,7 +6,6 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 )
 
 func NewUserRepositoryMock() domain.UserRepository {
@@ -39,7 +38,7 @@ func (m *UserRepositoryMock) GetUserByToken(ctx context.Context, token string) (
 	return args.Get(0).(*domain.User), args.Error(1)
 }
 
-func (m *UserRepositoryMock) GetUsers(ctx context.Context, userFilter *filters.UserFilter) (*[]domain.User, error) {
+func (m *UserRepositoryMock) GetUsers(ctx context.Context, userFilter *dto.UserFilter) (*[]domain.User, error) {
 	args := m.Called(ctx, userFilter)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -47,7 +46,7 @@ func (m *UserRepositoryMock) GetUsers(ctx context.Context, userFilter *filters.U
 	return args.Get(0).(*[]domain.User), args.Error(1)
 }
 
-func (m *UserRepositoryMock) CountUsers(ctx context.Context, userFilter *filters.UserFilter) (int64, error) {
+func (m *UserRepositoryMock) CountUsers(ctx context.Context, userFilter *dto.UserFilter) (int64, error) {
 	args := m.Called(ctx, userFilter)
 	return args.Get(0).(int64), args.Error(1)
 }

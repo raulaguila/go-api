@@ -13,7 +13,6 @@ import (
 	"github.com/raulaguila/packhub"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/utils"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
@@ -36,8 +35,8 @@ type (
 	}
 
 	UserRepository interface {
-		CountUsers(context.Context, *filters.UserFilter) (int64, error)
-		GetUsers(context.Context, *filters.UserFilter) (*[]User, error)
+		CountUsers(context.Context, *dto.UserFilter) (int64, error)
+		GetUsers(context.Context, *dto.UserFilter) (*[]User, error)
 		GetUser(context.Context, *User) error
 		GetUserByToken(context.Context, string) (*User, error)
 		CreateUser(context.Context, *User) error
@@ -48,7 +47,7 @@ type (
 	UserService interface {
 		GenerateUserOutputDTO(*User) *dto.UserOutputDTO
 		GetUserByID(context.Context, uint) (*dto.UserOutputDTO, error)
-		GetUsers(context.Context, *filters.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error)
+		GetUsers(context.Context, *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error)
 		CreateUser(context.Context, *dto.UserInputDTO) (*dto.UserOutputDTO, error)
 		UpdateUser(context.Context, uint, *dto.UserInputDTO) (*dto.UserOutputDTO, error)
 		DeleteUsers(context.Context, []uint) error

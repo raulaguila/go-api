@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
+	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
@@ -42,13 +43,13 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        credentials		body	dto.AuthInputDTO	true	"Credentials model"
 // @Success      200  {object}  	dto.AuthOutputDTO
-// @Failure      401  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      401  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /auth [post]
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := new(dto.AuthInputDTO)
 	if err := c.BodyParser(credentials); err != nil {
-		return utils.NewHTTPResponse(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
+		return HTTPResponse.New(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 	}
 
 	authResponse, err := s.authService.Login(c.Context(), credentials)
@@ -68,8 +69,8 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Param        Authorization		header	string				false	"User token"
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Success      200  {object}  	dto.UserOutputDTO
-// @Failure      401  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      401  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
@@ -85,8 +86,8 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Param        Authorization		header	string				false	"User token"
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Success      200  {object}  	dto.AuthOutputDTO
-// @Failure      401  {object}  	utils.HTTPResponse
-// @Failure      500  {object}  	utils.HTTPResponse
+// @Failure      401  {object}  	HTTPResponse.Response
+// @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(s.authService.Refresh(c.Locals(utils.LocalUser).(*domain.User)))
