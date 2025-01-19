@@ -150,6 +150,7 @@ definitions:
       message:
         example: status bad request
         type: string
+      object: {}
     type: object
 info:
   contact:

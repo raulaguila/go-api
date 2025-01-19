@@ -1,6 +1,6 @@
 FROM golang:1.23.4 AS builder
 
-WORKDIR /app
+WORKDIR /opt/app
 
 # Copy files to docker image
 COPY cmd/ cmd/
@@ -22,8 +22,8 @@ RUN apk add --no-cache bash tzdata dumb-init
 WORKDIR /opt/app
 
 # Copy files to docker image
-COPY --from=builder /app/configs/.env configs/.env
-COPY --from=builder /app/backend .
+COPY --from=builder /opt/app/configs/.env configs/.env
+COPY --from=builder /opt/app/backend .
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 

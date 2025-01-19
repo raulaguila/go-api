@@ -10,7 +10,7 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -59,13 +59,13 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        filter				query	filter.Filter		false	"Optional Filter"
+// @Param        pgfilter				query	pgfilter.Filter		false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
-	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(utils.LocalFilter).(*filter.Filter))
+	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(utils.LocalFilter).(*pgfilter.Filter))
 	if err != nil {
 		return s.handlerError(c, err)
 	}

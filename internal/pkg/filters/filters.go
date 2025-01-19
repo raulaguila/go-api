@@ -1,12 +1,12 @@
 package filters
 
 import (
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 type (
 	UserFilter struct {
-		filter.Filter
+		pgfilter.Filter
 		ProfileID uint `query:"profile_id" form:"profile_id" example:"1"`
 	}
 

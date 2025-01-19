@@ -15,8 +15,8 @@ import (
 	"golang.org/x/text/language"
 
 	"github.com/raulaguila/go-api/configs"
-	"github.com/raulaguila/go-api/internal/infra/database/pgsql"
-	"github.com/raulaguila/go-api/internal/infra/handlers"
+	"github.com/raulaguila/go-api/internal/api/rest"
+	"github.com/raulaguila/go-api/internal/database/pgsql"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -96,5 +96,5 @@ func main() {
 		}),
 	)
 
-	handlers.HandleRequests(app, postgresDB)
+	rest.New(app, postgresDB)
 }

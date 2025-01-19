@@ -2,18 +2,17 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"testing"
 
+	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/filter"
-	"github.com/raulaguila/go-api/pkg/pgutils"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -25,7 +24,7 @@ func TestProfileRepository_CountProfiles(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filter.Filter
+		filter        *pgfilter.Filter
 		expectedCount int64
 		expectedError error
 	}{
@@ -34,8 +33,8 @@ func TestProfileRepository_CountProfiles(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
 			},
 			filter:        nil,
 			expectedCount: 2,
@@ -72,7 +71,7 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *filter.Filter
+		filter        *pgfilter.Filter
 		expectedNames []string
 		expectedErr   error
 	}{
@@ -81,10 +80,10 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
 			},
-			filter:        filter.New("name", "asc"),
+			filter:        pgfilter.New("name", "asc"),
 			expectedNames: []string{"Profile 1", "Profile 2"},
 			expectedErr:   nil,
 		},
@@ -94,7 +93,7 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 			},
-			filter:        filter.New("name", "asc"),
+			filter:        pgfilter.New("name", "asc"),
 			expectedNames: []string{},
 			expectedErr:   nil,
 		},
@@ -130,8 +129,8 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
 			},
 			profileInput: &domain.Profile{Base: domain.Base{ID: 1}},
 			expectedName: "Profile 1",
@@ -142,8 +141,8 @@ func TestProfileRepository_GetProfileByID(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
 			},
 			profileInput: &domain.Profile{Base: domain.Base{ID: 2}},
 			expectedName: "Profile 2",
@@ -181,7 +180,7 @@ func TestProfileRepository_CreateProfile(t *testing.T) {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 			},
-			input:       &domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
+			input:       &domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}},
 			expectedErr: nil,
 		},
 		{
@@ -189,9 +188,9 @@ func TestProfileRepository_CreateProfile(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 			},
-			input:       &domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
+			input:       &domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}},
 			expectedErr: errors.New("UNIQUE constraint failed: users_profile.name"),
 		},
 	}
@@ -226,9 +225,9 @@ func TestProfileRepository_UpdateProfile(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 			},
-			input:       &domain.Profile{Base: domain.Base{ID: 1}, Name: "Updated Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))},
+			input:       &domain.Profile{Base: domain.Base{ID: 1}, Name: "Updated Profile 1", Permissions: pq.StringArray{"read"}},
 			expectedErr: nil,
 		},
 	}
@@ -259,9 +258,9 @@ func TestProfileRepository_DeleteProfiles(t *testing.T) {
 			mockSetup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
-				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 3", Permissions: pgutils.JSONB(json.RawMessage([]byte(`{"read": true}`)))}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 3", Permissions: pq.StringArray{"read"}}).Error)
 			},
 			toDelete:    []uint{1, 2, 3},
 			expectedErr: nil,

@@ -1791,7 +1791,8 @@
                 "message": {
                     "type": "string",
                     "example": "status bad request"
-                }
+                },
+                "object": {}
             }
         }
     },

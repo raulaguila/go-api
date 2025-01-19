@@ -23,7 +23,6 @@ passReset: Password reset successfully.
 
 itemNotFound: Item not found.
 passNotMatch: Passwords does not match.
-hasNoPhoto: User has no profile photo.
 hasPass: User already has registered password.
 errGeneric: An unexpected error occurred, try again later.
 undefinedColumn: Undefined column or parameter name.

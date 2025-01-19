@@ -51,7 +51,6 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 				pgutils.ErrDuplicatedKey:     []any{fiber.StatusConflict, "userRegistered"},
 				utils.ErrUserHasPass:         []any{fiber.StatusBadRequest, "hasPass"},
 				utils.ErrPasswordsDoNotMatch: []any{fiber.StatusBadRequest, "passNotMatch"},
-				utils.ErrUserHasNoPhoto:      []any{fiber.StatusNotFound, "hasNoPhoto"},
 				gorm.ErrRecordNotFound:       []any{fiber.StatusNotFound, "userNotFound"},
 			},
 		}),
@@ -77,7 +76,7 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 // @Produce      json
 // @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        filter				query		filters.UserFilter	false	"Optional Filter"
+// @Param        pgfilter				query		filters.UserFilter	false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /user [get]

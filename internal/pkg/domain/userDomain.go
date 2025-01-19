@@ -3,13 +3,14 @@ package domain
 import (
 	"context"
 	"crypto/rsa"
-	"github.com/raulaguila/packhub"
 	"io"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/raulaguila/packhub"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"

@@ -7,7 +7,7 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 func NewProductService(r domain.ProductRepository) domain.ProductService {
@@ -36,7 +36,7 @@ func (s *productService) GetProductByID(ctx context.Context, id uint) (*dto.Prod
 	return s.GenerateProductOutputDTO(p), nil
 }
 
-func (s *productService) GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error) {
+func (s *productService) GetProducts(ctx context.Context, f *pgfilter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error) {
 	products, err := s.productRepository.GetProducts(ctx, f)
 	if err != nil {
 		return nil, err

@@ -6,14 +6,14 @@ import (
 	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 var middlewareFilterDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalFilter,
 	OnLookup:   datatransferobject.Query,
-	Model:      &filter.Filter{},
+	Model:      &pgfilter.Filter{},
 })
 
 var middlewareUserFilterDTO = datatransferobject.New(datatransferobject.Config{

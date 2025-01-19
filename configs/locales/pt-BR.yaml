@@ -23,7 +23,6 @@ passReset: Senha redefinida com sucesso.
 
 itemNotFound: Item não encontrado.
 passNotMatch: Senhas não correspondem.
-hasNoPhoto: Usuário não possui foto de perfil.
 hasPass: Usuário já possui senha cadastrada.
 errGeneric: Um erro inesperado ocorreu, tente novamente mais tarde.
 undefinedColumn: Coluna ou nome de parâmetro indefinido.

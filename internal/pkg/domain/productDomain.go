@@ -6,7 +6,7 @@ import (
 	"github.com/raulaguila/packhub"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -19,8 +19,8 @@ type (
 	}
 
 	ProductRepository interface {
-		CountProducts(ctx context.Context, f *filter.Filter) (int64, error)
-		GetProducts(ctx context.Context, f *filter.Filter) (*[]Product, error)
+		CountProducts(ctx context.Context, f *pgfilter.Filter) (int64, error)
+		GetProducts(ctx context.Context, f *pgfilter.Filter) (*[]Product, error)
 		GetProduct(ctx context.Context, p *Product) error
 		CreateProduct(ctx context.Context, p *Product) error
 		UpdateProduct(ctx context.Context, p *Product) error
@@ -29,7 +29,7 @@ type (
 
 	ProductService interface {
 		GenerateProductOutputDTO(*Product) *dto.ProductOutputDTO
-		GetProducts(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
+		GetProducts(ctx context.Context, f *pgfilter.Filter) (*dto.ItemsOutputDTO[dto.ProductOutputDTO], error)
 		GetProductByID(ctx context.Context, id uint) (*dto.ProductOutputDTO, error)
 		CreateProduct(ctx context.Context, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)
 		UpdateProduct(ctx context.Context, id uint, pdto *dto.ProductInputDTO) (*dto.ProductOutputDTO, error)

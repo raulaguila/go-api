@@ -1,4 +1,4 @@
-package filter
+package pgfilter
 
 import (
 	"fmt"
@@ -6,8 +6,6 @@ import (
 	"os"
 	"slices"
 	"strings"
-
-	"gorm.io/gorm"
 )
 
 func New(sort, order string) *Filter {
@@ -28,42 +26,38 @@ type Filter struct {
 	Order  string `query:"order" form:"order" enums:"asc,desc" default:"desc"`
 }
 
-func (s *Filter) ApplySearchLike(db *gorm.DB, columns ...string) *gorm.DB {
+func (s *Filter) ApplySearchLike(columns ...string) (where string) {
 	if len(columns) > 0 && s.Search != "" {
-		whereLike := func(column, value string) string {
-			return fmt.Sprintf("unaccent(LOWER(%v)) LIKE unaccent(LOWER('%%%v%%'))", column, value)
+		whereFunc := func(column, value string) string {
+			return fmt.Sprintf("unaccent(LOWER(%s)) LIKE unaccent(LOWER('%%%s%%'))", column, value)
 		}
 
-		where := ""
 		for i, column := range columns {
 			if i > 0 {
 				where += " or "
 			}
-			where += whereLike(column, s.Search)
-		}
-
-		if where != "" {
-			return db.Where(where)
+			where += whereFunc(column, s.Search)
 		}
 	}
 
-	return db
+	return
 }
 
-func (s *Filter) ApplyOrder(db *gorm.DB, tbName *string) *gorm.DB {
+func (s *Filter) ApplyOrder(tbName *string) string {
 	s.check()
 	if tbName != nil && !strings.Contains(s.Sort, ".") {
-		return db.Order(fmt.Sprintf("%v.%v %v", *tbName, s.Sort, s.Order))
+		return fmt.Sprintf("%v.%v %v", *tbName, s.Sort, s.Order)
 	}
-	return db.Order(fmt.Sprintf("%v %v", s.Sort, s.Order))
+	return fmt.Sprintf("%v %v", s.Sort, s.Order)
 }
 
-func (s *Filter) ApplyPagination(db *gorm.DB) *gorm.DB {
-	if s.Page > 0 && s.Limit > 0 {
-		return db.Offset((s.Page - 1) * s.Limit).Limit(s.Limit)
+func (s *Filter) ApplyPagination() (aux bool, offset, limit int) {
+	if aux = s.Page > 0 && s.Limit > 0; aux {
+		offset = (s.Page - 1) * s.Limit
+		limit = s.Limit
 	}
 
-	return db
+	return
 }
 
 func (s *Filter) check() {

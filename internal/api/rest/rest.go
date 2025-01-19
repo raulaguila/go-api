@@ -1,4 +1,4 @@
-package handlers
+package rest
 
 import (
 	"os"
@@ -13,9 +13,9 @@ import (
 	"github.com/raulaguila/go-api/docs"
 	"github.com/raulaguila/go-api/internal/api/rest/handler"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
-	"github.com/raulaguila/go-api/internal/api/rest/service"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
+	"github.com/raulaguila/go-api/internal/pkg/service"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -61,7 +61,7 @@ func initHandlers(app *fiber.App) {
 	})
 }
 
-func HandleRequests(app *fiber.App, postgresDB *gorm.DB) {
+func New(app *fiber.App, postgresDB *gorm.DB) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "1" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 

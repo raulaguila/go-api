@@ -1799,7 +1799,8 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "status bad request"
-                }
+                },
+                "object": {}
             }
         }
     },

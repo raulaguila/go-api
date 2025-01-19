@@ -1,8 +1,6 @@
 package dto
 
-import (
-	"github.com/lib/pq"
-)
+import "github.com/lib/pq"
 
 type (
 	ProductOutputDTO struct {

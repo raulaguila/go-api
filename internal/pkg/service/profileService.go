@@ -7,7 +7,7 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 func NewProfileService(r domain.ProfileRepository) domain.ProfileService {
@@ -37,7 +37,7 @@ func (s *profileService) GetProfileByID(ctx context.Context, profileID uint) (*d
 	return s.GenerateProfileOutputDTO(profile), nil
 }
 
-func (s *profileService) GetProfiles(ctx context.Context, profileFilter *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
+func (s *profileService) GetProfiles(ctx context.Context, profileFilter *pgfilter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
 	profiles, err := s.profileRepository.GetProfiles(ctx, profileFilter)
 	if err != nil {
 		return nil, err

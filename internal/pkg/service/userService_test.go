@@ -8,9 +8,10 @@ import (
 	"github.com/stretchr/testify/mock"
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/packhub"
+	
 	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func TestUserService_GetUserByID(t *testing.T) {
@@ -78,7 +79,7 @@ func TestUserService_CreateUser(t *testing.T) {
 					Return(nil).
 					Once()
 			},
-			userInput: &dto.UserInputDTO{Name: utils.Pointer("John Doe"), Email: utils.Pointer("johndoe@example.com"), ProfileID: utils.Pointer(uint(1))},
+			userInput: &dto.UserInputDTO{Name: packhub.Pointer("John Doe"), Email: packhub.Pointer("johndoe@example.com"), ProfileID: packhub.Pointer(uint(1))},
 			wantErr:   false,
 		},
 		{
@@ -89,7 +90,7 @@ func TestUserService_CreateUser(t *testing.T) {
 					Return(gorm.ErrDuplicatedKey).
 					Once()
 			},
-			userInput: &dto.UserInputDTO{Name: utils.Pointer("John Doe"), Email: utils.Pointer("johndoe@example.com"), ProfileID: utils.Pointer(uint(1))},
+			userInput: &dto.UserInputDTO{Name: packhub.Pointer("John Doe"), Email: packhub.Pointer("johndoe@example.com"), ProfileID: packhub.Pointer(uint(1))},
 			wantErr:   true,
 		},
 	}

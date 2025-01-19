@@ -6,6 +6,8 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/raulaguila/packhub"
+	
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
 	"github.com/raulaguila/go-api/pkg/utils"
@@ -21,37 +23,38 @@ type userRepository struct {
 	db *gorm.DB
 }
 
-func (s *userRepository) applyFilter(ctx context.Context, filter *filters.UserFilter) *gorm.DB {
+func (s *userRepository) applyFilter(ctx context.Context, f *filters.UserFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
-	if filter != nil {
-		if filter.ProfileID != 0 {
-			db = db.Where(domain.AuthTableName+".profile_id = ?", filter.ProfileID)
+	if f != nil {
+		if f.ProfileID != 0 {
+			db = db.Where(domain.AuthTableName+".profile_id = ?", f.ProfileID)
 		}
 		db = db.Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.auth_id", domain.AuthTableName, domain.AuthTableName, domain.UserTableName))
 		db = db.Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.profile_id", domain.ProfileTableName, domain.ProfileTableName, domain.AuthTableName))
-		db = filter.ApplySearchLike(db,
+		if where := f.ApplySearchLike(
 			domain.UserTableName+".name",
 			domain.UserTableName+".mail",
 			domain.ProfileTableName+".name",
-		)
-		tbName := domain.UserTableName
-		db = filter.ApplyOrder(db, &tbName)
+		); where != "" {
+			db = db.Where(where)
+		}
+		db = db.Order(f.ApplyOrder(packhub.Pointer(domain.UserTableName)))
 	}
 
 	return db.Group(domain.UserTableName + ".id")
 }
 
-func (s *userRepository) CountUsers(ctx context.Context, filter *filters.UserFilter) (int64, error) {
+func (s *userRepository) CountUsers(ctx context.Context, f *filters.UserFilter) (int64, error) {
 	var count int64
-
-	db := s.applyFilter(ctx, filter)
-	return count, db.Model(new(domain.User)).Count(&count).Error
+	return count, s.applyFilter(ctx, f).Model(new(domain.User)).Count(&count).Error
 }
 
-func (s *userRepository) GetUsers(ctx context.Context, filter *filters.UserFilter) (*[]domain.User, error) {
-	db := s.applyFilter(ctx, filter)
-	if filter != nil {
-		db = filter.ApplyPagination(db)
+func (s *userRepository) GetUsers(ctx context.Context, f *filters.UserFilter) (*[]domain.User, error) {
+	db := s.applyFilter(ctx, f)
+	if f != nil {
+		if ok, offset, limit := f.ApplyPagination(); ok {
+			db = db.Offset(offset).Limit(limit)
+		}
 	}
 
 	users := new([]domain.User)

@@ -10,7 +10,7 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/internal/pkg/filters"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/pgutils"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
@@ -59,13 +59,13 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool			false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string			false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        filter				query	filter.Filter	false	"Optional Filter"
+// @Param        pgfilter				query	pgfilter.Filter	false	"Optional Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProductOutputDTO]
 // @Failure      500  {object}  	utils.HTTPResponse
 // @Router       /product [get]
 // @Security	 Bearer
 func (s *ProductHandler) getProducts(c *fiber.Ctx) error {
-	response, err := s.productService.GetProducts(c.Context(), c.Locals(utils.LocalFilter).(*filter.Filter))
+	response, err := s.productService.GetProducts(c.Context(), c.Locals(utils.LocalFilter).(*pgfilter.Filter))
 	if err != nil {
 		return s.handlerError(c, err)
 	}

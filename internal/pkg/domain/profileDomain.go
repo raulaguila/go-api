@@ -2,12 +2,13 @@ package domain
 
 import (
 	"context"
-	"github.com/raulaguila/packhub"
 
 	"github.com/lib/pq"
 
+	"github.com/raulaguila/packhub"
+	
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/filter"
+	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
@@ -21,9 +22,9 @@ type (
 	}
 
 	ProfileRepository interface {
-		CountProfiles(ctx context.Context, f *filter.Filter) (int64, error)
+		CountProfiles(ctx context.Context, f *pgfilter.Filter) (int64, error)
 		GetProfile(ctx context.Context, p *Profile) error
-		GetProfiles(ctx context.Context, f *filter.Filter) (*[]Profile, error)
+		GetProfiles(ctx context.Context, f *pgfilter.Filter) (*[]Profile, error)
 		CreateProfile(ctx context.Context, p *Profile) error
 		UpdateProfile(ctx context.Context, p *Profile) error
 		DeleteProfiles(ctx context.Context, i []uint) error
@@ -32,7 +33,7 @@ type (
 	ProfileService interface {
 		GenerateProfileOutputDTO(p *Profile) *dto.ProfileOutputDTO
 		GetProfileByID(ctx context.Context, id uint) (*dto.ProfileOutputDTO, error)
-		GetProfiles(ctx context.Context, f *filter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
+		GetProfiles(ctx context.Context, f *pgfilter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
 		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
 		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
 		DeleteProfiles(ctx context.Context, ids []uint) error
