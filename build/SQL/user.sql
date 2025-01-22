@@ -35,8 +35,8 @@ CREATE SEQUENCE if not exists public.users_profile_id_seq
 CREATE TABLE if not exists public.users_profile
 (
     id          bigint      DEFAULT nextval('users_profile_id_seq'::regclass) NOT NULL,
-    created_at  timestamptz default NOW()                                     NOT NULL,
-    updated_at  timestamptz default NOW()                                     NOT NULL,
+    created_at  timestamptz DEFAULT NOW()                                     NOT NULL,
+    updated_at  timestamptz DEFAULT NOW()                                     NOT NULL,
     "name"      varchar(100)                                                  NOT NULL,
     permissions text[]                                                        NOT NULL,
     CONSTRAINT uni_users_profile_name UNIQUE (name),
@@ -52,8 +52,8 @@ VALUES ('ROOT', ARRAY ['*']);
 CREATE TABLE if not exists public.users_auth
 (
     id         bigint      DEFAULT nextval('users_auth_id_seq'::regclass) NOT NULL,
-    created_at timestamptz default NOW()                                  NOT NULL,
-    updated_at timestamptz default NOW()                                  NOT NULL,
+    created_at timestamptz DEFAULT NOW()                                  NOT NULL,
+    updated_at timestamptz DEFAULT NOW()                                  NOT NULL,
     status     bool                                                       NOT NULL,
     profile_id int8                                                       NOT NULL,
     "token"    varchar(255)                                               NULL,
@@ -77,8 +77,8 @@ VALUES (true, 1, 'd048aee9-dd65-4ca0-aee7-230c1bf19d8c',
 CREATE TABLE if not exists public.users
 (
     id         bigint      DEFAULT nextval('users_id_seq'::regclass) NOT NULL,
-    created_at timestamptz default NOW()                             NOT NULL,
-    updated_at timestamptz default NOW()                             NOT NULL,
+    created_at timestamptz DEFAULT NOW()                             NOT NULL,
+    updated_at timestamptz DEFAULT NOW()                             NOT NULL,
     auth_id    int8                                                  NOT NULL,
     "name"     varchar(90)                                           NOT NULL,
     mail       varchar(50)                                           NOT NULL,

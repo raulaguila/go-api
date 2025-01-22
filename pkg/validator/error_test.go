@@ -48,8 +48,7 @@ func TestValidateError_Error(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.err.Error()
-			assert.Equal(t, tt.wantError, got)
+			assert.Equal(t, tt.wantError, tt.err.Error())
 		})
 	}
 }
