@@ -20,9 +20,12 @@ jobs:
           go-version: "1.23"
           cache: false
 
+      - name: Environment file
+        run: make init
+
       - name: Run Test
         uses: nick-fields/retry@v2
         with:
           max_attempts: 3
           timeout_minutes: 15
-          command: make init && go test ./...
+          command: go test ./...

@@ -17,7 +17,7 @@ func TestValidatorStruct_Validate(t *testing.T) {
 	validatorInstance := validator.New()
 	tests := []struct {
 		name    string
-		input   any
+		input   testStruct
 		wantErr bool
 	}{
 		{"Valid", testStruct{ID: 1, Name: "John", Email: "john@example.com"}, false},

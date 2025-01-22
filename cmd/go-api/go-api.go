@@ -19,7 +19,5 @@ import (
 // @name							Authorization
 // @description 					Type "Bearer" followed by a space and the JWT token.
 func main() {
-	postgresDB := pgsql.ConnectPostgresDB()
-
-	rest.New(postgresDB)
+	rest.New(pgsql.ConnectPostgresDB())
 }
