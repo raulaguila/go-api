@@ -12,16 +12,16 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/packhub"
-	
+
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
-	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/pgerror"
 )
 
-func setupProductApp(mockService *_mocks.ProductServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
+func setupProductApp(mockService *mocks.ProductServiceMock) *fiber.App {
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
@@ -39,7 +39,7 @@ func setupProductApp(mockService *_mocks.ProductServiceMock) *fiber.App {
 }
 
 func TestProductHandler_getProducts(t *testing.T) {
-	mockService := new(_mocks.ProductServiceMock)
+	mockService := new(mocks.ProductServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -66,7 +66,7 @@ func TestProductHandler_getProducts(t *testing.T) {
 }
 
 func TestProductHandler_getProduct(t *testing.T) {
-	mockService := new(_mocks.ProductServiceMock)
+	mockService := new(mocks.ProductServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -103,7 +103,7 @@ func TestProductHandler_getProduct(t *testing.T) {
 }
 
 func TestProductHandler_createProduct(t *testing.T) {
-	mockService := new(_mocks.ProductServiceMock)
+	mockService := new(mocks.ProductServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -133,7 +133,7 @@ func TestProductHandler_createProduct(t *testing.T) {
 }
 
 func TestProductHandler_updateProduct(t *testing.T) {
-	mockService := new(_mocks.ProductServiceMock)
+	mockService := new(mocks.ProductServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",
@@ -173,7 +173,7 @@ func TestProductHandler_updateProduct(t *testing.T) {
 }
 
 func TestProductHandler_deleteProduct(t *testing.T) {
-	mockService := new(_mocks.ProductServiceMock)
+	mockService := new(mocks.ProductServiceMock)
 	tests := []generalHandlerTest{
 		{
 			name:     "success",

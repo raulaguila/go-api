@@ -10,12 +10,12 @@ import (
 
 	"github.com/raulaguila/packhub"
 
-	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/internal/pkg/mocks"
 )
 
 func TestUserService_GetUserByID(t *testing.T) {
-	mockRepository := new(_mocks.UserRepositoryMock)
+	mockRepository := new(mocks.UserRepositoryMock)
 	service := NewUserService(mockRepository)
 
 	tests := []struct {
@@ -58,7 +58,7 @@ func TestUserService_GetUserByID(t *testing.T) {
 }
 
 func TestUserService_CreateUser(t *testing.T) {
-	mockRepository := new(_mocks.UserRepositoryMock)
+	mockRepository := new(mocks.UserRepositoryMock)
 	service := NewUserService(mockRepository)
 
 	tests := []struct {

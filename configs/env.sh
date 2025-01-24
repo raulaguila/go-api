@@ -3,19 +3,6 @@
 access_token=$(openssl genrsa 3072 | base64 | tr -d \\n)
 refresh_token=$(openssl genrsa 3072 | base64 | tr -d \\n)
 
-#declare -A tokens
-#for ((i = 0; i < 2; i++)); do
-#    openssl genrsa -out pvt.pem 3072
-#    openssl rsa -in pvt.pem -pubout -out pub.pem >/dev/null 2>&1
-#
-#    # shellcheck disable=SC2002
-#    tokens[$i, 0]=$(cat pvt.pem | base64 | tr -d \\n)
-#    # shellcheck disable=SC2002
-#    tokens[$i, 1]=$(cat pub.pem | base64 | tr -d \\n)
-#
-#    rm pvt.pem pub.pem
-#done
-
 echo "TZ='America/Manaus'                             # Set system time zone
 
 API_PORT='9000'                                 # API Container PORT
