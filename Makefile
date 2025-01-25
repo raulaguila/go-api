@@ -27,25 +27,25 @@ run: ## Run application from source code
 
 .PHONY: compose-build-services
 compose-build-services: ## Create and start services containers
-	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services up -d --build
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile services up -d --build
+	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} up -d --build
+	@${COMPOSE_COMMAND} -f build/docker/services.compose.yml up -d --build
 
 .PHONY: compose-build-built
 compose-build-built: ## Create and start containers from built
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all up -d --build
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml up -d --build
 
 .PHONY: compose-build-source
 compose-build-source: ## Create and start containers from source code
-	@${COMPOSE_COMMAND} -f build/docker/source.compose.yml --profile all up -d --build
+	@${COMPOSE_COMMAND} -f build/docker/source.compose.yml up -d --build
 
 .PHONY: compose-down
 compose-down: ## Stop and remove containers and networks
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all down
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml down
 
 .PHONY: compose-remove
 compose-remove: ## Stop and remove containers, networks and volumes
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all down -v --remove-orphans
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml down -v --remove-orphans
 
 .PHONY: compose-exec
 compose-exec: ## Access container bash
