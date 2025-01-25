@@ -1,12 +1,13 @@
 package rest
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"

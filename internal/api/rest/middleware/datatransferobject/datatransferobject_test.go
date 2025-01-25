@@ -9,7 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/raulaguila/packhub"
 )
 
