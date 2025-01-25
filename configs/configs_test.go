@@ -29,7 +29,7 @@ func TestInit(t *testing.T) {
 			setup: func() {
 				_, b, _, _ := runtime.Caller(0)
 				envPath := path.Join(path.Dir(b), "configs", ".env")
-				os.WriteFile(envPath, []byte("TZ=UTC\n"), 0644)
+				os.WriteFile(envPath, []byte("TZ=UTC\n"), 0o644)
 				godotenv.Load(envPath)
 			},
 			teardown: func() {

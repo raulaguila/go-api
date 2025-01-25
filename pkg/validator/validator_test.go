@@ -2,9 +2,10 @@ package validator
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 type testStruct struct {

@@ -20,7 +20,7 @@ services:
     restart: always
     volumes:
       - postgres_volume:/var/lib/postgresql/data
-      - ./build/SQL:/docker-entrypoint-initdb.d
+      - ../SQL:/docker-entrypoint-initdb.d
     command: -p ${POSTGRES_PORT}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -40,13 +40,13 @@ services:
       - api_network
     profiles: [ all, services ]
 
-  backend_built:
+  backend:
 
-    container_name: api_backend_built
+    image: api_backend
+    container_name: api_backend
     build:
-      context: .
-      dockerfile: build/docker/built.Dockerfile
-    image: api_backend_built
+      context: ../..
+      dockerfile: build/docker/back/built.Dockerfile
     restart: always
     depends_on:
       postgres:
@@ -58,24 +58,4 @@ services:
       - TZ=${TZ}
     networks:
       - api_network
-    profiles: [ all, built ]
-
-  backend_source:
-
-    container_name: api_backend_source
-    build:
-      context: .
-      dockerfile: build/docker/source.Dockerfile
-    image: api_backend_source
-    restart: always
-    depends_on:
-      postgres:
-          condition: service_healthy
-    ports:
-      - ${API_PORT}:${API_PORT}
-    tty: true
-    environment:
-      - TZ=${TZ}
-    networks:
-      - api_network
-    profiles: [ all, source ]
+    profiles: [ all ]

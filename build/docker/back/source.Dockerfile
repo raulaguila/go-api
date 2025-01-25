@@ -10,9 +10,8 @@ COPY internal/ internal/
 COPY pkg/ pkg/
 COPY go.mod .
 COPY go.sum .
-COPY Makefile .
 
-RUN make go-build
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
 
 
 FROM alpine:3.20.3

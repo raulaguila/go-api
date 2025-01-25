@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"net/url"
+
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
-	"net/url"
 
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"

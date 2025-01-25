@@ -1,4 +1,5 @@
 COMPOSE_COMMAND = docker compose --env-file configs/.env
+GO_BUILD_COMMAND = CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s"
 
 .PHONY: all
 all: help
@@ -13,55 +14,56 @@ help:
 init: ## Create environment file
 	@chmod +x configs/env.sh && configs/env.sh && mv .env configs/
 
-.PHONY: compose-build-services
-compose-build-services: ## Run 'docker compose --env-file configs/.env --profile services up -d --build' to create and start services containers
-	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services up -d --build
-	@${COMPOSE_COMMAND} --profile services up -d --build
+.PHONY: build
+build: ## Build the application from source code
+	@${GO_BUILD_COMMAND} -o backend cmd/go-api/go-api.go
+	@${GO_BUILD_COMMAND} -o generator cmd/generator/generator.go
 
-.PHONY: compose-build-source
-compose-build-source: ## Run 'docker compose --env-file configs/.env --profile services --profile source up -d --build' to create and start containers from source code
-	@${COMPOSE_COMMAND} --profile services --profile source up -d --build
+.PHONY: run
+run: ## Run application from source code
+	@go run cmd/go-api/go-api.go
+
+### Docker compose commands  ---------------------------------------------
+
+.PHONY: compose-build-services
+compose-build-services: ## Create and start services containers
+	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} --profile services up -d --build
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile services up -d --build
 
 .PHONY: compose-build-built
-compose-build-built: ## Run 'docker compose --env-file configs/.env --profile services --profile built up -d --build' to create and start containers from built
-	@${COMPOSE_COMMAND} --profile services --profile built up -d --build
+compose-build-built: ## Create and start containers from built
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all up -d --build
+
+.PHONY: compose-build-source
+compose-build-source: ## Create and start containers from source code
+	@${COMPOSE_COMMAND} -f build/docker/source.compose.yml --profile all up -d --build
 
 .PHONY: compose-down
-compose-down: ## Run 'docker compose --env-file configs/.env --profile all down' to stop and remove containers and networks
-	@${COMPOSE_COMMAND} --profile all down
+compose-down: ## Stop and remove containers and networks
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all down
 
 .PHONY: compose-remove
-compose-remove: ## Run 'docker compose --env-file configs/.env --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
+compose-remove: ## Stop and remove containers, networks and volumes
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@${COMPOSE_COMMAND} --profile all down -v --remove-orphans
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml --profile all down -v --remove-orphans
 
-.PHONY: compose-exec-built
-compose-exec-built: ## Run 'docker compose --env-file configs/.env exec -it backend_built bash' to access container bash
-	@${COMPOSE_COMMAND} exec -it backend_built bash
+.PHONY: compose-exec
+compose-exec: ## Access container bash
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml exec -it backend bash
 
-.PHONY: compose-exec-source
-compose-exec-source: ## Run 'docker compose --env-file configs/.env exec -it backend_source bash' to access container bash
-	@${COMPOSE_COMMAND} exec -it backend_source bash
-
-.PHONY: compose-log-built
-compose-log-built: ## Run 'docker compose --env-file configs/.env logs -f backend_built' to show container logger
-	@${COMPOSE_COMMAND} logs -f backend_built
-
-.PHONY: compose-log-source
-compose-log-source: ## Run 'docker compose --env-file configs/.env logs -f backend_source' to show container logger
-	@${COMPOSE_COMMAND} logs -f backend_source
+.PHONY: compose-log
+compose-log: ## Show container logger
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml logs -f backend
 
 .PHONY: compose-top
-compose-top: ## Run 'docker compose --env-file configs/.env top' to display containers processes
-	@${COMPOSE_COMMAND} top
+compose-top: ## Display containers processes
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml top
 
 .PHONY: compose-stats
-compose-stats: ## Run 'docker compose --env-file configs/.env stats' to display containers stats
-	@${COMPOSE_COMMAND} stats
+compose-stats: ## Display containers stats
+	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml stats
 
-.PHONY: go-run
-go-run: ## Run application from source code
-	@go run cmd/go-api/go-api.go
+###   ---------------------------------------------
 
 .PHONY: go-test
 go-test: ## Run tests and generate coverage report
@@ -70,11 +72,6 @@ go-test: ## Run tests and generate coverage report
 	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
 	@gocov test $(packages) | gocov-html -t kit > report.html
 	-open ./report.html
-
-.PHONY: go-build
-go-build: ## Build the application from source code
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o generator cmd/generator/generator.go
 
 .PHONY: go-benchmark
 go-benchmark: ## Benchmark code performance

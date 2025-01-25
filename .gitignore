@@ -34,7 +34,7 @@ coverage.html
 bin/
 docker/
 !build/
-!build/docker
+!*/docker/
 
 # Files
 *.7z
@@ -45,11 +45,12 @@ translate.*.toml
 *.pem
 *.sh
 !env.sh
-backend
-generator
 qodana.yaml
 .golangci.yml
 *.puml
 report.html
+backend
+generator
 
 # End of https://www.toptal.com/developers/gitignore/api/go
+.DS_Store

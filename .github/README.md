@@ -52,34 +52,32 @@
    <summary>Makefile commands:</summary>
 
     ```bash
-   Usage:
-   make [COMMAND]
-   make help
-   
-   Commands:
-   
-   init                           Create environment file
-   compose-build-services         Run 'docker compose --env-file configs/.env --profile services up -d --build' to create and start services containers
-   compose-build-source           Run 'docker compose --env-file configs/.env --profile services --profile source up -d --build' to create and start containers from source code
-   compose-build-built            Run 'docker compose --env-file configs/.env --profile services --profile built up -d --build' to create and start containers from built
-   compose-down                   Run 'docker compose --env-file configs/.env --profile all down' to stop and remove containers and networks
-   compose-remove                 Run 'docker compose --env-file configs/.env --profile all down -v --remove-orphans' to stop and remove containers, networks and volumes
-   compose-exec-built             Run 'docker compose --env-file configs/.env exec -it backend_built bash' to access container bash
-   compose-exec-source            Run 'docker compose --env-file configs/.env exec -it backend_source bash' to access container bash
-   compose-log-built              Run 'docker compose --env-file configs/.env logs -f backend_built' to show container logger
-   compose-log-source             Run 'docker compose --env-file configs/.env logs -f backend_source' to show container logger
-   compose-top                    Run 'docker compose --env-file configs/.env top' to display containers processes
-   compose-stats                  Run 'docker compose --env-file configs/.env stats' to display containers stats
-   go-run                         Run application from source code
-   go-test                        Run tests and generate coverage report
-   go-build                       Build the application from source code
-   go-benchmark                   Benchmark code performance
-   go-lint                        Run lint checks
-   go-audit                       Conduct quality checks
-   go-swag                        Update swagger files
-   go-format                      Fix code format issues
-   go-tidy                        Clean and tidy dependencies
-   ```
+    Usage:
+        make [COMMAND]
+        make help
+
+    Commands:
+    
+    init                           Create environment file
+    build                          Build the application from source code
+    run                            Run application from source code
+    compose-build-services         Create and start services containers
+    compose-build-built            Create and start containers from built
+    compose-build-source           Create and start containers from source code
+    compose-down                   Stop and remove containers and networks
+    compose-remove                 Stop and remove containers, networks and volumes
+    compose-exec                   Access container bash
+    compose-log                    Show container logger
+    compose-top                    Display containers processes
+    compose-stats                  Display containers stats
+    go-test                        Run tests and generate coverage report
+    go-benchmark                   Benchmark code performance
+    go-lint                        Run lint checks
+    go-audit                       Conduct quality checks
+    go-swag                        Update swagger files
+    go-format                      Fix code format issues
+    go-tidy                        Clean and tidy dependencies
+    ```
    </details>
 
 4. #### Starting the Project [&uarr;](#summary)

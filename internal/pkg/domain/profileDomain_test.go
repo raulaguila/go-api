@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"github.com/lib/pq"
 	"testing"
+
+	"github.com/lib/pq"
 
 	"github.com/stretchr/testify/assert"
 
