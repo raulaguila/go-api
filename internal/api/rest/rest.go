@@ -116,8 +116,14 @@ func New(postgresDB *gorm.DB) {
 				"xip": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
+				"xauth": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
+					if auth := c.Get("Authorization", ""); auth != "" {
+						return output.WriteString(fmt.Sprintf(":%s", strings.TrimPrefix(auth, "Bearer ")[:15]))
+					}
+					return output.WriteString("")
+				},
 			},
-			Format:     "[FIBER:${magenta}${xid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${yellow}\"${reqHeader:Accept-Language}\"${reset} ${magenta}${error}${reset}\n",
+			Format:     "[FIBER:${magenta}${xid}${reset}] ${time} | ${status} | ${latency} | ${xip} | ${method} ${fullPath} ${yellow}\"${reqHeader:Accept-Language}${xauth}\"${reset} ${magenta}${error}${reset}\n",
 			TimeFormat: "2006-01-02 15:04:05",
 			TimeZone:   time.Local.String(),
 		}))
