@@ -10,8 +10,8 @@ services:
     image: api_backend:latest
     container_name: api_backend
     build:
-      context: ../..
-      dockerfile: build/docker/back/built.Dockerfile
+      context: ..
+      dockerfile: build/back/built.Dockerfile
     restart: always
     ports:
       - ${API_PORT}:${API_PORT}

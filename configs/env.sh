@@ -1,7 +1,7 @@
 #!/bin/bash
 
-access_token=$(openssl genrsa 3072 | base64 | tr -d \\n)
-refresh_token=$(openssl genrsa 3072 | base64 | tr -d \\n)
+access_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
+refresh_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
 
 echo "TZ='America/Manaus'                             # Set system time zone
 
