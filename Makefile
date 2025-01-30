@@ -1,5 +1,5 @@
 COMPOSE_COMMAND = docker compose --env-file configs/.env
-GO_BUILD_COMMAND = CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s"
+GOBUILD_COMMAND = CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s"
 
 .PHONY: all
 all: help
@@ -16,8 +16,8 @@ init: ## Create environment file
 
 .PHONY: build
 build: ## Build the application from source code
-	@${GO_BUILD_COMMAND} -o backend cmd/go-api/go-api.go
-	@${GO_BUILD_COMMAND} -o generator cmd/generator/generator.go
+	@${GOBUILD_COMMAND} -o backend cmd/go-api/go-api.go
+	@${GOBUILD_COMMAND} -o generator cmd/generator/generator.go
 
 .PHONY: run
 run: ## Run application from source code
@@ -28,40 +28,40 @@ run: ## Run application from source code
 .PHONY: compose-build-services
 compose-build-services: ## Create and start services containers
 	@#BUILDKIT_PROGRESS=plain ${COMPOSE_COMMAND} up -d --build
-	@${COMPOSE_COMMAND} -f build/docker/services.compose.yml up -d --build
+	@${COMPOSE_COMMAND} -f build/services.compose.yml up -d --build
 
 .PHONY: compose-build-built
 compose-build-built: ## Create and start containers from built
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml up -d --build
+	@${COMPOSE_COMMAND} -f build/built.compose.yml up -d --build
 
 .PHONY: compose-build-source
 compose-build-source: ## Create and start containers from source code
-	@${COMPOSE_COMMAND} -f build/docker/source.compose.yml up -d --build
+	@${COMPOSE_COMMAND} -f build/source.compose.yml up -d --build
 
 .PHONY: compose-down
 compose-down: ## Stop and remove containers and networks
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml down
+	@${COMPOSE_COMMAND} -f build/built.compose.yml down
 
 .PHONY: compose-remove
 compose-remove: ## Stop and remove containers, networks and volumes
 	@echo -n "All registered data and volumes will be deleted, are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml down -v --remove-orphans
+	@${COMPOSE_COMMAND} -f build/built.compose.yml down -v --remove-orphans
 
 .PHONY: compose-exec
 compose-exec: ## Access container bash
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml exec -it backend bash
+	@${COMPOSE_COMMAND} -f build/built.compose.yml exec -it backend bash
 
 .PHONY: compose-log
 compose-log: ## Show container logger
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml logs -f backend
+	@${COMPOSE_COMMAND} -f build/built.compose.yml logs -f backend
 
 .PHONY: compose-top
 compose-top: ## Display containers processes
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml top
+	@${COMPOSE_COMMAND} -f build/built.compose.yml top
 
 .PHONY: compose-stats
 compose-stats: ## Display containers stats
-	@${COMPOSE_COMMAND} -f build/docker/built.compose.yml stats
+	@${COMPOSE_COMMAND} -f build/built.compose.yml stats
 
 ###   ---------------------------------------------
 
