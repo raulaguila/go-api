@@ -69,8 +69,9 @@ compose-stats: ## Display containers stats
 go-test: ## Run tests and generate coverage report
 	@go install github.com/axw/gocov/gocov@v1.2.1
 	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
-	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
-	@gocov test $(packages) | gocov-html -t kit > report.html
+	@go test ./... -coverprofile cover.out
+	@#go tool cover -html=cover.out
+	@gocov convert cover.out | gocov-html -t kit > report.html
 	-open ./report.html
 
 .PHONY: go-benchmark
