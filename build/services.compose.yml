@@ -3,6 +3,7 @@ name: api
 volumes:
 
   postgres_volume:
+    name: postgres_volume
 
 networks:
 

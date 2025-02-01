@@ -1,8 +1,7 @@
-package handler
+package rest
 
 import (
 	"fmt"
-	"github.com/lib/pq"
 	"golang.org/x/text/language"
 	"io"
 	"net/http/httptest"
@@ -17,6 +16,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/rest/handler"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
@@ -25,8 +25,8 @@ import (
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-func setupUserApp(db *gorm.DB) *fiber.App {
-	repo := repository.NewUserRepository(db)
+func setupProductApp(db *gorm.DB) *fiber.App {
+	repo := repository.NewProductRepository(db)
 
 	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &mocks.UserRepositoryMock{})
 
@@ -40,12 +40,12 @@ func setupUserApp(db *gorm.DB) *fiber.App {
 		DefaultLanguage: language.AmericanEnglish,
 		Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 	}))
-	NewUserHandler(app.Group(""), service.NewUserService(repo))
+	handler.NewProductHandler(app.Group(""), service.NewProductService(repo))
 
 	return app
 }
 
-func TestUserHandler_getUsers(t *testing.T) {
+func TestProductHandler_getProducts(t *testing.T) {
 	tests := []struct {
 		name, endpoint string
 		setup          func() *fiber.App
@@ -60,13 +60,13 @@ func TestUserHandler_getUsers(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01", Email: "user01@email.com"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 02", Email: "user02@email.com"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 03", Email: "user03@email.com"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 03"}).Error)
 
-				return setupUserApp(db)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -85,7 +85,7 @@ func TestUserHandler_getUsers(t *testing.T) {
 	}
 }
 
-func TestUserHandler_getUser(t *testing.T) {
+func TestProductHandler_getProduct(t *testing.T) {
 	tests := []struct {
 		name, endpoint string
 		setup          func() *fiber.App
@@ -100,20 +100,13 @@ func TestUserHandler_getUser(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01", Email: "user01@email.com", Auth: &domain.Auth{
-					Status: false,
-					Profile: &domain.Profile{
-						Base: domain.Base{
-							ID: 1,
-						},
-						Name:        "ADMIN",
-						Permissions: pq.StringArray{"ADMIN"},
-					},
-				}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 03"}).Error)
 
-				return setupUserApp(db)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -126,13 +119,13 @@ func TestUserHandler_getUser(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
 
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01", Email: "user01@email.com"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 02", Email: "user02@email.com"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 03", Email: "user03@email.com"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 03"}).Error)
 
-				return setupUserApp(db)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
@@ -151,7 +144,7 @@ func TestUserHandler_getUser(t *testing.T) {
 	}
 }
 
-func TestUserHandler_createUser(t *testing.T) {
+func TestProductHandler_createProduct(t *testing.T) {
 	tests := []struct {
 		name, endpoint string
 		body           io.Reader
@@ -161,31 +154,31 @@ func TestUserHandler_createUser(t *testing.T) {
 		{
 			name:     "success",
 			endpoint: "/",
-			body:     strings.NewReader(`{"name": "User 01", "email": "user01@email.com", "profile_id": 1, "status": true}`),
+			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setup: func() *fiber.App {
 				db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
 					Logger: logger.Default.LogMode(logger.Silent),
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusCreated,
 		},
 		{
-			name:     "duplicate User",
+			name:     "duplicate product",
 			endpoint: "/",
-			body:     strings.NewReader(`{"name": "User 01", "email": "user01@email.com", "profile_id": 1, "status": true}`),
+			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setup: func() *fiber.App {
 				db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
 					Logger: logger.Default.LogMode(logger.Silent),
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01", Email: "user01@email.com"}).Error)
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
@@ -204,7 +197,7 @@ func TestUserHandler_createUser(t *testing.T) {
 	}
 }
 
-func TestUserHandler_updateUser(t *testing.T) {
+func TestProductHandler_updateProduct(t *testing.T) {
 	tests := []struct {
 		name, endpoint string
 		body           io.Reader
@@ -214,48 +207,48 @@ func TestUserHandler_updateUser(t *testing.T) {
 		{
 			name:     "success",
 			endpoint: "/1",
-			body:     strings.NewReader(`{"name": "User 01", "permissions": ["read"]}`),
+			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setup: func() *fiber.App {
 				db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
 					Logger: logger.Default.LogMode(logger.Silent),
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01"}).Error)
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
-			name:     "duplicate User",
+			name:     "duplicate product",
 			endpoint: "/2",
-			body:     strings.NewReader(`{"name": "User 01", "permissions": ["read"]}`),
+			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setup: func() *fiber.App {
 				db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
 					Logger: logger.Default.LogMode(logger.Silent),
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 02"}).Error)
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 		{
 			name:     "not found",
 			endpoint: "/1",
-			body:     strings.NewReader(`{"name": "User 01", "permissions": ["read"]}`),
+			body:     strings.NewReader(`{"name": "Product 01"}`),
 			setup: func() *fiber.App {
 				db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
 					Logger: logger.Default.LogMode(logger.Silent),
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
@@ -274,7 +267,7 @@ func TestUserHandler_updateUser(t *testing.T) {
 	}
 }
 
-func TestUserHandler_deleteUser(t *testing.T) {
+func TestProductHandler_deleteProduct(t *testing.T) {
 	tests := []struct {
 		name, endpoint string
 		body           io.Reader
@@ -291,11 +284,11 @@ func TestUserHandler_deleteUser(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 02"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 03"}).Error)
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 03"}).Error)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusOK,
 		},
@@ -309,8 +302,8 @@ func TestUserHandler_deleteUser(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
@@ -324,11 +317,11 @@ func TestUserHandler_deleteUser(t *testing.T) {
 				})
 				utils.PanicIfErr(err)
 
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 01"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 02"}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 03"}).Error)
-				return setupUserApp(db)
+				utils.PanicIfErr(db.AutoMigrate(&domain.Product{}))
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 01"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 02"}).Error)
+				utils.PanicIfErr(db.Create(&domain.Product{Name: "Product 03"}).Error)
+				return setupProductApp(db)
 			},
 			expectedCode: fiber.StatusBadRequest,
 		},

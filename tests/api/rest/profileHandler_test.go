@@ -1,4 +1,4 @@
-package handler
+package rest
 
 import (
 	"fmt"
@@ -17,6 +17,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/raulaguila/go-api/configs"
+	"github.com/raulaguila/go-api/internal/api/rest/handler"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/mocks"
@@ -40,7 +41,7 @@ func setupProfileApp(db *gorm.DB) *fiber.App {
 		DefaultLanguage: language.AmericanEnglish,
 		Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 	}))
-	NewProfileHandler(app.Group(""), service.NewProfileService(repo))
+	handler.NewProfileHandler(app.Group(""), service.NewProfileService(repo))
 
 	return app
 }
