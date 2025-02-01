@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"crypto/rsa"
+	"gorm.io/gorm"
 	"io"
 	"time"
 
@@ -55,6 +56,10 @@ type (
 		SetUserPassword(context.Context, string, *dto.PasswordInputDTO) error
 	}
 )
+
+func (u *User) AfterDelete(tx *gorm.DB) (err error) {
+	return tx.Delete(&Auth{}, u.AuthID).Error
+}
 
 func (u *User) TableName() string {
 	return UserTableName

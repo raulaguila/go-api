@@ -16,7 +16,7 @@ services:
 
     hostname: postgres
     container_name: api_postgres
-    image: postgres:14.7-alpine
+    image: postgres:17.2-alpine
     restart: always
     volumes:
       - postgres_volume:/var/lib/postgresql/data
