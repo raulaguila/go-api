@@ -54,7 +54,11 @@ func TestUserService_GetUserByID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMock()
 			_, err := service.GetUserByID(context.Background(), tt.userID)
-			assert.Equal(t, err != nil, tt.wantErr)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 		})
 	}
 }
@@ -113,7 +117,11 @@ func TestUserService_GetUsers(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMock()
 			_, err := service.GetUsers(context.Background(), &dto.UserFilter{})
-			assert.Equal(t, err != nil, tt.wantErr)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 		})
 	}
 }
@@ -160,7 +168,69 @@ func TestUserService_CreateUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMock()
 			_, err := service.CreateUser(context.Background(), tt.userInput)
-			assert.Equal(t, err != nil, tt.wantErr)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestUserService_UpdateUser(t *testing.T) {
+	mockRepository := new(_mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
+
+	tests := []struct {
+		name      string
+		setup     func()
+		userID    uint
+		userInput *dto.UserInputDTO
+		wantErr   bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Twice()
+				mockRepository.
+					On("UpdateUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			userID:    1,
+			userInput: &dto.UserInputDTO{Name: packhub.Pointer("John Doe"), Email: packhub.Pointer("johndoe@example.com"), ProfileID: packhub.Pointer(uint(1))},
+			wantErr:   false,
+		},
+		{
+			name: "create error",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+				mockRepository.
+					On("UpdateUser", mock.Anything, mock.Anything).
+					Return(gorm.ErrDuplicatedKey).
+					Once()
+			},
+			userID:    1,
+			userInput: &dto.UserInputDTO{Name: packhub.Pointer("John Doe"), Email: packhub.Pointer("johndoe@example.com"), ProfileID: packhub.Pointer(uint(1))},
+			wantErr:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			_, err := service.UpdateUser(context.Background(), tt.userID, tt.userInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
 		})
 	}
 }

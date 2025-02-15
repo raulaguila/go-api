@@ -28,6 +28,9 @@ func (s *ProductRepositoryMock) GetProduct(ctx context.Context, product *domain.
 
 func (s *ProductRepositoryMock) GetProducts(ctx context.Context, f *pgfilter.Filter) (*[]domain.Product, error) {
 	ret := s.Called(ctx, f)
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
 	return ret.Get(0).(*[]domain.Product), ret.Error(1)
 }
 

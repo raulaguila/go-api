@@ -3,6 +3,7 @@ package _mocks
 import (
 	"context"
 
+	"github.com/lib/pq"
 	"github.com/stretchr/testify/mock"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
@@ -23,8 +24,9 @@ func (m *UserRepositoryMock) GetUser(ctx context.Context, user *domain.User) err
 	user.Auth = &domain.Auth{
 		Status: false,
 		Profile: &domain.Profile{
-			Base: domain.Base{ID: uint(1)},
-			Name: "ADMIN",
+			Base:        domain.Base{ID: uint(1)},
+			Name:        "ADMIN",
+			Permissions: make(pq.StringArray, 0),
 		},
 	}
 	args := m.Called(ctx, user)
