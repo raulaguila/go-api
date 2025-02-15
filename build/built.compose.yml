@@ -1,4 +1,4 @@
-name: api
+name: api_test
 
 include:
   - services.compose.yml

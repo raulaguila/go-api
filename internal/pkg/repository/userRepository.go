@@ -94,9 +94,12 @@ func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error
 	if err := s.db.WithContext(ctx).Find(users, toDelete).Error; err != nil {
 		return err
 	}
+	if len(*users) == 0 {
+		return gorm.ErrRecordNotFound
+	}
 
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		result := tx.Select(clause.Associations).Delete(users)
+		result := tx.Select(clause.Associations).Where(users).Delete(users)
 		if result.Error != nil {
 			return result.Error
 		}
