@@ -187,7 +187,7 @@ func TestProfileService_UpdateProfile(t *testing.T) {
 				mockRepository.
 					On("GetProfile", mock.Anything, mock.Anything).
 					Return(nil).
-					Twice()
+					Once()
 				mockRepository.
 					On("UpdateProfile", mock.Anything, mock.Anything).
 					Return(nil).
@@ -198,7 +198,19 @@ func TestProfileService_UpdateProfile(t *testing.T) {
 			wantErr:      false,
 		},
 		{
-			name: "create error",
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("GetProfile", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			profileID:    1,
+			profileInput: &dto.ProfileInputDTO{Name: packhub.Pointer("John Doe"), Permissions: &pq.StringArray{"read"}},
+			wantErr:      true,
+		},
+		{
+			name: "update error",
 			setup: func() {
 				mockRepository.
 					On("GetProfile", mock.Anything, mock.Anything).
@@ -219,6 +231,53 @@ func TestProfileService_UpdateProfile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
 			_, err := service.UpdateProfile(context.Background(), tt.profileID, tt.profileInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestProductService_DeleteProfiles(t *testing.T) {
+	mockRepository := new(_mocks.ProfileRepositoryMock)
+	service := NewProfileService(mockRepository)
+
+	tests := []struct {
+		name     string
+		setup    func()
+		idsInput []uint
+		wantErr  bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("DeleteProfiles", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  false,
+		},
+		{
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("DeleteProfiles", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			err := service.DeleteProfiles(context.Background(), tt.idsInput)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {

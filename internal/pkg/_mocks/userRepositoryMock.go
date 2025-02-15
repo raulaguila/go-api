@@ -2,9 +2,10 @@ package _mocks
 
 import (
 	"context"
-
 	"github.com/lib/pq"
+	"github.com/raulaguila/packhub"
 	"github.com/stretchr/testify/mock"
+	"os"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
@@ -29,6 +30,13 @@ func (m *UserRepositoryMock) GetUser(ctx context.Context, user *domain.User) err
 			Permissions: make(pq.StringArray, 0),
 		},
 	}
+
+	if os.Getenv("userRepositoryMockType") == "authTests" {
+		user.Auth.Status = true
+		user.Auth.Password = packhub.Pointer("$2a$10$vqkyIvgHRU2sl2FGtlbkNeGFeTsJHQYz18abMJiLlGyJt.Ge99zYy")
+		user.Auth.Token = packhub.Pointer("d048aee9-dd65-4ca0-aee7-230c1bf19d8c")
+	}
+
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }

@@ -28,7 +28,7 @@ test: ## Run tests and generate coverage report
 	@go install github.com/axw/gocov/gocov@v1.2.1
 	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
 	@go clean -testcache
-	@go test -v -coverprofile=cover.out ./...
+	@go test -coverprofile=cover.out ./...
 	@go tool cover -html=cover.out
 	@gocov convert cover.out | gocov-html -t kit > report.html
 	@-open ./report.html

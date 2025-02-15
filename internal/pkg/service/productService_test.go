@@ -196,7 +196,7 @@ func TestProductService_UpdateProduct(t *testing.T) {
 			wantErr:      false,
 		},
 		{
-			name: "create error",
+			name: "update error",
 			setup: func() {
 				mockRepository.
 					On("GetProduct", mock.Anything, mock.Anything).
@@ -217,6 +217,53 @@ func TestProductService_UpdateProduct(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
 			_, err := service.UpdateProduct(context.Background(), tt.productID, tt.productInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestProductService_DeleteProducts(t *testing.T) {
+	mockRepository := new(_mocks.ProductRepositoryMock)
+	service := NewProductService(mockRepository)
+
+	tests := []struct {
+		name     string
+		setup    func()
+		idsInput []uint
+		wantErr  bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("DeleteProducts", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  false,
+		},
+		{
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("DeleteProducts", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			err := service.DeleteProducts(context.Background(), tt.idsInput)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {

@@ -234,3 +234,155 @@ func TestUserService_UpdateUser(t *testing.T) {
 		})
 	}
 }
+
+func TestProductService_DeleteUsers(t *testing.T) {
+	mockRepository := new(_mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
+
+	tests := []struct {
+		name     string
+		setup    func()
+		idsInput []uint
+		wantErr  bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("DeleteUsers", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  false,
+		},
+		{
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("DeleteUsers", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			idsInput: []uint{1},
+			wantErr:  true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			err := service.DeleteUsers(context.Background(), tt.idsInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestProductService_ResetUserPassword(t *testing.T) {
+	mockRepository := new(_mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
+
+	tests := []struct {
+		name      string
+		setup     func()
+		mailInput string
+		wantErr   bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+				mockRepository.
+					On("UpdateUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			mailInput: "johndoe@example.com",
+			wantErr:   false,
+		},
+		{
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			mailInput: "johndoe@example.com",
+			wantErr:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			err := service.ResetUserPassword(context.Background(), tt.mailInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestProductService_SetUserPassword(t *testing.T) {
+	mockRepository := new(_mocks.UserRepositoryMock)
+	service := NewUserService(mockRepository)
+
+	tests := []struct {
+		name      string
+		setup     func()
+		mailInput string
+		passInput *dto.PasswordInputDTO
+		wantErr   bool
+	}{
+		{
+			name: "success",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+				mockRepository.
+					On("UpdateUser", mock.Anything, mock.Anything).
+					Return(nil).
+					Once()
+			},
+			mailInput: "johndoe@example.com",
+			passInput: &dto.PasswordInputDTO{Password: packhub.Pointer("secret"), PasswordConfirm: packhub.Pointer("secret")},
+			wantErr:   false,
+		},
+		{
+			name: "not found",
+			setup: func() {
+				mockRepository.
+					On("GetUser", mock.Anything, mock.Anything).
+					Return(gorm.ErrRecordNotFound).
+					Once()
+			},
+			mailInput: "johndoe@example.com",
+			passInput: &dto.PasswordInputDTO{Password: packhub.Pointer("secret"), PasswordConfirm: packhub.Pointer("secret")},
+			wantErr:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.setup()
+			err := service.SetUserPassword(context.Background(), tt.mailInput, tt.passInput)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
