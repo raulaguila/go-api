@@ -1,4 +1,4 @@
-FROM golang:1.23.4 AS builder
+FROM golang:1.24.0 AS builder
 
 WORKDIR /opt/app
 
@@ -14,7 +14,7 @@ COPY go.sum .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api_test/go-api_test.go
 
 
-FROM alpine:3.20.3
+FROM alpine:3.21.3
 
 RUN apk add --no-cache bash tzdata dumb-init
 

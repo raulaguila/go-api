@@ -14,7 +14,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 func TestProfileService_GetProfileByID(t *testing.T) {
@@ -109,7 +108,7 @@ func TestProfileService_GetProfiles(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMock()
-			_, err := service.GetProfiles(context.Background(), &pgfilter.Filter{})
+			_, err := service.GetProfiles(context.Background(), &dto.ProfileFilter{})
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {

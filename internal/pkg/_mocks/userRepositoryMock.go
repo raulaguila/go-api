@@ -2,13 +2,14 @@ package _mocks
 
 import (
 	"context"
-	"github.com/lib/pq"
-	"github.com/raulaguila/packhub"
-	"github.com/stretchr/testify/mock"
 	"os"
+
+	"github.com/lib/pq"
+	"github.com/stretchr/testify/mock"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/packhub"
 )
 
 func NewUserRepositoryMock() domain.UserRepository {
