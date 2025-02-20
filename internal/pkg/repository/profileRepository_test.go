@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"testing"
 
 	"github.com/lib/pq"
@@ -24,7 +25,7 @@ func TestProfileRepository_CountProfiles(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *pgfilter.Filter
+		filter        *dto.ProfileFilter
 		expectedCount int64
 		expectedError error
 	}{
@@ -71,7 +72,7 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 	tests := []struct {
 		name          string
 		mockSetup     func()
-		filter        *pgfilter.Filter
+		filter        *dto.ProfileFilter
 		expectedNames []string
 		expectedErr   error
 	}{
@@ -83,7 +84,7 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 2", Permissions: pq.StringArray{"read"}}).Error)
 			},
-			filter:        pgfilter.New("name", "asc"),
+			filter:        &dto.ProfileFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{"Profile 1", "Profile 2"},
 			expectedErr:   nil,
 		},
@@ -93,7 +94,7 @@ func TestProfileRepository_GetProfiles(t *testing.T) {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 			},
-			filter:        pgfilter.New("name", "asc"),
+			filter:        &dto.ProfileFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{},
 			expectedErr:   nil,
 		},

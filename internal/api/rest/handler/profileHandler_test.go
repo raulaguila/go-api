@@ -2,23 +2,29 @@ package handler
 
 import (
 	"errors"
+	"fmt"
+	"golang.org/x/text/language"
+	"gorm.io/gorm"
+	"io"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/mock"
-	"golang.org/x/text/language"
-	"gorm.io/gorm"
+	"github.com/stretchr/testify/require"
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
+	"github.com/raulaguila/go-api/pkg/pgerror"
+	"github.com/raulaguila/packhub"
 )
 
-func setupProfileApp(mockService *mocks.ProfileServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &mocks.UserRepositoryMock{})
+func setupProfileApp(mockService *_mocks.ProfileServiceMock) *fiber.App {
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
@@ -36,164 +42,249 @@ func setupProfileApp(mockService *mocks.ProfileServiceMock) *fiber.App {
 }
 
 func TestProfileHandler_getProfiles(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProfileServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodGet,
 			endpoint: "/",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProfiles", mock.Anything, mock.Anything).Return(&dto.ItemsOutputDTO[dto.ProfileOutputDTO]{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "general error",
-			method:   fiber.MethodGet,
 			endpoint: "/",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProfiles", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))
-}
 
-func TestProfileHandler_createProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
-	tests := []generalHandlerTest{
-		{
-			name:     "success",
-			method:   fiber.MethodPost,
-			endpoint: "/",
-			body:     strings.NewReader(`{"name":"admin"}`),
-			setupMocks: func() {
-				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(&dto.ProfileOutputDTO{}, nil).Once()
-			},
-			expectedCode: fiber.StatusCreated,
-		},
-		{
-			name:     "bad request",
-			method:   fiber.MethodPost,
-			endpoint: "/",
-			body:     strings.NewReader(`{"name":"admin"}`),
-			setupMocks: func() {
-				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
-			},
-			expectedCode: fiber.StatusInternalServerError,
-		},
+	app := setupProfileApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodGet, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
 	}
-	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))
 }
 
 func TestProfileHandler_getProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProfileServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodGet,
 			endpoint: "/1",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProfileByID", mock.Anything, uint(1)).Return(&dto.ProfileOutputDTO{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
-			name:     "not found",
-			method:   fiber.MethodGet,
+			name:     "general error",
 			endpoint: "/200",
-			body:     nil,
-			setupMocks: func() {
-				mockService.On("GetProfileByID", mock.Anything, uint(200)).Return(nil, gorm.ErrRecordNotFound).Once()
+			setup: func() {
+				mockService.On("GetProfileByID", mock.Anything, uint(200)).Return(nil, errors.New("error")).Once()
+			},
+			expectedCode: fiber.StatusInternalServerError,
+		},
+		{
+			name:     "not found",
+			endpoint: "/500",
+			setup: func() {
+				mockService.On("GetProfileByID", mock.Anything, uint(500)).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))
+
+	app := setupProfileApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodGet, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
+}
+
+func TestProfileHandler_createProfile(t *testing.T) {
+	mockService := new(_mocks.ProfileServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
+		{
+			name:     "success",
+			endpoint: "/",
+			body:     strings.NewReader(`{"name": "Profile 01"}`),
+			setup: func() {
+				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(&dto.ProfileOutputDTO{
+					ID:   packhub.Pointer(uint(1)),
+					Name: packhub.Pointer("Profile 01"),
+				}, nil).Once()
+			},
+			expectedCode: fiber.StatusCreated,
+		},
+		{
+			name:     "duplicate profile",
+			endpoint: "/",
+			body:     strings.NewReader(`{"name": "Profile 01"}`),
+			setup: func() {
+				mockService.On("CreateProfile", mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
+			},
+			expectedCode: fiber.StatusConflict,
+		},
+	}
+
+	app := setupProfileApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPost, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProfileHandler_updateProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProfileServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodPut,
 			endpoint: "/1",
-			body:     strings.NewReader(`{"name":"user1","email":"example@email.com"}`),
-			setupMocks: func() {
-				mockService.On("UpdateProfile", mock.Anything, uint(1), mock.Anything).Return(&dto.ProfileOutputDTO{}, nil).Once()
+			body:     strings.NewReader(`{"name": "Profile 01"}`),
+			setup: func() {
+				mockService.On("UpdateProfile", mock.Anything, mock.Anything, mock.Anything).Return(&dto.ProfileOutputDTO{
+					ID:   packhub.Pointer(uint(1)),
+					Name: packhub.Pointer("Profile 01"),
+				}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
-			name:     "bad request",
-			method:   fiber.MethodPut,
-			endpoint: "/500",
-			body:     strings.NewReader(`{"name":"user1"}`),
-			setupMocks: func() {
-				mockService.On("UpdateProfile", mock.Anything, uint(500), mock.Anything).Return(nil, errors.New("error")).Once()
+			name:     "duplicate profile",
+			endpoint: "/1",
+			body:     strings.NewReader(`{"name": "Profile 01"}`),
+			setup: func() {
+				mockService.On("UpdateProfile", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
 			},
-			expectedCode: fiber.StatusInternalServerError,
+			expectedCode: fiber.StatusConflict,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodPut,
-			endpoint: "/200",
-			body:     strings.NewReader(`{"name":"user1"}`),
-			setupMocks: func() {
-				mockService.On("UpdateProfile", mock.Anything, uint(200), mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
+			endpoint: "/1",
+			body:     strings.NewReader(`{"name": "Profile 01"}`),
+			setup: func() {
+				mockService.On("UpdateProfile", mock.Anything, mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))
+
+	app := setupProfileApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPut, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProfileHandler_deleteProfile(t *testing.T) {
-	mockService := new(mocks.ProfileServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProfileServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
-			body:     strings.NewReader(`{"ids": [1, 2, 3, 4]}`),
-			setupMocks: func() {
-				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4}).Return(nil).Once()
+			body:     strings.NewReader(`{"ids": [1, 2, 3]}`),
+			setup: func() {
+				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3}).Return(nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "bad request",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
-			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5]}`),
-			setupMocks: func() {
-				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4, 5}).Return(errors.New("error")).Once()
+			body:     strings.NewReader(`{"ids": [1, 2, 3, 4]}`),
+			setup: func() {
+				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4}).Return(errors.New("error")).Once()
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
-			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5, 6]}`),
-			setupMocks: func() {
-				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4, 5, 6}).Return(gorm.ErrRecordNotFound).Once()
+			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5]}`),
+			setup: func() {
+				mockService.On("DeleteProfiles", mock.Anything, []uint{1, 2, 3, 4, 5}).Return(gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 		{
 			name:         "invalid id",
-			method:       fiber.MethodDelete,
 			endpoint:     "/",
 			body:         strings.NewReader(`{"ids": ["a", "b", "c", "d"]}`),
-			setupMocks:   func() {},
+			setup:        func() {},
 			expectedCode: fiber.StatusBadRequest,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProfileApp(mockService))
+
+	app := setupProfileApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodDelete, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }

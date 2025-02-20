@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -18,7 +17,7 @@ func TestMiddleware(t *testing.T) {
 	app := fiber.New()
 	db, _ := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 
-	os.Setenv("API_PORT", "3000")
+	os.Setenv("API_PORT", "9099")
 	defer os.Unsetenv("API_PORT")
 
 	go func() {

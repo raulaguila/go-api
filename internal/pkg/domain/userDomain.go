@@ -9,6 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"github.com/raulaguila/packhub"
 
@@ -55,6 +56,10 @@ type (
 		SetUserPassword(context.Context, string, *dto.PasswordInputDTO) error
 	}
 )
+
+func (u *User) AfterDelete(tx *gorm.DB) (err error) {
+	return tx.Delete(&Auth{}, u.AuthID).Error
+}
 
 func (u *User) TableName() string {
 	return UserTableName

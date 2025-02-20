@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 func NewProfileRepository(db *gorm.DB) domain.ProfileRepository {
@@ -19,24 +19,30 @@ type profileRepository struct {
 	db *gorm.DB
 }
 
-func (s *profileRepository) applyFilter(ctx context.Context, f *pgfilter.Filter) *gorm.DB {
+func (s *profileRepository) applyFilter(ctx context.Context, f *dto.ProfileFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
 	if f != nil {
 		if where := f.ApplySearchLike("name"); where != "" {
 			db = db.Where(where)
 		}
 		db = db.Order(f.ApplyOrder(nil))
+		if f.WithPermissions != nil && !(*f.WithPermissions) {
+			db = db.Omit("permissions")
+		}
+		if !f.ListRoot {
+			db = db.Where("name != ?", "ROOT")
+		}
 	}
 
 	return db
 }
 
-func (s *profileRepository) CountProfiles(ctx context.Context, f *pgfilter.Filter) (int64, error) {
+func (s *profileRepository) CountProfiles(ctx context.Context, f *dto.ProfileFilter) (int64, error) {
 	var count int64
 	return count, s.applyFilter(ctx, f).Model(new(domain.Profile)).Count(&count).Error
 }
 
-func (s *profileRepository) GetProfiles(ctx context.Context, f *pgfilter.Filter) (*[]domain.Profile, error) {
+func (s *profileRepository) GetProfiles(ctx context.Context, f *dto.ProfileFilter) (*[]domain.Profile, error) {
 	db := s.applyFilter(ctx, f)
 	if f != nil {
 		if ok, offset, limit := f.ApplyPagination(); ok {

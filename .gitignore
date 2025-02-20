@@ -15,7 +15,7 @@
 .DS_Store
 Build
 
-# Test binary, built with `go api -c`
+# Test binary, built with `go api_test -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE

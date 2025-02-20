@@ -632,6 +632,10 @@ paths:
         minimum: 1
         name: limit
         type: integer
+      - example: false
+        in: query
+        name: list_root
+        type: boolean
       - default: desc
         enum:
         - asc
@@ -653,6 +657,10 @@ paths:
         in: query
         name: sort
         type: string
+      - example: false
+        in: query
+        name: with_permissions
+        type: boolean
       produces:
       - application/json
       responses:

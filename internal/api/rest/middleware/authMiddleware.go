@@ -22,12 +22,6 @@ var (
 )
 
 func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
-	//decodedKey, err := base64.StdEncoding.DecodeString(base64key)
-	//utils.PanicIfErr(err)
-	//
-	//parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(decodedKey)
-	//utils.PanicIfErr(err)
-
 	return keyauth.New(keyauth.Config{
 		KeyLookup:  "header:" + fiber.HeaderAuthorization,
 		AuthScheme: "Bearer",

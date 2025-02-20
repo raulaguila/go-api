@@ -23,6 +23,16 @@ build: ## Build the application from source code
 run: ## Run application from source code
 	@go run cmd/go-api/go-api.go
 
+.PHONY: test
+test: ## Run tests and generate coverage report
+	@go install github.com/axw/gocov/gocov@v1.2.1
+	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
+	@go clean -testcache
+	@go test -coverprofile=cover.out ./...
+	@go tool cover -html=cover.out
+	@gocov convert cover.out | gocov-html -t kit > report.html
+	@-open ./report.html
+
 ### Docker compose commands  ---------------------------------------------
 
 .PHONY: compose-build-services
@@ -64,14 +74,6 @@ compose-stats: ## Display containers stats
 	@${COMPOSE_COMMAND} -f build/built.compose.yml stats
 
 ###   ---------------------------------------------
-
-.PHONY: go-test
-go-test: ## Run tests and generate coverage report
-	@go install github.com/axw/gocov/gocov@v1.2.1
-	@go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
-	$(eval packages:=$(shell go list ./... | grep -v github.com/raulaguila/go-api/docs))
-	@gocov test $(packages) | gocov-html -t kit > report.html
-	-open ./report.html
 
 .PHONY: go-benchmark
 go-benchmark: ## Benchmark code performance

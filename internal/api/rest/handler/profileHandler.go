@@ -11,7 +11,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"github.com/raulaguila/go-api/pkg/pgerror"
-	"github.com/raulaguila/go-api/pkg/pgfilter"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
@@ -44,7 +43,7 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 
 	route.Use(middleware.MidAccess)
 
-	route.Get("", middlewareFilterDTO, handler.getProfiles)
+	route.Get("", middlewareProfileFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
 	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
@@ -59,13 +58,19 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 // @Produce      json
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        pgfilter				query	pgfilter.Filter		false	"Optional Filter"
+// @Param        pgfilter			query	dto.ProfileFilter	false	"Profile Filter"
 // @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
-	response, err := s.profileService.GetProfiles(c.Context(), c.Locals(utils.LocalFilter).(*pgfilter.Filter))
+	f := c.Locals(utils.LocalFilter).(*dto.ProfileFilter)
+	f.ListRoot = false
+	if u := c.Locals(utils.LocalUser); u != nil && u.(*domain.User).Auth != nil {
+		f.ListRoot = u.(*domain.User).Auth.ProfileID == 1
+	}
+
+	response, err := s.profileService.GetProfiles(c.Context(), f)
 	if err != nil {
 		return s.handlerError(c, err)
 	}

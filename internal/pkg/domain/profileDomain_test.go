@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/lib/pq"
-
 	"github.com/stretchr/testify/assert"
 
 	"github.com/raulaguila/go-api/internal/pkg/dto"

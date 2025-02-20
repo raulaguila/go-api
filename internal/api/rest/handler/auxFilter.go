@@ -16,6 +16,12 @@ var middlewareFilterDTO = datatransferobject.New(datatransferobject.Config{
 	Model:      &pgfilter.Filter{},
 })
 
+var middlewareProfileFilterDTO = datatransferobject.New(datatransferobject.Config{
+	ContextKey: utils.LocalFilter,
+	OnLookup:   datatransferobject.Query,
+	Model:      &dto.ProfileFilter{},
+})
+
 var middlewareUserFilterDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalFilter,
 	OnLookup:   datatransferobject.Query,

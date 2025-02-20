@@ -1,6 +1,10 @@
 package handler
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/require"
+	"io"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -12,12 +16,12 @@ import (
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
 
-func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {
+func setupAuthApp(nockService *_mocks.AuthServiceMock) *fiber.App {
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
 		Next:            func(c *fiber.Ctx) bool { return false },
@@ -32,94 +36,137 @@ func setupAuthApp(nockService *mocks.AuthServiceMock) *fiber.App {
 }
 
 func TestAuthHandler_login(t *testing.T) {
-	nockService := new(mocks.AuthServiceMock)
-	tests := []generalHandlerTest{
+	nockService := new(_mocks.AuthServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "valid login",
-			method:   fiber.MethodPost,
 			endpoint: "/",
-			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			body:     strings.NewReader(`{"login": "admin@admin.com","password": "12345678"}`),
+			setup: func() {
 				nockService.On("Login", mock.Anything, mock.Anything).Return(&dto.AuthOutputDTO{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:         "invalid body",
-			method:       fiber.MethodPost,
 			endpoint:     "/",
 			body:         strings.NewReader(`{invalidJson}`),
-			setupMocks:   func() {},
+			setup:        func() {},
 			expectedCode: fiber.StatusBadRequest,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodPost,
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			setup: func() {
 				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 		{
 			name:     "disabled user",
-			method:   fiber.MethodPost,
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			setup: func() {
 				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, utils.ErrDisabledUser).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},
 		{
 			name:     "incorrect credentials",
-			method:   fiber.MethodPost,
 			endpoint: "/",
 			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			setup: func() {
 				nockService.On("Login", mock.Anything, mock.Anything).Return(nil, utils.ErrInvalidCredentials).Once()
 			},
 			expectedCode: fiber.StatusUnauthorized,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupAuthApp(nockService))
+
+	app := setupAuthApp(nockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPost, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestAuthHandler_me(t *testing.T) {
-	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &mocks.UserRepositoryMock{})
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
 
-	nockService := new(mocks.AuthServiceMock)
-	tests := []generalHandlerTest{
+	nockService := new(_mocks.AuthServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "valid request",
-			method:   fiber.MethodGet,
 			endpoint: "/",
-			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			setup: func() {
 				nockService.On("Me", mock.Anything).Return(&dto.UserOutputDTO{}).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupAuthApp(nockService))
+
+	app := setupAuthApp(nockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodGet, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestAuthHandler_refresh(t *testing.T) {
-	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, &mocks.UserRepositoryMock{})
+	middleware.MidRefresh = middleware.Auth(configs.RefreshPrivateKey, &_mocks.UserRepositoryMock{})
 
-	nockService := new(mocks.AuthServiceMock)
-	tests := []generalHandlerTest{
+	nockService := new(_mocks.AuthServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "valid request",
-			method:   fiber.MethodPut,
 			endpoint: "/",
-			body:     strings.NewReader(`{"username":"admin@admin.com","password":"12345678"}`),
-			setupMocks: func() {
+			setup: func() {
 				nockService.On("Refresh", mock.Anything).Return(&dto.AuthOutputDTO{}).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupAuthApp(nockService))
+
+	app := setupAuthApp(nockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPut, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }

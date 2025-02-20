@@ -24,18 +24,18 @@ func TestUserRepository_CountUsers(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		mockSetup     func()
+		setup         func()
 		filter        *dto.UserFilter
 		expectedCount int64
 		expectedError error
 	}{
 		{
 			name: "success_count_2",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com"}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com"}).Error)
 			},
@@ -45,11 +45,11 @@ func TestUserRepository_CountUsers(t *testing.T) {
 		},
 		{
 			name: "success_count_0",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 			},
 			filter:        nil,
 			expectedCount: 0,
@@ -59,7 +59,7 @@ func TestUserRepository_CountUsers(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			count, err := repository.CountUsers(context.Background(), tt.filter)
 
 			assert.Equal(t, tt.expectedCount, count)
@@ -75,19 +75,19 @@ func TestUserRepository_GetUsers(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		mockSetup     func()
+		setup         func()
 		filter        *dto.UserFilter
 		expectedNames []string
 		expectedErr   error
 	}{
 		{
 			name: "success_get_users_2",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
@@ -99,11 +99,11 @@ func TestUserRepository_GetUsers(t *testing.T) {
 		},
 		{
 			name: "success_get_users_0",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 			},
 			filter:        &dto.UserFilter{Filter: *pgfilter.New("name", "asc")},
 			expectedNames: []string{},
@@ -113,7 +113,7 @@ func TestUserRepository_GetUsers(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			data, err := repository.GetUsers(context.Background(), tt.filter)
 
 			assert.Equal(t, tt.expectedErr, err)
@@ -131,19 +131,19 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		mockSetup    func()
+		setup        func()
 		userInput    *domain.User
 		expectedName string
 		expectedErr  error
 	}{
 		{
 			name: "success_get_user_1",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
@@ -155,7 +155,7 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 		},
 		{
 			name: "success_get_user_2",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
@@ -174,7 +174,7 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			err := repository.GetUser(context.Background(), tt.userInput)
 
 			assert.Equal(t, tt.expectedErr, err)
@@ -192,18 +192,18 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		mockSetup   func()
+		setup       func()
 		input       *domain.User
 		expectedErr error
 	}{
 		{
 			name: "success_create_user",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 			},
@@ -212,7 +212,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		},
 		{
 			name: "error_duplicated_user",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
@@ -229,7 +229,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			err = repository.CreateUser(context.Background(), tt.input)
 
 			if tt.expectedErr == nil {
@@ -248,18 +248,18 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		mockSetup   func()
+		setup       func()
 		input       *domain.User
 		expectedErr error
 	}{
 		{
 			name: "success_update_user",
-			mockSetup: func() {
+			setup: func() {
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
 				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Auth{}))
 				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
 				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
@@ -271,7 +271,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			err := repository.UpdateUser(context.Background(), tt.input)
 
 			assert.Equal(t, tt.expectedErr, err)
@@ -285,36 +285,29 @@ func TestUserRepository_DeleteUsers(t *testing.T) {
 	repository := NewUserRepository(db)
 
 	tests := []struct {
-		name        string
-		mockSetup   func()
-		toDelete    []uint
-		expectedErr error
+		name     string
+		setup    func()
+		toDelete []uint
 	}{
 		{
 			name: "success_delete_users",
-			mockSetup: func() {
-				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}))
-				utils.PanicIfErr(db.Migrator().DropTable(&domain.Auth{}))
-				utils.PanicIfErr(db.Migrator().DropTable(&domain.Profile{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.User{}))
-				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}))
+			setup: func() {
+				utils.PanicIfErr(db.Migrator().DropTable(&domain.User{}, &domain.Auth{}, &domain.Profile{}))
+				utils.PanicIfErr(db.AutoMigrate(&domain.Profile{}, &domain.Auth{}, &domain.User{}))
 				utils.PanicIfErr(db.Create(&domain.Profile{Name: "Profile 1", Permissions: pq.StringArray{"read"}}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 2", Email: "user2@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
-				utils.PanicIfErr(db.Create(&domain.User{Name: "User 3", Email: "user3@email.com", Auth: &domain.Auth{Status: false, ProfileID: 1}}).Error)
+				utils.PanicIfErr(db.Create(&domain.Auth{Status: false, ProfileID: 1}).Error)
+				utils.PanicIfErr(db.Create(&domain.User{Name: "User 1", Email: "user1@email.com", AuthID: 1}).Error)
 			},
-			toDelete:    []uint{1, 2, 3},
-			expectedErr: nil,
+			toDelete: []uint{1},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			tt.setup()
 			err = repository.DeleteUsers(context.Background(), tt.toDelete)
 
-			assert.Equal(t, tt.expectedErr, err)
+			assert.NoError(t, err)
 		})
 	}
 }

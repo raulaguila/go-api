@@ -2,26 +2,29 @@ package handler
 
 import (
 	"errors"
+	"fmt"
+	"golang.org/x/text/language"
+	"gorm.io/gorm"
+	"io"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/mock"
-	"golang.org/x/text/language"
-	"gorm.io/gorm"
-
-	"github.com/raulaguila/packhub"
+	"github.com/stretchr/testify/require"
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
+	"github.com/raulaguila/go-api/internal/pkg/_mocks"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/internal/pkg/mocks"
 	"github.com/raulaguila/go-api/pkg/pgerror"
+	"github.com/raulaguila/packhub"
 )
 
-func setupProductApp(mockService *mocks.ProductServiceMock) *fiber.App {
-	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &mocks.UserRepositoryMock{})
+func setupProductApp(mockService *_mocks.ProductServiceMock) *fiber.App {
+	middleware.MidAccess = middleware.Auth(configs.AccessPrivateKey, &_mocks.UserRepositoryMock{})
 
 	app := fiber.New()
 	app.Use(fiberi18n.New(&fiberi18n.Config{
@@ -39,78 +42,106 @@ func setupProductApp(mockService *mocks.ProductServiceMock) *fiber.App {
 }
 
 func TestProductHandler_getProducts(t *testing.T) {
-	mockService := new(mocks.ProductServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProductServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodGet,
 			endpoint: "/",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProducts", mock.Anything, mock.Anything).Return(&dto.ItemsOutputDTO[dto.ProductOutputDTO]{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "general error",
-			method:   fiber.MethodGet,
 			endpoint: "/",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProducts", mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProductApp(mockService))
+
+	app := setupProductApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodGet, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProductHandler_getProduct(t *testing.T) {
-	mockService := new(mocks.ProductServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProductServiceMock)
+	tests := []struct {
+		name, endpoint string
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodGet,
 			endpoint: "/1",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProductByID", mock.Anything, uint(1)).Return(&dto.ProductOutputDTO{}, nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "general error",
-			method:   fiber.MethodGet,
 			endpoint: "/200",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProductByID", mock.Anything, uint(200)).Return(nil, errors.New("error")).Once()
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodGet,
 			endpoint: "/500",
-			body:     nil,
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("GetProductByID", mock.Anything, uint(500)).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProductApp(mockService))
+
+	app := setupProductApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodGet, tt.endpoint, nil)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProductHandler_createProduct(t *testing.T) {
-	mockService := new(mocks.ProductServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProductServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodPost,
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{
 					ID:   packhub.Pointer(uint(1)),
 					Name: packhub.Pointer("Product 01"),
@@ -120,27 +151,43 @@ func TestProductHandler_createProduct(t *testing.T) {
 		},
 		{
 			name:     "duplicate product",
-			method:   fiber.MethodPost,
 			endpoint: "/",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("CreateProduct", mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProductApp(mockService))
+
+	app := setupProductApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPost, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProductHandler_updateProduct(t *testing.T) {
-	mockService := new(mocks.ProductServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProductServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodPut,
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(&dto.ProductOutputDTO{
 					ID:   packhub.Pointer(uint(1)),
 					Name: packhub.Pointer("Product 01"),
@@ -150,69 +197,94 @@ func TestProductHandler_updateProduct(t *testing.T) {
 		},
 		{
 			name:     "duplicate product",
-			method:   fiber.MethodPut,
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, pgerror.ErrDuplicatedKey).Once()
 			},
 			expectedCode: fiber.StatusConflict,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodPut,
 			endpoint: "/1",
 			body:     strings.NewReader(`{"name": "Product 01"}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProductApp(mockService))
+
+	app := setupProductApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodPut, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }
 
 func TestProductHandler_deleteProduct(t *testing.T) {
-	mockService := new(mocks.ProductServiceMock)
-	tests := []generalHandlerTest{
+	mockService := new(_mocks.ProductServiceMock)
+	tests := []struct {
+		name, endpoint string
+		body           io.Reader
+		setup          func()
+		expectedCode   int
+	}{
 		{
 			name:     "success",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3]}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("DeleteProducts", mock.Anything, []uint{1, 2, 3}).Return(nil).Once()
 			},
 			expectedCode: fiber.StatusOK,
 		},
 		{
 			name:     "bad request",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4]}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("DeleteProducts", mock.Anything, []uint{1, 2, 3, 4}).Return(errors.New("error")).Once()
 			},
 			expectedCode: fiber.StatusInternalServerError,
 		},
 		{
 			name:     "not found",
-			method:   fiber.MethodDelete,
 			endpoint: "/",
 			body:     strings.NewReader(`{"ids": [1, 2, 3, 4, 5]}`),
-			setupMocks: func() {
+			setup: func() {
 				mockService.On("DeleteProducts", mock.Anything, []uint{1, 2, 3, 4, 5}).Return(gorm.ErrRecordNotFound).Once()
 			},
 			expectedCode: fiber.StatusNotFound,
 		},
 		{
 			name:         "invalid id",
-			method:       fiber.MethodDelete,
 			endpoint:     "/",
 			body:         strings.NewReader(`{"ids": ["a", "b", "c", "d"]}`),
-			setupMocks:   func() {},
+			setup:        func() {},
 			expectedCode: fiber.StatusBadRequest,
 		},
 	}
-	runGeneralHandlerTests(t, tests, setupProductApp(mockService))
+
+	app := setupProductApp(mockService)
+	for _, tt := range tests {
+		t.Run(tt.name, func(test *testing.T) {
+			tt.setup()
+			req := httptest.NewRequest(fiber.MethodDelete, tt.endpoint, tt.body)
+			req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			req.Header.Set("X-Skip-Auth", "true")
+
+			resp, err := app.Test(req)
+			require.NoError(test, err, fmt.Sprintf("Error on test '%v'", tt.name))
+			require.Equal(test, tt.expectedCode, resp.StatusCode, fmt.Sprintf("Wrong status code on test '%v'", tt.name))
+		})
+	}
 }

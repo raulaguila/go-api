@@ -1,4 +1,4 @@
-package mocks
+package _mocks
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
 func NewProfileServiceMock() domain.ProfileService {
@@ -32,7 +31,7 @@ func (m *ProfileServiceMock) GetProfileByID(ctx context.Context, id uint) (*dto.
 	return args.Get(0).(*dto.ProfileOutputDTO), args.Error(1)
 }
 
-func (m *ProfileServiceMock) GetProfiles(ctx context.Context, filter *pgfilter.Filter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
+func (m *ProfileServiceMock) GetProfiles(ctx context.Context, filter *dto.ProfileFilter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error) {
 	args := m.Called(ctx, filter)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)

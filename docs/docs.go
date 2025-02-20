@@ -665,6 +665,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "boolean",
+                        "example": false,
+                        "name": "list_root",
+                        "in": "query"
+                    },
+                    {
                         "enum": [
                             "asc",
                             "desc"
@@ -692,6 +698,12 @@ const docTemplate = `{
                         "default": "updated_at",
                         "example": "updated_at",
                         "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "name": "with_permissions",
                         "in": "query"
                     }
                 ],

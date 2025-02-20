@@ -70,7 +70,7 @@
     compose-log                    Show container logger
     compose-top                    Display containers processes
     compose-stats                  Display containers stats
-    go-test                        Run tests and generate coverage report
+    go-test                        Run test and generate coverage report
     go-benchmark                   Benchmark code performance
     go-lint                        Run lint checks
     go-audit                       Conduct quality checks

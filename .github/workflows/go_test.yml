@@ -1,4 +1,4 @@
-name: go_test
+name: Go API Backend Unit tests
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   Test:
-    name: Golang api
+    name: Golang api_test
 
     runs-on: [ ubuntu-latest ]
 
@@ -17,7 +17,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.23"
+          go-version: "1.24"
           cache: false
 
       - name: Environment file

@@ -34,7 +34,7 @@ type Config struct {
 	ErrorHandler fiber.ErrorHandler
 }
 
-// defaultConfig provides the default configuration settings for the application, including context key and error handler.
+// defaultConfig provides the default configuration settings for the application, including context key and error handler_test.
 var defaultConfig = Config{
 	ContextKey: "localDTO",
 	OnLookup:   Body,

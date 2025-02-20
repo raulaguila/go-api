@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/raulaguila/packhub"
 
@@ -89,8 +90,16 @@ func (s *userRepository) UpdateUser(ctx context.Context, user *domain.User) erro
 }
 
 func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error {
+	users := new([]domain.User)
+	if err := s.db.WithContext(ctx).Find(users, toDelete).Error; err != nil {
+		return err
+	}
+	if len(*users) == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		result := tx.Delete(new(domain.User), "id IN ?", toDelete)
+		result := tx.Select(clause.Associations).Where(users).Delete(users)
 		if result.Error != nil {
 			return result.Error
 		}
