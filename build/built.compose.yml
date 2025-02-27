@@ -7,7 +7,7 @@ services:
 
   backend:
 
-    image: api_backend:latest
+    image: api_backend:${SYS_VERSION}
     container_name: api_backend
     build:
       context: ..

@@ -2,8 +2,10 @@
 
 access_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
 refresh_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
+sys_version=$(cat configs/version.txt | tr -d "[:space:]")
 
 echo "TZ='America/Manaus'                             # Set system time zone
+SYS_VERSION='${sys_version}'                    # System version
 
 API_PORT='9000'                                 # API Container PORT
 API_LOGGER='1'                                  # API Logger enable

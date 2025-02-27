@@ -83,7 +83,8 @@
 4. #### Starting the Project [&uarr;](#summary)
     * Download and extract the latest build [release](https://github.com/raulaguila/go-api/releases)
     * Open the terminal in the release folder
-    * Run `make compose-build-built`
+    * Run `make compose-build`
+    * Or to build from source code: `make compose-build COMPOSE=build/source.compose.yml`
 
 5. #### Stopping the Project [&uarr;](#summary)
     * Open the terminal in the release folder

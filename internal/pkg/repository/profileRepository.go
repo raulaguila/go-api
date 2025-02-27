@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
 
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 
 func NewProfileRepository(db *gorm.DB) domain.ProfileRepository {

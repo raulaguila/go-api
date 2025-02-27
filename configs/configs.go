@@ -7,7 +7,6 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -20,9 +19,6 @@ var (
 	//go:embed locales/*
 	Locales embed.FS
 
-	//go:embed version.txt
-	version string
-
 	AccessPrivateKey  *rsa.PrivateKey
 	RefreshPrivateKey *rsa.PrivateKey
 )
@@ -33,8 +29,6 @@ func init() {
 		_, b, _, _ := runtime.Caller(0)
 		utils.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
 	}
-
-	utils.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace(version)))
 
 	time.Local, err = time.LoadLocation(os.Getenv("TZ"))
 	utils.PanicIfErr(err)

@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/raulaguila/go-api/internal/pkg/dto"
 	"testing"
+
+	"github.com/raulaguila/go-api/internal/pkg/dto"
 
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"

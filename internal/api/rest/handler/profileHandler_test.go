@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"golang.org/x/text/language"
 	"io"
 	"net/http/httptest"
 	"strings"
@@ -13,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"golang.org/x/text/language"
 	"gorm.io/gorm"
 
 	"github.com/raulaguila/go-api/configs"

@@ -11,7 +11,7 @@ COPY pkg/ pkg/
 COPY go.mod .
 COPY go.sum .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api_test/go-api_test.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
 
 
 FROM alpine:3.21.3
