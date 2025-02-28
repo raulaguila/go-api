@@ -51,7 +51,7 @@
    <details>
    <summary>Makefile commands:</summary>
 
-    ```bash
+    ```shell
     Usage:
         make [COMMAND]
         make help
