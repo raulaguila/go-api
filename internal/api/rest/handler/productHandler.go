@@ -46,9 +46,8 @@ func NewProductHandler(route fiber.Router, ps domain.ProductService) {
 
 	route.Get("", middlewareFilterDTO, handler.getProducts)
 	route.Post("", middlewareProductDTO, handler.createProduct)
-	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProductByID)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProductDTO, handler.updateProduct)
-	route.Delete("", middlewareIDsDTO, handler.deleteProducts)
+	route.Delete("", middlewareIDsIntDTO, handler.deleteProducts)
 }
 
 // getProducts godoc
@@ -71,31 +70,6 @@ func (s *ProductHandler) getProducts(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
-}
-
-// getProductByID godoc
-// @Summary      Get product by ID
-// @Description  Get product by ID
-// @Tags         Product
-// @Accept       json
-// @Produce      json
-// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path	dto.IDFilter	true	"Product ID"
-// @Success      200  {object}  	dto.ProductOutputDTO
-// @Failure      400  {object}  	HTTPResponse.Response
-// @Failure      404  {object}  	HTTPResponse.Response
-// @Failure      500  {object}  	HTTPResponse.Response
-// @Router       /product/{id} [get]
-// @Security	 Bearer
-func (s *ProductHandler) getProductByID(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*dto.IDFilter)
-	product, err := s.productService.GetProductByID(c.Context(), id.ID)
-	if err != nil {
-		return s.handlerError(c, err)
-	}
-
-	return c.Status(fiber.StatusOK).JSON(product)
 }
 
 // createProduct godoc
@@ -154,16 +128,16 @@ func (s *ProductHandler) updateProduct(c *fiber.Ctx) error {
 // @Tags         Product
 // @Accept       json
 // @Produce      json
-// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        ids				body	dto.IDsInputDTO		true	"Products ID"
+// @Param        X-Skip-Auth		header	bool					false	"Skip auth" enums(true,false) default(true)
+// @Param        Accept-Language	header	string					false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        ids				body	dto.IDsInputDTO[uint]	true	"Products ID"
 // @Success      204  {object}  	HTTPResponse.Response
 // @Failure      404  {object}  	HTTPResponse.Response
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /product [delete]
 // @Security	 Bearer
 func (s *ProductHandler) deleteProducts(c *fiber.Ctx) error {
-	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO[uint])
 	if err := s.productService.DeleteProducts(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}

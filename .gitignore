@@ -49,8 +49,8 @@ qodana.yaml
 .golangci.yml
 *.puml
 report.html
-backend
 generator
+backend
 
 # End of https://www.toptal.com/developers/gitignore/api/go
 .DS_Store

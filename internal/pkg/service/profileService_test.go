@@ -16,53 +16,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 
-func TestProfileService_GetProfileByID(t *testing.T) {
-	mockRepository := new(_mocks.ProfileRepositoryMock)
-	service := NewProfileService(mockRepository)
-
-	tests := []struct {
-		name      string
-		setupMock func()
-		profileID uint
-		wantErr   bool
-	}{
-		{
-			name: "success",
-			setupMock: func() {
-				mockRepository.
-					On("GetProfile", mock.Anything, mock.Anything).
-					Return(nil).
-					Once()
-			},
-			profileID: 1,
-			wantErr:   false,
-		},
-		{
-			name: "not found",
-			setupMock: func() {
-				mockRepository.
-					On("GetProfile", mock.Anything, mock.Anything).
-					Return(gorm.ErrRecordNotFound).
-					Once()
-			},
-			profileID: 1,
-			wantErr:   true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.setupMock()
-			_, err := service.GetProfileByID(context.Background(), tt.profileID)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-		})
-	}
-}
-
 func TestProfileService_GetProfiles(t *testing.T) {
 	mockRepository := new(_mocks.ProfileRepositoryMock)
 	service := NewProfileService(mockRepository)

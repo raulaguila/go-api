@@ -22,6 +22,10 @@ type productRepository struct {
 func (s *productRepository) applyFilter(ctx context.Context, f *pgfilter.Filter) *gorm.DB {
 	db := s.db.WithContext(ctx)
 	if f != nil {
+		if f.ID != nil {
+			db = db.Where("id = ?", *f.ID)
+		}
+
 		if where := f.ApplySearchLike("name"); where != "" {
 			db = db.Where(where)
 		}

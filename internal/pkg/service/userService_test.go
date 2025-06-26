@@ -16,53 +16,6 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 
-func TestUserService_GetUserByID(t *testing.T) {
-	mockRepository := new(_mocks.UserRepositoryMock)
-	service := NewUserService(mockRepository)
-
-	tests := []struct {
-		name      string
-		setupMock func()
-		userID    uint
-		wantErr   bool
-	}{
-		{
-			name: "success",
-			setupMock: func() {
-				mockRepository.
-					On("GetUser", mock.Anything, mock.Anything).
-					Return(nil).
-					Once()
-			},
-			userID:  1,
-			wantErr: false,
-		},
-		{
-			name: "not found",
-			setupMock: func() {
-				mockRepository.
-					On("GetUser", mock.Anything, mock.Anything).
-					Return(gorm.ErrRecordNotFound).
-					Once()
-			},
-			userID:  1,
-			wantErr: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.setupMock()
-			_, err := service.GetUserByID(context.Background(), tt.userID)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-		})
-	}
-}
-
 func TestUserService_GetUsers(t *testing.T) {
 	mockRepository := new(_mocks.UserRepositoryMock)
 	service := NewUserService(mockRepository)

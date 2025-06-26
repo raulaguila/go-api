@@ -1,8 +1,8 @@
 #!/bin/bash
 
+sys_version=$(cat configs/version.txt | tr -d "[:space:]")
 access_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
 refresh_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
-sys_version=$(cat configs/version.txt | tr -d "[:space:]")
 
 echo "TZ='America/Manaus'                             # Set system time zone
 SYS_VERSION='${sys_version}'                    # System version

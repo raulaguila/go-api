@@ -28,7 +28,7 @@ definitions:
       user:
         $ref: '#/definitions/dto.UserOutputDTO'
     type: object
-  dto.IDsInputDTO:
+  dto.IDsInputDTO-uint:
     properties:
       ids:
         items:
@@ -312,7 +312,7 @@ paths:
         name: ids
         required: true
         schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO-uint'
       produces:
       - application/json
       responses:
@@ -354,6 +354,10 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - example: 1
+        in: query
+        name: id
+        type: integer
       - default: 10
         in: query
         minimum: 1
@@ -450,57 +454,6 @@ paths:
       tags:
       - Product
   /product/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get product by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get product by ID
-      tags:
-      - Product
     put:
       consumes:
       - application/json
@@ -585,7 +538,7 @@ paths:
         name: ids
         required: true
         schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO-uint'
       produces:
       - application/json
       responses:
@@ -627,15 +580,15 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - example: 1
+        in: query
+        name: id
+        type: integer
       - default: 10
         in: query
         minimum: 1
         name: limit
         type: integer
-      - example: false
-        in: query
-        name: list_root
-        type: boolean
       - default: desc
         enum:
         - asc
@@ -731,57 +684,6 @@ paths:
       tags:
       - Profile
   /profile/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get profile by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProfileOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get profile by ID
-      tags:
-      - Profile
     put:
       consumes:
       - application/json
@@ -866,7 +768,7 @@ paths:
         name: id
         required: true
         schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
+          $ref: '#/definitions/dto.IDsInputDTO-uint'
       produces:
       - application/json
       responses:
@@ -906,6 +808,10 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - example: 1
+        in: query
+        name: id
+        type: integer
       - default: 10
         in: query
         minimum: 1
@@ -1006,57 +912,6 @@ paths:
       tags:
       - User
   /user/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get user by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get user
-      tags:
-      - User
     put:
       consumes:
       - application/json

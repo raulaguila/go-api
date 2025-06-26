@@ -6,16 +6,16 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/dto"
 )
 
-const AuthTableName string = "users_auth"
+const AuthTableName string = "usr_auth"
 
 type (
 	Auth struct {
 		Base
-		Status    bool `gorm:"column:status;type:bool;not null;"`
-		ProfileID uint `gorm:"column:profile_id;type:bigint;not null;index;" validate:"required,min=1"`
+		Status    bool `gorm:"column:status;"`
+		ProfileID uint `gorm:"column:profile_id;" validate:"required,min=1"`
 		Profile   *Profile
-		Token     *string `gorm:"column:token;type:varchar(255);unique;index"`
-		Password  *string `gorm:"column:password;type:varchar(255);"`
+		Token     *string `gorm:"column:token;"`
+		Password  *string `gorm:"column:password;"`
 	}
 
 	AuthService interface {

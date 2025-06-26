@@ -64,9 +64,8 @@ func NewUserHandler(route fiber.Router, us domain.UserService) {
 	route.Delete("/pass", middlewareIDDTO, handler.resetUserPassword)
 	route.Get("", middlewareUserFilterDTO, handler.getUsers)
 	route.Post("", middlewareUserDTO, handler.createUser)
-	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getUser)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareUserDTO, handler.updateUser)
-	route.Delete("", middlewareIDsDTO, handler.deleteUser)
+	route.Delete("", middlewareIDsIntDTO, handler.deleteUser)
 }
 
 // getUsers godoc
@@ -116,31 +115,6 @@ func (h *UserHandler) createUser(c *fiber.Ctx) error {
 	return HTTPResponse.New(c, fiber.StatusCreated, fiberi18n.MustLocalize(c, "userCreated"), user)
 }
 
-// getUser godoc
-// @Summary      Get user
-// @Description  Get user by ID
-// @Tags         User
-// @Accept       json
-// @Produce      json
-// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path		dto.IDFilter		true	"User ID"
-// @Success      200  {object}  	dto.UserOutputDTO
-// @Failure      400  {object}  	HTTPResponse.Response
-// @Failure      404  {object}  	HTTPResponse.Response
-// @Failure      500  {object}  	HTTPResponse.Response
-// @Router       /user/{id} [get]
-// @Security	 Bearer
-func (h *UserHandler) getUser(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*dto.IDFilter)
-	user, err := h.userService.GetUserByID(c.Context(), id.ID)
-	if err != nil {
-		return h.handlerError(c, err)
-	}
-
-	return c.Status(fiber.StatusOK).JSON(user)
-}
-
 // updateUser godoc
 // @Summary      Update user
 // @Description  Update user by ID
@@ -174,16 +148,16 @@ func (h *UserHandler) updateUser(c *fiber.Ctx) error {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					body		dto.IDsInputDTO		true	"User ID"
+// @Param        X-Skip-Auth		header		bool					false	"Skip auth" enums(true,false) default(true)
+// @Param        Accept-Language	header		string					false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        id					body		dto.IDsInputDTO[uint]	true	"User ID"
 // @Success      204  {object}  	nil
 // @Failure      404  {object}  	HTTPResponse.Response
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *UserHandler) deleteUser(c *fiber.Ctx) error {
-	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO[uint])
 	if err := h.userService.DeleteUsers(c.Context(), toDelete.IDs); err != nil {
 		return h.handlerError(c, err)
 	}

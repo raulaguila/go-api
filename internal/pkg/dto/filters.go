@@ -8,7 +8,7 @@ type (
 	ProfileFilter struct {
 		pgfilter.Filter
 		WithPermissions *bool `query:"with_permissions" form:"with_permissions" example:"false"`
-		ListRoot        bool  `query:"list_root" form:"list_root" example:"false"`
+		ListRoot        bool  `json:"-"`
 	}
 
 	UserFilter struct {

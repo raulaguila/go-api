@@ -45,9 +45,8 @@ func NewProfileHandler(route fiber.Router, ps domain.ProfileService) {
 
 	route.Get("", middlewareProfileFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
-	route.Get("/:"+utils.ParamID, middlewareIDDTO, handler.getProfile)
 	route.Put("/:"+utils.ParamID, middlewareIDDTO, middlewareProfileDTO, handler.updateProfile)
-	route.Delete("", middlewareIDsDTO, handler.deleteProfiles)
+	route.Delete("", middlewareIDsIntDTO, handler.deleteProfiles)
 }
 
 // getProfiles godoc
@@ -76,31 +75,6 @@ func (s *ProfileHandler) getProfiles(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
-}
-
-// getProfile godoc
-// @Summary      Get profile by ID
-// @Description  Get profile by ID
-// @Tags         Profile
-// @Accept       json
-// @Produce      json
-// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        id					path    dto.IDFilter		true	"Profile ID"
-// @Success      200  {object}  	dto.ProfileOutputDTO
-// @Failure      400  {object}  	HTTPResponse.Response
-// @Failure      404  {object}  	HTTPResponse.Response
-// @Failure      500  {object}  	HTTPResponse.Response
-// @Router       /profile/{id} [get]
-// @Security	 Bearer
-func (s *ProfileHandler) getProfile(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*dto.IDFilter)
-	profile, err := s.profileService.GetProfileByID(c.Context(), id.ID)
-	if err != nil {
-		return s.handlerError(c, err)
-	}
-
-	return c.Status(fiber.StatusOK).JSON(profile)
 }
 
 // createProfile godoc
@@ -159,16 +133,16 @@ func (s *ProfileHandler) updateProfile(c *fiber.Ctx) error {
 // @Tags         Profile
 // @Accept       json
 // @Produce      json
-// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
-// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
-// @Param        ids				body	dto.IDsInputDTO     true	"Profiles ID"
+// @Param        X-Skip-Auth		header	bool					false	"Skip auth" enums(true,false) default(true)
+// @Param        Accept-Language	header	string					false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        ids				body	dto.IDsInputDTO[uint]   true	"Profiles ID"
 // @Success      204  {object}  	HTTPResponse.Response
 // @Failure      404  {object}  	HTTPResponse.Response
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *ProfileHandler) deleteProfiles(c *fiber.Ctx) error {
-	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO)
+	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO[uint])
 	if err := s.profileService.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}

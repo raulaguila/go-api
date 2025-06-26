@@ -3,8 +3,8 @@ package dto
 import "github.com/lib/pq"
 
 type (
-	IDsInputDTO struct {
-		IDs []uint `json:"ids"`
+	IDsInputDTO[T uint | string] struct {
+		IDs []T `json:"ids"`
 	}
 
 	ProfileInputDTO struct {

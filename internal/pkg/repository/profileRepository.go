@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"gorm.io/gorm"
 
@@ -22,6 +23,11 @@ type profileRepository struct {
 func (s *profileRepository) applyFilter(ctx context.Context, f *dto.ProfileFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
 	if f != nil {
+		fmt.Printf("Filter: %+v\n", *f)
+		if f.ID != nil {
+			db = db.Where("id = ?", *f.ID)
+		}
+
 		if where := f.ApplySearchLike("name"); where != "" {
 			db = db.Where(where)
 		}
@@ -29,6 +35,7 @@ func (s *profileRepository) applyFilter(ctx context.Context, f *dto.ProfileFilte
 		if f.WithPermissions != nil && !(*f.WithPermissions) {
 			db = db.Omit("permissions")
 		}
+
 		if !f.ListRoot {
 			db = db.Where("name != ?", "ROOT")
 		}

@@ -1,4 +1,4 @@
-COMPOSE_FILE ?= $(or ${COMPOSE}, build/built.compose.yml)
+COMPOSE_FILE ?= $(or ${COMPOSE}, build/docker/built.compose.yml)
 COMPOSE_CONTAINER ?= $(or ${CONTAINER}, backend)
 COMPOSE_COMMAND := docker compose --env-file configs/.env
 GOBUILD_COMMAND := CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s"
@@ -76,8 +76,8 @@ compose-down: ## Stop and remove containers and networks
 .PHONY: compose-remove
 compose-remove: ## Stop and remove containers, networks and volumes
 	@echo "\033[1;31m⚠️ WARNING: This will permanently delete all containers, networks, and volumes!\033[0m"
-	@echo -n "❌ All data will be lost. Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-	@echo "\033[1;33m🛑 Stopping and removing all Docker resources...\033[0m"
+	@echo -n "\033[1;31m❌ All data will be lost. Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+	@echo "\033[1;33m\n🛑 Stopping and removing all Docker resources...\033[0m"
 	@${COMPOSE_COMMAND} -f ${COMPOSE_FILE} down -v --remove-orphans 2>&1 > /dev/null
 	@echo "\033[1;32m✅ Containers, networks, and volumes removed successfully.\033[0m\n"
 

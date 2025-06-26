@@ -118,7 +118,8 @@ func New(postgresDB *gorm.DB) {
 				},
 				"xauth": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
 					if auth := c.Get("Authorization", ""); auth != "" {
-						return output.WriteString(fmt.Sprintf(":%s", strings.TrimPrefix(auth, "Bearer ")[:15]))
+						auth = strings.TrimPrefix(auth, "Bearer ")
+						return output.WriteString(fmt.Sprintf(":%s", auth[:min(len(auth), 15)]))
 					}
 					return output.WriteString("")
 				},
@@ -148,7 +149,7 @@ func New(postgresDB *gorm.DB) {
 		}),
 		limiter.New(limiter.Config{
 			Max:        100,
-			Expiration: time.Minute,
+			Expiration: 30 * time.Second,
 			LimitReached: func(c *fiber.Ctx) error {
 				return HTTPResponse.New(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"), nil)
 			},

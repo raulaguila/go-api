@@ -27,6 +27,10 @@ type userRepository struct {
 func (s *userRepository) applyFilter(ctx context.Context, f *dto.UserFilter) *gorm.DB {
 	db := s.db.WithContext(ctx)
 	if f != nil {
+		if f.ID != nil {
+			db = db.Where(domain.UserTableName+".id = ?", *f.ID)
+		}
+
 		if f.ProfileID != 0 {
 			db = db.Where(domain.AuthTableName+".profile_id = ?", f.ProfileID)
 		}

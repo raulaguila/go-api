@@ -11,13 +11,13 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-const ProfileTableName string = "users_profile"
+const ProfileTableName string = "usr_profile"
 
 type (
 	Profile struct {
 		Base
-		Name        string         `gorm:"column:name;type:varchar(100);unique;not null;" validate:"required,min=4"`
-		Permissions pq.StringArray `gorm:"column:permissions;type:text[];not null;" validate:"required"`
+		Name        string         `gorm:"column:name;" validate:"required,min=4"`
+		Permissions pq.StringArray `gorm:"column:permissions;type:text[];" validate:"required"`
 	}
 
 	ProfileRepository interface {
@@ -31,7 +31,6 @@ type (
 
 	ProfileService interface {
 		GenerateProfileOutputDTO(p *Profile) *dto.ProfileOutputDTO
-		GetProfileByID(ctx context.Context, id uint) (*dto.ProfileOutputDTO, error)
 		GetProfiles(ctx context.Context, f *dto.ProfileFilter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
 		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
 		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)

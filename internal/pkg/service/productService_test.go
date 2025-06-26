@@ -16,53 +16,6 @@ import (
 	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
-func TestProductService_GetProductByID(t *testing.T) {
-	mockRepository := new(_mocks.ProductRepositoryMock)
-	service := NewProductService(mockRepository)
-
-	tests := []struct {
-		name      string
-		setupMock func()
-		productID uint
-		wantErr   bool
-	}{
-		{
-			name: "success",
-			setupMock: func() {
-				mockRepository.
-					On("GetProduct", mock.Anything, mock.Anything).
-					Return(nil).
-					Once()
-			},
-			productID: 1,
-			wantErr:   false,
-		},
-		{
-			name: "not found",
-			setupMock: func() {
-				mockRepository.
-					On("GetProduct", mock.Anything, mock.Anything).
-					Return(gorm.ErrRecordNotFound).
-					Once()
-			},
-			productID: 1,
-			wantErr:   true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.setupMock()
-			_, err := service.GetProductByID(context.Background(), tt.productID)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-		})
-	}
-}
-
 func TestProductService_GetProducts(t *testing.T) {
 	mockRepository := new(_mocks.ProductRepositoryMock)
 	service := NewProductService(mockRepository)

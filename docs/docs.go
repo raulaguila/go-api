@@ -249,6 +249,12 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
                         "minimum": 1,
                         "type": "integer",
                         "default": 10,
@@ -427,7 +433,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO-uint"
                         }
                     }
                 ],
@@ -454,82 +460,6 @@ const docTemplate = `{
             }
         },
         "/product/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get product by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Get product by ID",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {
@@ -658,16 +588,16 @@ const docTemplate = `{
                         "in": "header"
                     },
                     {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
                         "minimum": 1,
                         "type": "integer",
                         "default": 10,
                         "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "example": false,
-                        "name": "list_root",
                         "in": "query"
                     },
                     {
@@ -848,7 +778,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO-uint"
                         }
                     }
                 ],
@@ -875,82 +805,6 @@ const docTemplate = `{
             }
         },
         "/profile/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get profile by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Get profile by ID",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProfileOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {
@@ -1077,6 +931,12 @@ const docTemplate = `{
                         "description": "Request language",
                         "name": "Accept-Language",
                         "in": "header"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "id",
+                        "in": "query"
                     },
                     {
                         "minimum": 1,
@@ -1263,7 +1123,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
+                            "$ref": "#/definitions/dto.IDsInputDTO-uint"
                         }
                     }
                 ],
@@ -1426,82 +1286,6 @@ const docTemplate = `{
             }
         },
         "/user/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get user by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get user",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {
@@ -1631,7 +1415,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.IDsInputDTO": {
+        "dto.IDsInputDTO-uint": {
             "type": "object",
             "properties": {
                 "ids": {

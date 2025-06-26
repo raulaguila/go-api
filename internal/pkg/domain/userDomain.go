@@ -18,14 +18,14 @@ import (
 	"github.com/raulaguila/go-api/pkg/validator"
 )
 
-const UserTableName string = "users"
+const UserTableName string = "usr_user"
 
 type (
 	User struct {
 		Base
-		Name   string `gorm:"column:name;type:varchar(90);not null;" validate:"required,min=5"`
-		Email  string `gorm:"column:mail;type:varchar(50);not null;unique;index;" validate:"required,email"`
-		AuthID uint   `gorm:"column:auth_id;type:bigint;not null;index;"`
+		Name   string `gorm:"column:name;" validate:"required,min=5"`
+		Email  string `gorm:"column:mail;" validate:"required,email"`
+		AuthID uint   `gorm:"column:auth_id;"`
 		Auth   *Auth  `gorm:"constraint:OnDelete:CASCADE"`
 	}
 
@@ -47,7 +47,6 @@ type (
 
 	UserService interface {
 		GenerateUserOutputDTO(*User) *dto.UserOutputDTO
-		GetUserByID(context.Context, uint) (*dto.UserOutputDTO, error)
 		GetUsers(context.Context, *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error)
 		CreateUser(context.Context, *dto.UserInputDTO) (*dto.UserOutputDTO, error)
 		UpdateUser(context.Context, uint, *dto.UserInputDTO) (*dto.UserOutputDTO, error)

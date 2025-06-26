@@ -1,4 +1,4 @@
-FROM golang:1.24.0 AS builder
+FROM golang:1.24.4 AS builder
 
 WORKDIR /opt/app
 
@@ -10,8 +10,9 @@ COPY internal/ internal/
 COPY pkg/ pkg/
 COPY go.mod .
 COPY go.sum .
+COPY Makefile .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o backend cmd/go-api/go-api.go
+RUN make build
 
 
 FROM alpine:3.21.3
