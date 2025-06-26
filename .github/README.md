@@ -93,7 +93,7 @@
 6. #### Features [&uarr;](#summary)
 
     * Get default user email and password on environment file `configs/.env`
-    * Test API endpoints using [http files](../api) or accessing [swagger page](http://127.0.0.1:9000/swagger)
+    * Test API endpoints accessing [swagger page](http://127.0.0.1:9000/swagger)
 
     1. ###### Profile Module ([HTTP](../api/profile.http))
 
