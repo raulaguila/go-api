@@ -45,7 +45,7 @@
 2. #### Prerequisites [&uarr;](#summary)
     * Docker
     * Docker Compose
-    * Golang 1.23+ (Optional)
+    * Golang 1.24+ (Optional)
 
 3. #### Makefile [&uarr;](#summary)
    <details>
