@@ -11,6 +11,7 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Raul del Aguila",
+            "url": "https://github.com/raulaguila",
             "email": "email@email.com"
         },
         "version": "{{.Version}}"
@@ -82,19 +83,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -128,25 +129,31 @@ const docTemplate = `{
                         "description": "Request language",
                         "name": "Accept-Language",
                         "in": "header"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Expire token",
+                        "name": "expire",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -181,7 +188,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO"
                         }
                     }
                 ],
@@ -189,428 +196,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/product": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "List products",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "List products",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "default": 10,
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "enum": [
-                            "asc",
-                            "desc"
-                        ],
-                        "type": "string",
-                        "default": "desc",
-                        "name": "order",
-                        "in": "query"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "default": 1,
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "example": "name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "default": "updated_at",
-                        "example": "updated_at",
-                        "name": "sort",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_ProductOutputDTO"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Insert product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Insert product",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "description": "Product model",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Delete products by IDs",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Delete products by IDs",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "description": "Products ID",
-                        "name": "ids",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/product/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get product by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Get product by ID",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Update product by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Update product by ID",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Product model",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductInputDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProductOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -656,6 +254,12 @@ const docTemplate = `{
                         "description": "Request language",
                         "name": "Accept-Language",
                         "in": "header"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
                     },
                     {
                         "minimum": 1,
@@ -713,14 +317,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_ProfileOutputDTO"
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -771,7 +375,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
                         }
                     }
                 ],
@@ -779,25 +383,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -808,7 +412,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Delete profiles by IDs",
+                "description": "Delete profiles by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -818,7 +422,7 @@ const docTemplate = `{
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Delete profiles by IDs",
+                "summary": "Delete profiles by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -848,7 +452,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint"
                         }
                     }
                 ],
@@ -856,101 +460,25 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
             }
         },
         "/profile/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get profile by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Get profile by ID",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProfileOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {
@@ -967,7 +495,7 @@ const docTemplate = `{
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Update profile",
+                "summary": "Update profile by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -1005,7 +533,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO"
                         }
                     }
                 ],
@@ -1013,25 +541,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProfileOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1081,6 +609,18 @@ const docTemplate = `{
                     {
                         "minimum": 1,
                         "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "level_id",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
                         "default": 10,
                         "name": "limit",
                         "in": "query"
@@ -1103,12 +643,6 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "example": 1,
-                        "name": "profile_id",
-                        "in": "query"
-                    },
-                    {
                         "type": "string",
                         "example": "name",
                         "name": "search",
@@ -1120,6 +654,12 @@ const docTemplate = `{
                         "example": "updated_at",
                         "name": "sort",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "name": "status",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1128,14 +668,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ItemsOutputDTO-dto_UserOutputDTO"
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1186,7 +726,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
                         }
                     }
                 ],
@@ -1194,25 +734,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1233,7 +773,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "Delete user",
+                "summary": "Delete user by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -1263,7 +803,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.IDsInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint"
                         }
                     }
                 ],
@@ -1274,13 +814,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1298,7 +838,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "Set user password",
+                "summary": "Set user password by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -1336,7 +876,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.PasswordInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO"
                         }
                     }
                 ],
@@ -1347,13 +887,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1374,7 +914,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "Reset user password",
+                "summary": "Reset user password by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -1413,95 +953,19 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
             }
         },
         "/user/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get user by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get user",
-                "parameters": [
-                    {
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Skip auth",
-                        "name": "X-Skip-Auth",
-                        "in": "header"
-                    },
-                    {
-                        "enum": [
-                            "en-US",
-                            "pt-BR"
-                        ],
-                        "type": "string",
-                        "default": "en-US",
-                        "description": "Request language",
-                        "name": "Accept-Language",
-                        "in": "header"
-                    },
-                    {
-                        "minimum": 1,
-                        "type": "integer",
-                        "example": 1,
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserOutputDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {
@@ -1518,7 +982,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "Update user",
+                "summary": "Update user by ID",
                 "parameters": [
                     {
                         "enum": [
@@ -1556,7 +1020,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserInputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO"
                         }
                     }
                 ],
@@ -1564,25 +1028,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserOutputDTO"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/HTTPResponse.Response"
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
                         }
                     }
                 }
@@ -1590,7 +1054,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "HTTPResponse.Response": {
+        "github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1604,12 +1068,17 @@ const docTemplate = `{
                 "object": {}
             }
         },
-        "dto.AuthInputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO": {
             "type": "object",
             "properties": {
+                "expiration": {
+                    "type": "boolean",
+                    "default": true,
+                    "example": true
+                },
                 "login": {
                     "type": "string",
-                    "example": "admin@admin.com"
+                    "example": "00000000"
                 },
                 "password": {
                     "type": "string",
@@ -1617,7 +1086,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AuthOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO": {
             "type": "object",
             "properties": {
                 "accesstoken": {
@@ -1627,11 +1096,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/dto.UserOutputDTO"
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                 }
             }
         },
-        "dto.IDsInputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint": {
             "type": "object",
             "properties": {
                 "ids": {
@@ -1642,49 +1111,35 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ItemsOutputDTO-dto_ProductOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.ProductOutputDTO"
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
                     }
                 },
                 "pagination": {
-                    "$ref": "#/definitions/dto.PaginationDTO"
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
                 }
             }
         },
-        "dto.ItemsOutputDTO-dto_ProfileOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO": {
             "type": "object",
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.ProfileOutputDTO"
+                        "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO"
                     }
                 },
                 "pagination": {
-                    "$ref": "#/definitions/dto.PaginationDTO"
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO"
                 }
             }
         },
-        "dto.ItemsOutputDTO-dto_UserOutputDTO": {
-            "type": "object",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.UserOutputDTO"
-                    }
-                },
-                "pagination": {
-                    "$ref": "#/definitions/dto.PaginationDTO"
-                }
-            }
-        },
-        "dto.PaginationDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO": {
             "type": "object",
             "properties": {
                 "current_page": {
@@ -1701,7 +1156,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.PasswordInputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO": {
             "type": "object",
             "properties": {
                 "password": {
@@ -1714,29 +1169,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProductInputDTO": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Product 01"
-                }
-            }
-        },
-        "dto.ProductOutputDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Product 01"
-                }
-            }
-        },
-        "dto.ProfileInputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO": {
             "type": "object",
             "properties": {
                 "name": {
@@ -1751,7 +1184,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProfileOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1770,7 +1203,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UserInputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1788,12 +1221,20 @@ const docTemplate = `{
                 "status": {
                     "type": "boolean",
                     "example": true
+                },
+                "username": {
+                    "type": "string",
+                    "example": "51515151"
                 }
             }
         },
-        "dto.UserOutputDTO": {
+        "github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO": {
             "type": "object",
             "properties": {
+                "corp_id": {
+                    "type": "string",
+                    "example": "john.cena"
+                },
                 "email": {
                     "type": "string",
                     "example": "john.cena@email.com"
@@ -1806,8 +1247,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "John Cena"
                 },
+                "new": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "profile": {
-                    "$ref": "#/definitions/dto.ProfileOutputDTO"
+                    "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO"
                 },
                 "status": {
                     "type": "boolean",
@@ -1828,7 +1273,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0.0",
 	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},

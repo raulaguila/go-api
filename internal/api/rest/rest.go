@@ -13,6 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
+	"github.com/minio/minio-go/v7"
 	"golang.org/x/text/language"
 	"gorm.io/gorm"
 
@@ -24,30 +25,27 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/repository"
 	"github.com/raulaguila/go-api/internal/pkg/service"
+	"github.com/raulaguila/go-api/pkg/packhub"
 )
 
 var (
 	profileRepository domain.ProfileRepository
 	userRepository    domain.UserRepository
-	productRepository domain.ProductRepository
 
+	authService    domain.AuthService
 	profileService domain.ProfileService
 	userService    domain.UserService
-	authService    domain.AuthService
-	productService domain.ProductService
 )
 
-func initRepositories(postgresDB *gorm.DB) {
+func initRepositories(postgresDB *gorm.DB, minioClient *minio.Client) {
 	profileRepository = repository.NewProfileRepository(postgresDB)
 	userRepository = repository.NewUserRepository(postgresDB)
-	productRepository = repository.NewProductRepository(postgresDB)
 }
 
 func initServices() {
 	profileService = service.NewProfileService(profileRepository)
-	userService = service.NewUserService(userRepository)
 	authService = service.NewAuthService(userRepository)
-	productService = service.NewProductService(productRepository)
+	userService = service.NewUserService(userRepository)
 }
 
 func initHandlers(app *fiber.App) {
@@ -58,9 +56,10 @@ func initHandlers(app *fiber.App) {
 	// Prepare endpoints for the API.
 	handler.NewMiscHandler(app.Group(""))
 	handler.NewAuthHandler(app.Group("/auth"), authService)
+
 	handler.NewProfileHandler(app.Group("/profile"), profileService)
+
 	handler.NewUserHandler(app.Group("/user"), userService)
-	handler.NewProductHandler(app.Group("/product"), productService)
 
 	// Prepare an endpoint for 'Not Found'.
 	app.All("*", func(c *fiber.Ctx) error {
@@ -68,7 +67,7 @@ func initHandlers(app *fiber.App) {
 	})
 }
 
-func start(app *fiber.App, postgresDB *gorm.DB) {
+func start(app *fiber.App, postgresDB *gorm.DB, minioClient *minio.Client) {
 	if strings.ToLower(os.Getenv("API_SWAGGO")) == "1" {
 		docs.SwaggerInfo.Version = os.Getenv("SYS_VERSION")
 
@@ -80,26 +79,26 @@ func start(app *fiber.App, postgresDB *gorm.DB) {
 		}))
 	}
 
-	initRepositories(postgresDB)
+	initRepositories(postgresDB, minioClient)
 	initServices()
 	initHandlers(app)
 
-	panic(app.Listen(":" + os.Getenv("API_PORT")))
+	packhub.PanicIfErr(app.Listen(":" + os.Getenv("API_PORT")))
 }
 
-func New(postgresDB *gorm.DB) {
+func New(postgresDB *gorm.DB, minioClient *minio.Client) {
 	app := fiber.New(fiber.Config{
 		EnablePrintRoutes:     false,
 		Prefork:               os.Getenv("API_ENABLE_PREFORK") == "1",
 		CaseSensitive:         true,
 		StrictRouting:         true,
 		DisableStartupMessage: false,
-		AppName:               "Golang template",
+		AppName:               "API Backend",
 		ReduceMemoryUsage:     false,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return HTTPResponse.New(c, fiber.StatusInternalServerError, err.Error(), nil)
 		},
-		BodyLimit: 50 * 1024 * 1024,
+		BodyLimit: 100 * 1024 * 1024,
 	})
 
 	app.Use(recover.New())
@@ -117,8 +116,8 @@ func New(postgresDB *gorm.DB) {
 					return output.WriteString(fmt.Sprintf("%15s", c.IP()))
 				},
 				"xauth": func(output logger.Buffer, c *fiber.Ctx, _ *logger.Data, _ string) (int, error) {
-					if auth := c.Get("Authorization", ""); auth != "" {
-						return output.WriteString(fmt.Sprintf(":%s", strings.TrimPrefix(auth, "Bearer ")[:15]))
+					if key := c.Get("Authorization", ""); key != "" {
+						return output.WriteString(fmt.Sprintf(":%s", strings.TrimPrefix(key, "Bearer ")[:min(len(strings.TrimPrefix(key, "Bearer ")), 10)]))
 					}
 					return output.WriteString("")
 				},
@@ -132,10 +131,10 @@ func New(postgresDB *gorm.DB) {
 	app.Use(
 		cors.New(cors.Config{
 			AllowOrigins:  "*",
-			AllowMethods:  strings.Join([]string{fiber.MethodGet, fiber.MethodPost, fiber.MethodPut, fiber.MethodDelete, fiber.MethodOptions}, ","),
+			AllowMethods:  strings.Join([]string{fiber.MethodGet, fiber.MethodPost, fiber.MethodPut, fiber.MethodPatch, fiber.MethodDelete, fiber.MethodOptions}, ","),
 			AllowHeaders:  "*",
 			ExposeHeaders: "*",
-			MaxAge:        1,
+			MaxAge:        -1,
 		}),
 		fiberi18n.New(&fiberi18n.Config{
 			Next: func(c *fiber.Ctx) bool {
@@ -147,13 +146,14 @@ func New(postgresDB *gorm.DB) {
 			Loader:          &fiberi18n.EmbedLoader{FS: configs.Locales},
 		}),
 		limiter.New(limiter.Config{
-			Max:        100,
-			Expiration: time.Minute,
+			Next:       nil,
+			Max:        300,
+			Expiration: 30 * time.Second,
 			LimitReached: func(c *fiber.Ctx) error {
 				return HTTPResponse.New(c, fiber.StatusTooManyRequests, fiberi18n.MustLocalize(c, "manyRequests"), nil)
 			},
 		}),
 	)
 
-	start(app, postgresDB)
+	start(app, postgresDB, minioClient)
 }

@@ -3,8 +3,12 @@ package dto
 import "github.com/lib/pq"
 
 type (
-	IDsInputDTO struct {
-		IDs []uint `json:"ids"`
+	IDInputDTO[T uint | string] struct {
+		ID T `json:"id"`
+	}
+
+	IDsInputDTO[T uint | string] struct {
+		IDs []T `json:"ids"`
 	}
 
 	ProfileInputDTO struct {
@@ -14,6 +18,7 @@ type (
 
 	UserInputDTO struct {
 		Name      *string `json:"name" example:"John Cena"`
+		Username  *string `json:"username" example:"john.cena"`
 		Email     *string `json:"email" example:"john.cena@email.com"`
 		Status    *bool   `json:"status" example:"true"`
 		ProfileID *uint   `json:"profile_id" example:"1"`
@@ -25,11 +30,8 @@ type (
 	}
 
 	AuthInputDTO struct {
-		Login    string `json:"login" example:"admin@admin.com"`
-		Password string `json:"password" example:"12345678"`
-	}
-
-	ProductInputDTO struct {
-		Name *string `json:"name" example:"Product 01"`
+		Login      string `json:"login" example:"admin"`
+		Password   string `json:"password" example:"12345678"`
+		Expiration bool   `json:"expiration" example:"true" default:"true"`
 	}
 )

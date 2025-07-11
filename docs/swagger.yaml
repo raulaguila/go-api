@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  HTTPResponse.Response:
+  github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response:
     properties:
       code:
         example: 400
@@ -10,59 +10,54 @@ definitions:
         type: string
       object: {}
     type: object
-  dto.AuthInputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO:
     properties:
+      expiration:
+        default: true
+        example: true
+        type: boolean
       login:
-        example: admin@admin.com
+        example: "00000000"
         type: string
       password:
         example: "12345678"
         type: string
     type: object
-  dto.AuthOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO:
     properties:
       accesstoken:
         type: string
       refreshtoken:
         type: string
       user:
-        $ref: '#/definitions/dto.UserOutputDTO'
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
     type: object
-  dto.IDsInputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint:
     properties:
       ids:
         items:
           type: integer
         type: array
     type: object
-  dto.ItemsOutputDTO-dto_ProductOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/dto.ProductOutputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
         type: array
       pagination:
-        $ref: '#/definitions/dto.PaginationDTO'
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
     type: object
-  dto.ItemsOutputDTO-dto_ProfileOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO:
     properties:
       items:
         items:
-          $ref: '#/definitions/dto.ProfileOutputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
         type: array
       pagination:
-        $ref: '#/definitions/dto.PaginationDTO'
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO'
     type: object
-  dto.ItemsOutputDTO-dto_UserOutputDTO:
-    properties:
-      items:
-        items:
-          $ref: '#/definitions/dto.UserOutputDTO'
-        type: array
-      pagination:
-        $ref: '#/definitions/dto.PaginationDTO'
-    type: object
-  dto.PaginationDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO:
     properties:
       current_page:
         type: integer
@@ -73,7 +68,7 @@ definitions:
       total_pages:
         type: integer
     type: object
-  dto.PasswordInputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO:
     properties:
       password:
         example: secret
@@ -82,22 +77,7 @@ definitions:
         example: secret
         type: string
     type: object
-  dto.ProductInputDTO:
-    properties:
-      name:
-        example: Product 01
-        type: string
-    type: object
-  dto.ProductOutputDTO:
-    properties:
-      id:
-        example: 1
-        type: integer
-      name:
-        example: Product 01
-        type: string
-    type: object
-  dto.ProfileInputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO:
     properties:
       name:
         example: ADMIN
@@ -107,7 +87,7 @@ definitions:
           type: string
         type: array
     type: object
-  dto.ProfileOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO:
     properties:
       id:
         example: 1
@@ -120,7 +100,7 @@ definitions:
           type: string
         type: array
     type: object
-  dto.UserInputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO:
     properties:
       email:
         example: john.cena@email.com
@@ -134,9 +114,15 @@ definitions:
       status:
         example: true
         type: boolean
+      username:
+        example: "51515151"
+        type: string
     type: object
-  dto.UserOutputDTO:
+  github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO:
     properties:
+      corp_id:
+        example: john.cena
+        type: string
       email:
         example: john.cena@email.com
         type: string
@@ -146,8 +132,11 @@ definitions:
       name:
         example: John Cena
         type: string
+      new:
+        example: true
+        type: boolean
       profile:
-        $ref: '#/definitions/dto.ProfileOutputDTO'
+        $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
       status:
         example: true
         type: boolean
@@ -156,9 +145,11 @@ info:
   contact:
     email: email@email.com
     name: Raul del Aguila
+    url: https://github.com/raulaguila
   description: This API is a user-friendly solution designed to serve as the foundation
     for more complex APIs.
   title: Go API
+  version: 1.0.0
 paths:
   /:
     get:
@@ -199,15 +190,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.UserOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
       summary: User authenticated
@@ -231,22 +222,22 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/dto.AuthInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.AuthOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       summary: User authentication
       tags:
       - Auth
@@ -267,302 +258,33 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - description: Expire token
+        in: query
+        name: expire
+        type: boolean
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.AuthOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.AuthOutputDTO'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       summary: User refresh
       tags:
       - Auth
-  /product:
-    delete:
-      consumes:
-      - application/json
-      description: Delete products by IDs
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - description: Products ID
-        in: body
-        name: ids
-        required: true
-        schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Delete products by IDs
-      tags:
-      - Product
-    get:
-      consumes:
-      - application/json
-      description: List products
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - default: 10
-        in: query
-        minimum: 1
-        name: limit
-        type: integer
-      - default: desc
-        enum:
-        - asc
-        - desc
-        in: query
-        name: order
-        type: string
-      - default: 1
-        in: query
-        minimum: 1
-        name: page
-        type: integer
-      - example: name
-        in: query
-        name: search
-        type: string
-      - default: updated_at
-        example: updated_at
-        in: query
-        name: sort
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/dto.ItemsOutputDTO-dto_ProductOutputDTO'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: List products
-      tags:
-      - Product
-    post:
-      consumes:
-      - application/json
-      description: Insert product
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - description: Product model
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ProductInputDTO'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.ProductOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Insert product
-      tags:
-      - Product
-  /product/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get product by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get product by ID
-      tags:
-      - Product
-    put:
-      consumes:
-      - application/json
-      description: Update product by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      - description: Product model
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ProductInputDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProductOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Update product by ID
-      tags:
-      - Product
   /profile:
     delete:
       consumes:
       - application/json
-      description: Delete profiles by IDs
+      description: Delete profiles by ID
       parameters:
       - default: true
         description: Skip auth
@@ -585,25 +307,25 @@ paths:
         name: ids
         required: true
         schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint'
       produces:
       - application/json
       responses:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
-      summary: Delete profiles by IDs
+      summary: Delete profiles by ID
       tags:
       - Profile
     get:
@@ -627,6 +349,10 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - in: query
+        minimum: 1
+        name: id
+        type: integer
       - default: 10
         in: query
         minimum: 1
@@ -668,12 +394,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ItemsOutputDTO-dto_ProfileOutputDTO'
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get profiles
@@ -705,83 +431,32 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/dto.ProfileInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.ProfileOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Insert profile
       tags:
       - Profile
   /profile/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get profile by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ProfileOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get profile by ID
-      tags:
-      - Profile
     put:
       consumes:
       - application/json
@@ -814,29 +489,29 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/dto.ProfileInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProfileOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ProfileOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
-      summary: Update profile
+      summary: Update profile by ID
       tags:
       - Profile
   /user:
@@ -866,7 +541,7 @@ paths:
         name: id
         required: true
         schema:
-          $ref: '#/definitions/dto.IDsInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.IDsInputDTO-uint'
       produces:
       - application/json
       responses:
@@ -875,14 +550,14 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
-      summary: Delete user
+      summary: Delete user by ID
       tags:
       - User
     get:
@@ -906,6 +581,14 @@ paths:
         in: header
         name: Accept-Language
         type: string
+      - in: query
+        minimum: 1
+        name: id
+        type: integer
+      - example: 1
+        in: query
+        name: level_id
+        type: integer
       - default: 10
         in: query
         minimum: 1
@@ -923,10 +606,6 @@ paths:
         minimum: 1
         name: page
         type: integer
-      - example: 1
-        in: query
-        name: profile_id
-        type: integer
       - example: name
         in: query
         name: search
@@ -936,6 +615,10 @@ paths:
         in: query
         name: sort
         type: string
+      - example: false
+        in: query
+        name: status
+        type: boolean
       produces:
       - application/json
       responses:
@@ -943,12 +626,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ItemsOutputDTO-dto_UserOutputDTO'
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Get users
@@ -980,83 +663,32 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.UserInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.UserOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
       summary: Insert user
       tags:
       - User
   /user/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get user by ID
-      parameters:
-      - default: true
-        description: Skip auth
-        enum:
-        - true
-        - false
-        in: header
-        name: X-Skip-Auth
-        type: boolean
-      - default: en-US
-        description: Request language
-        enum:
-        - en-US
-        - pt-BR
-        in: header
-        name: Accept-Language
-        type: string
-      - example: 1
-        in: path
-        minimum: 1
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserOutputDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      security:
-      - Bearer: []
-      summary: Get user
-      tags:
-      - User
     put:
       consumes:
       - application/json
@@ -1089,29 +721,29 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.UserInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserInputDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.UserOutputDTO'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
-      summary: Update user
+      summary: Update user by ID
       tags:
       - User
   /user/pass:
@@ -1149,14 +781,14 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
       security:
       - Bearer: []
-      summary: Reset user password
+      summary: Reset user password by ID
       tags:
       - User
     put:
@@ -1191,7 +823,7 @@ paths:
         name: password
         required: true
         schema:
-          $ref: '#/definitions/dto.PasswordInputDTO'
+          $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.PasswordInputDTO'
       produces:
       - application/json
       responses:
@@ -1200,12 +832,12 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/HTTPResponse.Response'
-      summary: Set user password
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
+      summary: Set user password by ID
       tags:
       - User
 securityDefinitions:

@@ -24,7 +24,7 @@ func TestDurationFromString(t *testing.T) {
 
 	for _, tt := range tests {
 		got, err := DurationFromString(tt.str, tt.factor)
-		assert.Equal(t, tt.want, got)
 		assert.Equal(t, tt.wantErr, err)
+		assert.Equal(t, tt.want, got)
 	}
 }

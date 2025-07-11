@@ -20,21 +20,15 @@
   </a>
 </p>
 
-### Summary
+#### Summary
 
 1. [Description](#description-)
-2. [Prerequisites](#prerequisites-)
-3. [Makefile](#makefile-)
-4. [Starting the Project](#starting-the-project-)
-5. [Stopping the Project](#stopping-the-project-)
-6. [Features](#features-)
-    1. [Profile Module](#profile-module-http)
-    2. [User Module](#user-module-http)
-    3. [Authentication Module](#authentication-module-http)
-    4. [Product Module](#product-module-http)
-7. [Code Status](#code-status-)
-8. [Contributors](#contributors-)
-9. [License](#license-)
+2. [Dependencies](#dependencies-)
+3. [Make Command](#make-file-)
+4. [Running the project](#running-the-project-)
+   1. [From repository clone](#from-repository-clone)
+   2. [From built version](#from-built-version)
+5. [Stopping the project](#stopping-the-project-)
 
 <h1></h1>
 
@@ -42,59 +36,82 @@
 
    User-friendly API template solution designed as a foundation for more complex APIs.
 
-2. #### Prerequisites [&uarr;](#summary)
-    * Docker
-    * Docker Compose
-    * Golang 1.23+ (Optional)
+2. #### Dependencies [&uarr;](#summary)
 
-3. #### Makefile [&uarr;](#summary)
-   <details>
-   <summary>Makefile commands:</summary>
+   - Make
+   - Docker
+   - Docker Compose
+   - Go 1.24+ (Optional)
 
-    ```bash
-    Usage:
-        make [COMMAND]
-        make help
+3. #### Make File [&uarr;](#summary)
 
-    Commands:
-    
-    init                           Create environment file
-    build                          Build the application from source code
-    run                            Run application from source code
-    compose-build-services         Create and start services containers
-    compose-build-built            Create and start containers from built
-    compose-build-source           Create and start containers from source code
-    compose-down                   Stop and remove containers and networks
-    compose-remove                 Stop and remove containers, networks and volumes
-    compose-exec                   Access container bash
-    compose-log                    Show container logger
-    compose-top                    Display containers processes
-    compose-stats                  Display containers stats
-    go-test                        Run test and generate coverage report
-    go-benchmark                   Benchmark code performance
-    go-lint                        Run lint checks
-    go-audit                       Conduct quality checks
-    go-swag                        Update swagger files
-    go-format                      Fix code format issues
-    go-tidy                        Clean and tidy dependencies
-    ```
-   </details>
+      <details>
+      <summary>Commands:</summary>
 
-4. #### Starting the Project [&uarr;](#summary)
-    * Download and extract the latest build [release](https://github.com/raulaguila/go-api/releases)
-    * Open the terminal in the release folder
-    * Run `make compose-build-built`
+   ```sh
+   Usage:
+   make [COMMAND]
 
-5. #### Stopping the Project [&uarr;](#summary)
-    * Open the terminal in the release folder
-    * Run `make compose-remove`
+   Example:
+   make build
+
+   Commands:
+
+   help                           Display available commands and their descriptions
+   init                           Create environment file
+   test                           Run tests and generate coverage report
+   run                            Run application from source code
+   build                          Build the all applications from source code
+   swag                           Update swagger files
+   format                         Fix code format issues
+   tidy                           Clean and tidy dependencies
+   lint                           Run lint checks
+   audit                          Conduct quality checks
+   benchmark                      Benchmark code performance
+   compose-up                     Create and start containers
+   compose-build                  Build, create and start containers
+   compose-down                   Stop and remove containers and networks
+   compose-clean                  Clear dangling Docker images
+   compose-remove                 Stop and remove containers, networks and volumes
+   compose-exec                   Access container bash
+   compose-log                    Show container logger
+   compose-top                    Display containers processes
+   compose-stats                  Display containers stats
+   ```
+
+      </details>
+
+4. #### Running the project [&uarr;](#summary)
+
+   If you have the cloned repository, follow the instructions in the item "[From repository clone](#from-repository-clone)"
+
+   If you downloaded the released version, follow the instructions in the item "[From released version](#from-released-version)"
+
+   1. ##### From repository clone
+
+      1. Open the terminal in the cloned repository folder.
+         - If there is a golang installation on the system:
+           - Run `make init build compose-build` to create environment file, build the application and create and start containers.
+         - If there is no golang installation on the system:
+           - Run `make init compose-build base=source` to create environment file and create and start production containers.
+
+   2. ##### From released version
+
+      1. Open terminal in built version folder.
+      2. Run `make compose-build` to create and start production containers.
+
+5. #### Stopping the project [&uarr;](#summary)
+
+   1. Open the terminal in the project folder.
+   2. Run `make compose-down` to stop and remove containers and networks or run `make compose-remove` to stop and
+      remove containers, networks and volumes.
 
 6. #### Features [&uarr;](#summary)
 
     * Get default user email and password on environment file `configs/.env`
     * Test API endpoints using [http files](../api) or accessing [swagger page](http://127.0.0.1:9000/swagger)
 
-    1. ###### Profile Module ([HTTP](../api/profile.http))
+    1. ###### Profile Module
 
        | Endpoint        | HTTP Method |       Description        |
        |:----------------|:-----------:|:------------------------:|
@@ -104,7 +121,7 @@
        | `/profile/{id}` |    `GET`    |   `Get profile by ID`    |
        | `/profile/{id}` |    `PUT`    |  `Update profile by ID`  |
 
-    2. ###### User Module ([HTTP](../api/user.http))
+    2. ###### User Module
 
        | Endpoint     | HTTP Method |       Description       |
        |:-------------|:-----------:|:-----------------------:|
@@ -116,7 +133,7 @@
        | `/user/pass` |    `PUT`    |  `Set user's password`  |
        | `/user/pass` |  `DELETE`   | `Reset user's password` |
 
-    3. ###### Authentication Module ([HTTP](../api/auth.http)):
+    3. ###### Authentication Module
 
        | Endpoint | HTTP Method |               Description               |
        |:---------|:-----------:|:---------------------------------------:|
@@ -130,16 +147,6 @@
        Authorization: Bearer <token>
        ```
 
-    4. ###### Product Module ([HTTP](../api/product.http))
-
-       | Endpoint        | HTTP Method |      Description       |
-       |:----------------|:-----------:|:----------------------:|
-       | `/product`      |    `GET`    |   `Get all products`   |
-       | `/product`      |   `POST`    | `Insert a new product` |
-       | `/product`      |  `DELETE`   |   `Delete products`    |
-       | `/product/{id}` |    `GET`    |  `Get product by ID`   |
-       | `/product/{id}` |    `PUT`    | `Update product by ID` |
-
 7. #### Code Status [&uarr;](#summary)
     * Development
 
@@ -152,3 +159,5 @@
 9. #### License [&uarr;](#summary)
 
    Copyright © 2023 [raulaguila](https://github.com/raulaguila). This project is [MIT](../LICENSE) licensed.
+
+<p style="text-align:right">&#40;<a href="#go-api-template">back to top</a>&#41;</p>
