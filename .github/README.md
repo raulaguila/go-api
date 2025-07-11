@@ -107,3 +107,58 @@
       remove containers, networks and volumes.
 
 <p style="text-align:right">&#40;<a href="#title">back to top</a>&#41;</p>
+
+
+6. #### Features [&uarr;](#summary)
+
+    * Get default user email and password on environment file `configs/.env`
+    * Test API endpoints using [http files](../api) or accessing [swagger page](http://127.0.0.1:9000/swagger)
+
+    1. ###### Profile Module
+
+       | Endpoint        | HTTP Method |       Description        |
+       |:----------------|:-----------:|:------------------------:|
+       | `/profile`      |    `GET`    |    `Get all profiles`    |
+       | `/profile`      |   `POST`    |   `Insert new profile`   |
+       | `/profile`      |  `DELETE`   | `Delete profiles by IDs` |
+       | `/profile/{id}` |    `GET`    |   `Get profile by ID`    |
+       | `/profile/{id}` |    `PUT`    |  `Update profile by ID`  |
+
+    2. ###### User Module
+
+       | Endpoint     | HTTP Method |       Description       |
+       |:-------------|:-----------:|:-----------------------:|
+       | `/user`      |    `GET`    |     `Get all users`     |
+       | `/user`      |   `POST`    |      `Insert user`      |
+       | `/user`      |  `DELETE`   |      `Delete user`      |
+       | `/user/{id}` |    `GET`    |    `Get user by ID`     |
+       | `/user/{id}` |    `PUT`    |   `Update user by ID`   |
+       | `/user/pass` |    `PUT`    |  `Set user's password`  |
+       | `/user/pass` |  `DELETE`   | `Reset user's password` |
+
+    3. ###### Authentication Module
+
+       | Endpoint | HTTP Method |               Description               |
+       |:---------|:-----------:|:---------------------------------------:|
+       | `/auth`  |   `POST`    |          `User authentication`          |
+       | `/auth`  |    `GET`    |  `User authenticated via access token`  |
+       | `/auth`  |    `PUT`    | `User refresh tokens via refresh token` |
+
+        * Pass token using prefix _**Bearer**_ in Authorization request header:
+
+       ```bash
+       Authorization: Bearer <token>
+       ```
+
+7. #### Code Status [&uarr;](#summary)
+    * Development
+
+8. #### Contributors [&uarr;](#summary)
+
+   <a href="https://github.com/raulaguila" target="_blank">
+     <img src="https://contrib.rocks/image?repo=raulaguila/go-api" alt="raulaguila">
+   </a>
+
+9. #### License [&uarr;](#summary)
+
+   Copyright © 2023 [raulaguila](https://github.com/raulaguila). This project is [MIT](../LICENSE) licensed.
