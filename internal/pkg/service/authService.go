@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"os"
+	"time"
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
@@ -12,12 +12,12 @@ import (
 
 func NewAuthService(r domain.UserRepository) domain.AuthService {
 	return &authService{
-		userRepository: r,
+		repository: r,
 	}
 }
 
 type authService struct {
-	userRepository domain.UserRepository
+	repository domain.UserRepository
 }
 
 func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
@@ -26,10 +26,11 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 	}
 
 	return &dto.UserOutputDTO{
-		ID:     &user.ID,
-		Name:   &user.Name,
-		Email:  &user.Email,
-		Status: &user.Auth.Status,
+		ID:       &user.ID,
+		Name:     &user.Name,
+		Username: &user.Username,
+		Email:    &user.Email,
+		Status:   &user.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
 			ID:          &user.Auth.Profile.ID,
 			Name:        &user.Auth.Profile.Name,
@@ -38,9 +39,19 @@ func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDT
 	}
 }
 
-func (s *authService) generateAuthOutputDTO(user *domain.User) *dto.AuthOutputDTO {
-	accessToken, _ := user.GenerateToken(os.Getenv("ACCESS_TOKEN_EXPIRE"), configs.AccessPrivateKey)
-	refreshToken, _ := user.GenerateToken(os.Getenv("RFRESH_TOKEN_EXPIRE"), configs.RefreshPrivateKey)
+func (s *authService) generateAuthOutputDTO(user *domain.User, expiration bool) *dto.AuthOutputDTO {
+	accessToken, _ := user.GenerateToken(func() *time.Duration {
+		if expiration {
+			return &configs.AccessExpiration
+		}
+		return nil
+	}(), configs.AccessPrivateKey)
+	refreshToken, _ := user.GenerateToken(func() *time.Duration {
+		if expiration {
+			return &configs.RefreshExpiration
+		}
+		return nil
+	}(), configs.RefreshPrivateKey)
 
 	return &dto.AuthOutputDTO{
 		User:         s.generateUserOutputDTO(user),
@@ -50,8 +61,8 @@ func (s *authService) generateAuthOutputDTO(user *domain.User) *dto.AuthOutputDT
 }
 
 func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) (*dto.AuthOutputDTO, error) {
-	user := &domain.User{Email: credentials.Login}
-	if err := s.userRepository.GetUser(ctx, user); err != nil {
+	user := &domain.User{Username: credentials.Login}
+	if err := s.repository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
@@ -63,13 +74,13 @@ func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) 
 		return nil, utils.ErrDisabledUser
 	}
 
-	return s.generateAuthOutputDTO(user), nil
+	return s.generateAuthOutputDTO(user, credentials.Expiration), nil
 }
 
 func (s *authService) Me(user *domain.User) *dto.UserOutputDTO {
 	return s.generateUserOutputDTO(user)
 }
 
-func (s *authService) Refresh(user *domain.User) *dto.AuthOutputDTO {
-	return s.generateAuthOutputDTO(user)
+func (s *authService) Refresh(user *domain.User, expiration bool) *dto.AuthOutputDTO {
+	return s.generateAuthOutputDTO(user, expiration)
 }

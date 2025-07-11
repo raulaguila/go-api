@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/raulaguila/go-api/pkg/packhub"
 )
 
 func TestInit(t *testing.T) {
@@ -72,9 +72,9 @@ func TestInit(t *testing.T) {
 			err := godotenv.Load(path.Join("configs", ".env"))
 			if err != nil {
 				_, b, _, _ := runtime.Caller(0)
-				utils.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
+				packhub.PanicIfErr(godotenv.Load(path.Join(path.Dir(b), ".env")))
 			}
-			utils.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace("1.0.0")))
+			packhub.PanicIfErr(os.Setenv("SYS_VERSION", strings.TrimSpace("1.0.0")))
 
 			_, err = time.LoadLocation(os.Getenv("TZ"))
 			if (err != nil) != tt.wantErr {

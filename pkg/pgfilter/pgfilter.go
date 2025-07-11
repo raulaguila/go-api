@@ -19,8 +19,8 @@ func New(sort, order string) *Filter {
 }
 
 type Filter struct {
-	ID     *uint  `query:"id" form:"id" example:"1"`
 	Search string `query:"search" form:"search" example:"name"`
+	ID     *uint  `query:"id" form:"id" minimum:"1"`
 	Page   int    `query:"page" form:"page" minimum:"1" default:"1"`
 	Limit  int    `query:"limit" form:"limit" minimum:"1" default:"10"`
 	Sort   string `query:"sort" form:"sort" default:"updated_at" example:"updated_at"`

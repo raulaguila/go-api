@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -15,13 +13,13 @@ import (
 )
 
 type AuthHandler struct {
-	authService  domain.AuthService
+	service      domain.AuthService
 	handlerError func(*fiber.Ctx, error) error
 }
 
-func NewAuthHandler(route fiber.Router, as domain.AuthService) {
+func NewAuthHandler(route fiber.Router, service domain.AuthService) {
 	handler := &AuthHandler{
-		authService: as,
+		service: service,
 		handlerError: newErrorHandler(map[string]map[error][]any{
 			"*": {
 				utils.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
@@ -51,11 +49,10 @@ func NewAuthHandler(route fiber.Router, as domain.AuthService) {
 func (s *AuthHandler) login(c *fiber.Ctx) error {
 	credentials := new(dto.AuthInputDTO)
 	if err := c.BodyParser(credentials); err != nil {
-		fmt.Println(err)
 		return HTTPResponse.New(c, fiber.StatusBadRequest, fiberi18n.MustLocalize(c, "invalidData"), nil)
 	}
 
-	authResponse, err := s.authService.Login(c.Context(), credentials)
+	authResponse, err := s.service.Login(c.Context(), credentials)
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -77,7 +74,7 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(s.authService.Me(c.Locals(utils.LocalUser).(*domain.User)))
+	return c.Status(fiber.StatusOK).JSON(s.service.Me(c.Locals(utils.LocalUser).(*domain.User)))
 }
 
 // refresh godoc
@@ -88,10 +85,12 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        Authorization		header	string				false	"User token"
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        expire				query	bool				false	"Expire token"
 // @Success      200  {object}  	dto.AuthOutputDTO
 // @Failure      401  {object}  	HTTPResponse.Response
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(s.authService.Refresh(c.Locals(utils.LocalUser).(*domain.User)))
+	expire := c.Query("expire", "true") == "true"
+	return c.Status(fiber.StatusOK).JSON(s.service.Refresh(c.Locals(utils.LocalUser).(*domain.User), expire))
 }

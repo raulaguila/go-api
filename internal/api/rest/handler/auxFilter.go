@@ -28,10 +28,16 @@ var middlewareUserFilterDTO = datatransferobject.New(datatransferobject.Config{
 	Model:      &dto.UserFilter{},
 })
 
-var middlewareIDDTO = datatransferobject.New(datatransferobject.Config{
+var middlewareEvidenceFilterDTO = datatransferobject.New(datatransferobject.Config{
+	ContextKey: utils.LocalFilter,
+	OnLookup:   datatransferobject.Query,
+	Model:      &dto.EvidenceFilter{},
+})
+
+var middlewareIDIntDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: utils.LocalID,
 	OnLookup:   datatransferobject.Params,
-	Model:      &dto.IDFilter{},
+	Model:      &dto.IDFilter[uint]{},
 	ErrorHandler: func(c *fiber.Ctx, err error) error {
 		return HTTPResponse.New(c, fiber.StatusBadRequest, "invalidID", nil)
 	},
@@ -45,3 +51,12 @@ var middlewareIDsIntDTO = datatransferobject.New(datatransferobject.Config{
 		return HTTPResponse.New(c, fiber.StatusBadRequest, "invalidID", nil)
 	},
 })
+
+// var middlewareIDsStringDTO = datatransferobject.New(datatransferobject.Config{
+// 	ContextKey: utils.LocalID,
+// 	OnLookup:   datatransferobject.Body,
+// 	Model:      &dto.IDsInputDTO[string]{},
+// 	ErrorHandler: func(c *fiber.Ctx, err error) error {
+// 		return HTTPResponse.New(c, fiber.StatusBadRequest, "invalidID", nil)
+// 	},
+// })

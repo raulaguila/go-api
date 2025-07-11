@@ -1,4 +1,4 @@
-name: Go API Backend Unit tests
+name: Go API Backend Unit Tests
 
 on:
   pull_request:

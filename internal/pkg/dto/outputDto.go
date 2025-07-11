@@ -1,13 +1,10 @@
 package dto
 
-import "github.com/lib/pq"
+import (
+	"github.com/lib/pq"
+)
 
 type (
-	ProductOutputDTO struct {
-		ID   *uint   `json:"id,omitempty" example:"1"`
-		Name *string `json:"name,omitempty" example:"Product 01"`
-	}
-
 	ProfileOutputDTO struct {
 		ID          *uint           `json:"id" example:"1"`
 		Name        *string         `json:"name" example:"ADMIN"`
@@ -15,15 +12,17 @@ type (
 	}
 
 	UserOutputDTO struct {
-		ID      *uint             `json:"id" example:"1"`
-		Name    *string           `json:"name" example:"John Cena"`
-		Email   *string           `json:"email" example:"john.cena@email.com"`
-		Status  *bool             `json:"status" example:"true"`
-		Profile *ProfileOutputDTO `json:"profile,omitempty"`
+		ID       *uint             `json:"id" example:"1"`
+		Name     *string           `json:"name" example:"John Cena"`
+		Email    *string           `json:"email" example:"john.cena@email.com"`
+		Username *string           `json:"corp_id" example:"john.cena"`
+		Status   *bool             `json:"status" example:"true"`
+		New      *bool             `json:"new,omitempty" example:"true"`
+		Profile  *ProfileOutputDTO `json:"profile,omitempty"`
 	}
 
 	outputDTO interface {
-		ProfileOutputDTO | UserOutputDTO | ProductOutputDTO
+		ProfileOutputDTO | UserOutputDTO
 	}
 
 	PaginationDTO struct {

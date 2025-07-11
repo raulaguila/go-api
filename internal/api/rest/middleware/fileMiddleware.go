@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"mime/multipart"
 	"path/filepath"
@@ -11,9 +12,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
-	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/pkg/utils"
 )
+
+type File struct {
+	Name      string
+	Extension string
+	File      io.Reader
+}
 
 func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
@@ -35,7 +41,7 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			}
 		}(f)
 
-		c.Locals(utils.LocalDTO, &domain.File{
+		c.Locals(utils.LocalFile, &File{
 			Name:      file.Filename,
 			Extension: filepath.Ext(file.Filename),
 			File:      f,

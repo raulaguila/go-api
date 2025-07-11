@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
 
-	"github.com/raulaguila/packhub"
+	"github.com/raulaguila/go-api/pkg/packhub"
 )
 
 type TestModel struct {
