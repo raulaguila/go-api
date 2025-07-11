@@ -106,9 +106,6 @@
    2. Run `make compose-down` to stop and remove containers and networks or run `make compose-remove` to stop and
       remove containers, networks and volumes.
 
-<p style="text-align:right">&#40;<a href="#title">back to top</a>&#41;</p>
-
-
 6. #### Features [&uarr;](#summary)
 
     * Get default user email and password on environment file `configs/.env`
@@ -162,3 +159,5 @@
 9. #### License [&uarr;](#summary)
 
    Copyright © 2023 [raulaguila](https://github.com/raulaguila). This project is [MIT](../LICENSE) licensed.
+
+<p style="text-align:right">&#40;<a href="#go-api-template">back to top</a>&#41;</p>
