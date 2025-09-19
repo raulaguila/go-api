@@ -1,143 +1,190 @@
-DOCKER_BASE ?= $(or ${base}, built)
-DOCKER_SERVICE ?= $(or ${service}, backend)
+# =========================
+# Configurações
+# =========================
+
+# Docker
+DOCKER_BASE     ?= $(or ${base}, built)
+DOCKER_SERVICE  ?= $(or ${service}, backend)
 COMPOSE_COMMAND := BASE=${DOCKER_BASE} docker compose --env-file configs/.env -f build/docker/compose.yml
-GOBUILD_COMMAND := CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s"
+
+# Go build
+GO          := go
+GOOS        := linux
+GOARCH      := amd64
+BUILD_FLAGS := -ldflags "-w -s"
+GOBUILD     := CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) build $(BUILD_FLAGS)
+
+# Tool versions
+SWAG_VERSION         := v1.16.3
+GOCOV_VERSION        := v1.2.1
+GOCOV_HTML_VERSION   := v1.4.0
+
+# Colors
+GREEN  := \033[1;32m
+YELLOW := \033[1;33m
+BLUE   := \033[1;34m
+CYAN   := \033[1;36m
+MAGENTA:= \033[1;35m
+RED    := \033[1;31m
+RESET  := \033[0m
+
+# =========================
+# Helpers
+# =========================
 
 define clean_dangling_images
-	@echo "\033[1;33m🧹 Cleaning up dangling Docker images...\n\033[0m"
+	@echo "$(YELLOW)🧹 Cleaning up dangling Docker images...$(RESET)"
 	@if test -n "$$(docker images -f "dangling=true" -q)"; then \
 		docker rmi $$(docker images -f "dangling=true" -q); \
 	fi > /dev/null
 endef
 
-.PHONY: all
+# =========================
+# Dependências
+# =========================
+
+.PHONY: check-docker check-swag doctor
+
+check-docker:
+	@command -v docker >/dev/null || (echo "❌ Docker não encontrado!" && exit 1)
+	@docker compose version >/dev/null || (echo "❌ Docker Compose não encontrado!" && exit 1)
+
+check-swag:
+	@command -v swag >/dev/null 2>&1 || { \
+		echo "❌ swag não encontrado. Instale com:"; \
+		echo "   go install github.com/swaggo/swag/cmd/swag@$(SWAG_VERSION)"; \
+		exit 1; \
+	}
+
+doctor: ## Check required tools
+	@for cmd in go docker swag; do \
+	  if ! command -v $$cmd >/dev/null 2>&1; then \
+	    echo "❌ Missing: $$cmd"; \
+	  else \
+	    echo "✅ Found: $$cmd"; \
+	  fi; \
+	done
+
+# =========================
+# Ajuda
+# =========================
+
+.PHONY: all help
 all: help
 help: ## Display available commands and their descriptions
-	@echo "\033[1;36mUsage:\033[0m"
+	@echo "$(CYAN)Usage:$(RESET)"
 	@echo "  make [COMMAND]\n"
-	@echo "\033[1;36mExample:\033[0m"
+	@echo "$(CYAN)Example:$(RESET)"
 	@echo "  make build\n"
-	@echo "\033[1;36mCommands:\033[0m\n"
-	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo "$(CYAN)Commands:$(RESET)\n"
+	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "$(CYAN)%-30s$(RESET) %s\n", $$1, $$2}'
 
-.PHONY: init
+# =========================
+# Go commands
+# =========================
+
+.PHONY: init test run build swag format tidy lint audit benchmark ci
+
 init: ## Create environment file
-	@echo "\033[1;34m⚙️  Initializing environment setup...\033[0m"
+	@echo "$(BLUE)⚙️  Initializing environment setup...$(RESET)"
 	@chmod +x configs/env.sh && configs/env.sh && mv .env configs/
-	@echo "\033[1;32m✅ Environment file successfully created and configured!\033[0m\n"
+	@echo "$(GREEN)✅ Environment file successfully created!$(RESET)\n"
 
-.PHONY: test
 test: ## Run tests and generate coverage report
-	@echo "\033[1;34m🔍 Running tests...\033[0m"
-	@-go install github.com/axw/gocov/gocov@v1.2.1
-	@-go install github.com/matm/gocov-html/cmd/gocov-html@v1.4.0
-	@-go clean -testcache
-	@-go test ./... -coverprofile cover.out
-	@-go tool cover -html=cover.out
+	@echo "$(BLUE)🔍 Running tests...$(RESET)"
+	@-$(GO) install github.com/axw/gocov/gocov@$(GOCOV_VERSION)
+	@-$(GO) install github.com/matm/gocov-html/cmd/gocov-html@$(GOCOV_HTML_VERSION)
+	@-$(GO) clean -testcache
+	@-$(GO) test ./... -coverprofile cover.out
+	@-$(GO) tool cover -html=cover.out
 	@gocov convert cover.out | gocov-html -t kit > report.html
-	@echo "\033[1;32m✅ Tests completed!\033[0m\n"
+	@echo "$(GREEN)✅ Tests completed!$(RESET)\n"
 	@-x-www-browser ./report.html
 
-.PHONY: run
 run: ## Run application from source code
-	@echo "\033[1;36m▶️  Running the application...\033[0m"
-	@go run cmd/backend/backend.go
-	@echo "\033[1;32m✅ Application stopped.\033[0m"
+	@echo "$(CYAN)▶️  Running the application...$(RESET)"
+	@$(GO) run cmd/backend/backend.go
+	@echo "$(GREEN)✅ Application stopped.$(RESET)"
 
-.PHONY: build
-build: ## Build the all applications from source code
-	@echo "\033[1;34m🚀 Building application...\033[0m"
-	@${GOBUILD_COMMAND} -o binbackend cmd/backend/backend.go
-	@${GOBUILD_COMMAND} -o bingenerator cmd/generator/generator.go
-	@echo "\033[1;32m✅ Build completed successfully!\033[0m\n"
+build: ## Build all applications from source code
+	@echo "$(BLUE)🚀 Building application...$(RESET)"
+	@${GOBUILD} -o bin/backend cmd/backend/backend.go
+	@${GOBUILD} -o bin/generator cmd/generator/generator.go
+	@echo "$(GREEN)✅ Build completed successfully!$(RESET)\n"
 
-.PHONY: swag
-swag: ## Update swagger files
-	@echo "\033[1;34m📄 Updating Swagger API documentation...\033[0m"
-	@go run github.com/swaggo/swag/cmd/swag@v1.16.3 init -g cmd/backend/backend.go --parseDependency 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Swagger files updated successfully.\033[0m\n"
+swag: check-swag ## Update swagger files
+	@echo "$(BLUE)📄 Updating Swagger API documentation...$(RESET)"
+	@swag init -g cmd/backend/backend.go --parseDependency -o ./docs
+	@echo "$(GREEN)✅ Swagger files updated successfully.$(RESET)\n"
 
-.PHONY: format
 format: ## Fix code format issues
-	@echo "\033[1;33m📝 Formatting code to fix style issues...\033[0m"
-	@go run mvdan.cc/gofumpt@latest -w -l . 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Code formatting complete! All issues fixed.\033[0m\n"
+	@echo "$(YELLOW)📝 Formatting code...$(RESET)"
+	@$(GO) run mvdan.cc/gofumpt@latest -w -l . 2>&1 > /dev/null
+	@echo "$(GREEN)✅ Code formatting complete!$(RESET)\n"
 
-.PHONY: tidy
 tidy: ## Clean and tidy dependencies
-	@echo "\033[1;33m🔧 Cleaning and tidying Go dependencies...\033[0m"
-	@go mod tidy -v 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Dependencies cleaned and tidied successfully.\033[0m\n"
+	@echo "$(YELLOW)🔧 Cleaning and tidying Go dependencies...$(RESET)"
+	@$(GO) mod tidy -v 2>&1 > /dev/null
+	@echo "$(GREEN)✅ Dependencies tidied successfully.$(RESET)\n"
 
-.PHONY: lint
-lint: ## Run lint checks
-	@echo "\033[1;33m🔍 Running lint checks on the code...\033[0m"
-	@go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.59.1 run ./... --fix
-	@echo "\033[1;32m✅ Linting complete! Code issues fixed where possible.\033[0m\n"
-
-.PHONY: audit
 audit: ## Conduct quality checks
-	@echo "\033[1;33m🔎 Running code audit...\033[0m"
-	@go mod verify 2>&1 > /dev/null
-	@go vet ./... 2>&1 > /dev/null
-	@go run golang.org/x/vuln/cmd/govulncheck@latest -show verbose ./... 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Code audit finished!\033[0m\n"
+	@echo "$(YELLOW)🔎 Running code audit...$(RESET)"
+	@$(GO) mod verify 2>&1 > /dev/null
+	@$(GO) vet ./... 2>&1 > /dev/null
+	@$(GO) run golang.org/x/vuln/cmd/govulncheck@latest -show verbose ./... 2>&1 > /dev/null
+	@echo "$(GREEN)✅ Code audit finished!$(RESET)\n"
 
-.PHONY: benchmark
 benchmark: ## Benchmark code performance
-	@echo "\033[1;35m⚡ Running benchmarks...\033[0m"
-	@go test ./... -benchmem -bench=. -run=^Benchmark_$ 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Benchmark completed!\033[0m\n"
+	@echo "$(MAGENTA)⚡ Running benchmarks...$(RESET)"
+	@$(GO) test ./... -benchmem -bench=. -run=^Benchmark_$ 2>&1 > /dev/null
+	@echo "$(GREEN)✅ Benchmark completed!$(RESET)\n"
 
-### Docker compose commands  ---------------------------------------------
+ci: tidy lint test audit ## Run all quality checks
 
-.PHONY: compose-up
-compose-up: ## Create and start containers
-	@echo "\033[1;34m🚀 Starting Docker containers...\033[0m"
+# =========================
+# Docker compose commands
+# =========================
+
+.PHONY: compose-up compose-build compose-down compose-clean compose-remove compose-exec compose-log compose-top compose-stats
+
+compose-up: check-docker ## Create and start containers
+	@echo "$(BLUE)🚀 Starting Docker containers...$(RESET)"
 	@${COMPOSE_COMMAND} up -d 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Containers are up and running!\033[0m\n"
+	@echo "$(GREEN)✅ Containers are up and running!$(RESET)\n"
 
-.PHONY: compose-build
-compose-build: ## Build, create and start containers
-	@echo "\033[1;34m🚢 Building and starting Docker containers...\033[0m"
+compose-build: check-docker ## Build, create and start containers
+	@echo "$(BLUE)🚢 Building and starting Docker containers...$(RESET)"
 	@${COMPOSE_COMMAND} up -d --build 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Containers are up and running!\033[0m\n"
+	@echo "$(GREEN)✅ Containers are up and running!$(RESET)\n"
 	@$(clean_dangling_images)
-	
-.PHONY: compose-down
-compose-down: ## Stop and remove containers and networks
-	@echo "\033[1;33m🛑 Stopping and removing containers...\033[0m"
-	@${COMPOSE_COMMAND} down 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Containers stopped.\033[0m\n"
 
-.PHONY: compose-clean
-compose-clean: ## Clear dangling Docker images
+compose-down: check-docker ## Stop and remove containers and networks
+	@echo "$(YELLOW)🛑 Stopping and removing containers...$(RESET)"
+	@${COMPOSE_COMMAND} down 2>&1 > /dev/null
+	@echo "$(GREEN)✅ Containers stopped.$(RESET)\n"
+
+compose-clean: check-docker ## Clear dangling Docker images
 	$(clean_dangling_images)
 
-.PHONY: compose-remove
-compose-remove: ## Stop and remove containers, networks and volumes
-	@echo "\033[1;31m⚠️  WARNING: This will permanently delete all containers, networks, and VOLUMES!\033[0m"
-	@echo -n "\033[1;31m❌ All data will be lost. Are you sure? [y/N] \033[0m" && read ans && [ $${ans:-N} = y ]
-	@echo "\033[1;33m\n🛑 Stopping and removing all Docker resources...\033[0m"
+compose-remove: check-docker ## Stop and remove containers, networks and volumes
+	@echo "$(RED)⚠️  WARNING: This will permanently delete all containers, networks, and VOLUMES!$(RESET)"
+	@echo -n "$(RED)❌ All data will be lost. Are you sure? [y/N] $(RESET)" && read ans && [ $${ans:-N} = y ]
+	@echo "$(YELLOW)\n🛑 Stopping and removing all Docker resources...$(RESET)"
 	@${COMPOSE_COMMAND} down -v --remove-orphans 2>&1 > /dev/null
-	@echo "\033[1;32m✅ Containers, networks, and volumes removed successfully.\033[0m\n"
+	@echo "$(GREEN)✅ Containers, networks, and volumes removed successfully.$(RESET)\n"
 
-.PHONY: compose-exec
-compose-exec: ## Access container bash
-	@echo "\033[1;34m🔑 Accessing the container shell...\033[0m"
+compose-exec: check-docker ## Access container bash
+	@echo "$(BLUE)🔑 Accessing the container shell...$(RESET)"
 	@${COMPOSE_COMMAND} exec -it ${DOCKER_SERVICE} bash
 
-.PHONY: compose-log
-compose-log: ## Show container logger
-	@echo "\033[1;34m📜 Fetching container logs...\033[0m"
+compose-log: check-docker ## Show container logger
+	@echo "$(BLUE)📜 Fetching container logs...$(RESET)"
 	@${COMPOSE_COMMAND} logs -f ${DOCKER_SERVICE}
 
-.PHONY: compose-top
-compose-top: ## Display containers processes
-	@echo "\033[1;34m🔍 Displaying container processes...\033[0m"
+compose-top: check-docker ## Display containers processes
+	@echo "$(BLUE)🔍 Displaying container processes...$(RESET)"
 	@${COMPOSE_COMMAND} top
 
-.PHONY: compose-stats
-compose-stats: ## Display containers stats
-	@echo "\033[1;36m📊 Showing container statistics...\033[0m"
+compose-stats: check-docker ## Display containers stats
+	@echo "$(CYAN)📊 Showing container statistics...$(RESET)"
 	@${COMPOSE_COMMAND} stats

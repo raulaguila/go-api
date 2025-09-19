@@ -44,7 +44,7 @@ services:
   
   minio:
 
-    hostname: api_minio
+    hostname: minio
     container_name: api_minio
     image: bitnami/minio:2024
     restart: always
