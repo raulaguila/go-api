@@ -12,18 +12,19 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/consts"
+	"github.com/raulaguila/go-api/pkg/erro"
 	"github.com/raulaguila/go-api/pkg/pgerror"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 var middlewareUserDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: utils.LocalDTO,
+	ContextKey: consts.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.UserInputDTO{},
 })
 
 var middlewarePasswordDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: utils.LocalDTO,
+	ContextKey: consts.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.PasswordInputDTO{},
 })
@@ -41,9 +42,9 @@ func NewUserHandler(route fiber.Router, service domain.UserService) {
 				pgerror.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "userUsed"},
 			},
 			"*": {
-				utils.ErrInvalidID:            []any{fiber.StatusBadRequest, "invalidID"},
-				utils.ErrUserHasPass:          []any{fiber.StatusBadRequest, "hasPass"},
-				utils.ErrPasswordsDoNotMatch:  []any{fiber.StatusBadRequest, "passNotMatch"},
+				erro.ErrInvalidID:             []any{fiber.StatusBadRequest, "invalidID"},
+				erro.ErrUserHasPass:           []any{fiber.StatusBadRequest, "hasPass"},
+				erro.ErrPasswordsDoNotMatch:   []any{fiber.StatusBadRequest, "passNotMatch"},
 				pgerror.ErrUndefinedColumn:    []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgerror.ErrDuplicatedKey:      []any{fiber.StatusConflict, "userRegistered"},
 				pgerror.ErrForeignKeyViolated: []any{fiber.StatusNotFound, "itemNotFound"},
@@ -59,7 +60,7 @@ func NewUserHandler(route fiber.Router, service domain.UserService) {
 	route.Delete("/pass", handler.resetUserPassword)
 	route.Get("", middlewareUserFilterDTO, handler.getUsers)
 	route.Post("", middlewareUserDTO, handler.createUser)
-	route.Put("/:"+utils.ParamID, middlewareIDIntDTO, middlewareUserDTO, handler.updateUser)
+	route.Put("/:"+consts.ParamID, middlewareIDIntDTO, middlewareUserDTO, handler.updateUser)
 	route.Delete("", middlewareIDsIntDTO, handler.deleteUser)
 }
 
@@ -77,7 +78,7 @@ func NewUserHandler(route fiber.Router, service domain.UserService) {
 // @Router       /user [get]
 // @Security	 Bearer
 func (h *userHandler) getUsers(c *fiber.Ctx) error {
-	response, err := h.service.GetUsers(c.Context(), c.Locals(utils.LocalFilter).(*dto.UserFilter))
+	response, err := h.service.GetUsers(c.Context(), c.Locals(consts.LocalFilter).(*dto.UserFilter))
 	if err != nil {
 		return h.handlerError(c, err)
 	}
@@ -101,7 +102,7 @@ func (h *userHandler) getUsers(c *fiber.Ctx) error {
 // @Router       /user [post]
 // @Security	 Bearer
 func (h *userHandler) createUser(c *fiber.Ctx) error {
-	userDTO := c.Locals(utils.LocalDTO).(*dto.UserInputDTO)
+	userDTO := c.Locals(consts.LocalDTO).(*dto.UserInputDTO)
 	user, err := h.service.CreateUser(c.Context(), userDTO)
 	if err != nil {
 		return h.handlerError(c, err)
@@ -127,8 +128,8 @@ func (h *userHandler) createUser(c *fiber.Ctx) error {
 // @Router       /user/{id} [put]
 // @Security	 Bearer
 func (h *userHandler) updateUser(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*dto.IDFilter[uint])
-	user, err := h.service.UpdateUser(c.Context(), id.ID, c.Locals(utils.LocalDTO).(*dto.UserInputDTO))
+	id := c.Locals(consts.LocalID).(*dto.IDFilter[uint])
+	user, err := h.service.UpdateUser(c.Context(), id.ID, c.Locals(consts.LocalDTO).(*dto.UserInputDTO))
 	if err != nil {
 		return h.handlerError(c, err)
 	}
@@ -151,7 +152,7 @@ func (h *userHandler) updateUser(c *fiber.Ctx) error {
 // @Router       /user [delete]
 // @Security	 Bearer
 func (h *userHandler) deleteUser(c *fiber.Ctx) error {
-	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO[uint])
+	toDelete := c.Locals(consts.LocalID).(*dto.IDsInputDTO[uint])
 	if err := h.service.DeleteUsers(c.Context(), toDelete.IDs); err != nil {
 		return h.handlerError(c, err)
 	}
@@ -174,7 +175,7 @@ func (h *userHandler) deleteUser(c *fiber.Ctx) error {
 // @Router       /user/pass [delete]
 // @Security	 Bearer
 func (h *userHandler) resetUserPassword(c *fiber.Ctx) error {
-	email, err := url.QueryUnescape(c.Query(utils.ParamMail, ""))
+	email, err := url.QueryUnescape(c.Query(consts.ParamMail, ""))
 	if err != nil {
 		return h.handlerError(c, err)
 	}
@@ -201,14 +202,14 @@ func (h *userHandler) resetUserPassword(c *fiber.Ctx) error {
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user/pass [put]
 func (h *userHandler) setUserPassword(c *fiber.Ctx) error {
-	email, err := url.QueryUnescape(c.Query(utils.ParamMail, ""))
+	email, err := url.QueryUnescape(c.Query(consts.ParamMail, ""))
 	if err != nil {
 		return h.handlerError(c, err)
 	}
 
-	pass := c.Locals(utils.LocalDTO).(*dto.PasswordInputDTO)
+	pass := c.Locals(consts.LocalDTO).(*dto.PasswordInputDTO)
 	if pass.Password == nil || pass.PasswordConfirm == nil || *pass.Password != *pass.PasswordConfirm {
-		return h.handlerError(c, utils.ErrPasswordsDoNotMatch)
+		return h.handlerError(c, erro.ErrPasswordsDoNotMatch)
 	}
 
 	if err := h.service.SetUserPassword(c.Context(), email, pass); err != nil {

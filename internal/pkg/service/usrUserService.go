@@ -5,8 +5,8 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/erro"
 	"github.com/raulaguila/go-api/pkg/packhub"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func NewUserService(r domain.UserRepository) domain.UserService {
@@ -135,7 +135,7 @@ func (s *userService) SetUserPassword(ctx context.Context, mail string, pass *dt
 	}
 
 	if user.Auth.Password != nil {
-		return utils.ErrUserHasPass
+		return erro.ErrUserHasPass
 	}
 
 	if err := user.SetPassword(*pass.Password); err != nil {

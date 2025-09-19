@@ -10,12 +10,13 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/consts"
+	"github.com/raulaguila/go-api/pkg/erro"
 	"github.com/raulaguila/go-api/pkg/pgerror"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 var middlewareProfileDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: utils.LocalDTO,
+	ContextKey: consts.LocalDTO,
 	OnLookup:   datatransferobject.Body,
 	Model:      &dto.ProfileInputDTO{},
 })
@@ -33,7 +34,7 @@ func NewProfileHandler(route fiber.Router, service domain.ProfileService) {
 				pgerror.ErrForeignKeyViolated: []any{fiber.StatusBadRequest, "profileUsed"},
 			},
 			"*": {
-				utils.ErrInvalidID:         []any{fiber.StatusBadRequest, "invalidID"},
+				erro.ErrInvalidID:          []any{fiber.StatusBadRequest, "invalidID"},
 				pgerror.ErrUndefinedColumn: []any{fiber.StatusBadRequest, "undefinedColumn"},
 				pgerror.ErrDuplicatedKey:   []any{fiber.StatusConflict, "profileRegistered"},
 				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "profileNotFound"},
@@ -45,7 +46,7 @@ func NewProfileHandler(route fiber.Router, service domain.ProfileService) {
 
 	route.Get("", middlewareProfileFilterDTO, handler.getProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
-	route.Put("/:"+utils.ParamID, middlewareIDIntDTO, middlewareProfileDTO, handler.updateProfile)
+	route.Put("/:"+consts.ParamID, middlewareIDIntDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", middlewareIDsIntDTO, handler.deleteProfiles)
 }
 
@@ -63,9 +64,9 @@ func NewProfileHandler(route fiber.Router, service domain.ProfileService) {
 // @Router       /profile [get]
 // @Security	 Bearer
 func (s *profileHandler) getProfiles(c *fiber.Ctx) error {
-	f := c.Locals(utils.LocalFilter).(*dto.ProfileFilter)
+	f := c.Locals(consts.LocalFilter).(*dto.ProfileFilter)
 	f.ListRoot = false
-	if u := c.Locals(utils.LocalUser); u != nil && u.(*domain.User).Auth != nil {
+	if u := c.Locals(consts.LocalUser); u != nil && u.(*domain.User).Auth != nil {
 		f.ListRoot = u.(*domain.User).Auth.ProfileID == 1
 	}
 
@@ -93,7 +94,7 @@ func (s *profileHandler) getProfiles(c *fiber.Ctx) error {
 // @Router       /profile [post]
 // @Security	 Bearer
 func (s *profileHandler) createProfile(c *fiber.Ctx) error {
-	profileDTO, err := s.service.CreateProfile(c.Context(), c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO))
+	profileDTO, err := s.service.CreateProfile(c.Context(), c.Locals(consts.LocalDTO).(*dto.ProfileInputDTO))
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -118,8 +119,8 @@ func (s *profileHandler) createProfile(c *fiber.Ctx) error {
 // @Router       /profile/{id} [put]
 // @Security	 Bearer
 func (s *profileHandler) updateProfile(c *fiber.Ctx) error {
-	id := c.Locals(utils.LocalID).(*dto.IDFilter[uint])
-	profileDTO, err := s.service.UpdateProfile(c.Context(), id.ID, c.Locals(utils.LocalDTO).(*dto.ProfileInputDTO))
+	id := c.Locals(consts.LocalID).(*dto.IDFilter[uint])
+	profileDTO, err := s.service.UpdateProfile(c.Context(), id.ID, c.Locals(consts.LocalDTO).(*dto.ProfileInputDTO))
 	if err != nil {
 		return s.handlerError(c, err)
 	}
@@ -142,7 +143,7 @@ func (s *profileHandler) updateProfile(c *fiber.Ctx) error {
 // @Router       /profile [delete]
 // @Security	 Bearer
 func (s *profileHandler) deleteProfiles(c *fiber.Ctx) error {
-	toDelete := c.Locals(utils.LocalID).(*dto.IDsInputDTO[uint])
+	toDelete := c.Locals(consts.LocalID).(*dto.IDsInputDTO[uint])
 	if err := s.service.DeleteProfiles(c.Context(), toDelete.IDs); err != nil {
 		return s.handlerError(c, err)
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/raulaguila/go-api/pkg/erro"
 )
 
 func NewAuthService(r domain.UserRepository) domain.AuthService {
@@ -67,11 +67,11 @@ func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) 
 	}
 
 	if !user.ValidatePassword(credentials.Password) {
-		return nil, utils.ErrInvalidCredentials
+		return nil, erro.ErrInvalidCredentials
 	}
 
 	if !user.Auth.Status || user.Auth.Password == nil {
-		return nil, utils.ErrDisabledUser
+		return nil, erro.ErrDisabledUser
 	}
 
 	return s.generateAuthOutputDTO(user, credentials.Expiration), nil

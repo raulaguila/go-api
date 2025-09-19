@@ -41,7 +41,7 @@
    - Make
    - Docker
    - Docker Compose
-   - Go 1.24+ (Optional)
+   - Go 1.25+ (Optional)
 
 3. #### Make File [&uarr;](#summary)
 

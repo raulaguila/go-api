@@ -13,7 +13,7 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/raulaguila/go-api/pkg/consts"
 )
 
 var (
@@ -29,7 +29,7 @@ func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
 		Next: func(c *fiber.Ctx) bool {
 			// Filter request to skip middleware
 			// true to skip, false to not skip
-			c.Locals(utils.LocalUser, new(domain.User))
+			c.Locals(consts.LocalUser, new(domain.User))
 			return os.Getenv("API_ACCEPT_SKIP_AUTH") == "1" && c.Get("X-Skip-Auth", "false") == "true"
 		},
 		SuccessHandler: func(c *fiber.Ctx) error {
@@ -66,7 +66,7 @@ func Auth(parsedKey *rsa.PrivateKey, repo domain.UserRepository) fiber.Handler {
 				return false, errors.New(fiberi18n.MustLocalize(c, "disabledUser"))
 			}
 
-			c.Locals(utils.LocalUser, user)
+			c.Locals(consts.LocalUser, user)
 			return true, nil
 		},
 	})

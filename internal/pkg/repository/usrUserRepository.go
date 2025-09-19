@@ -9,8 +9,8 @@ import (
 
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
+	"github.com/raulaguila/go-api/pkg/consts"
 	"github.com/raulaguila/go-api/pkg/packhub"
-	"github.com/raulaguila/go-api/pkg/utils"
 )
 
 func NewUserRepository(postgreDB *gorm.DB) domain.UserRepository {
@@ -70,11 +70,11 @@ func (s *userRepository) GetUsers(ctx context.Context, f *dto.UserFilter) (*[]do
 	}
 
 	users := new([]domain.User)
-	return users, postgreDB.Preload(utils.PGAuthProfile).Find(users).Error
+	return users, postgreDB.Preload(consts.PGAuthProfile).Find(users).Error
 }
 
 func (s *userRepository) GetUser(ctx context.Context, input *domain.User) error {
-	return s.postgreDB.WithContext(ctx).Where(input).Preload(utils.PGAuthProfile).First(input).Error
+	return s.postgreDB.WithContext(ctx).Where(input).Preload(consts.PGAuthProfile).First(input).Error
 }
 
 func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*domain.User, error) {
@@ -82,7 +82,7 @@ func (s *userRepository) GetUserByToken(ctx context.Context, token string) (*dom
 	return user, s.postgreDB.
 		WithContext(ctx).
 		Joins(fmt.Sprintf("JOIN %v ON %v.id = %v.auth_id", domain.AuthTableName, domain.AuthTableName, domain.UserTableName)).
-		Preload(utils.PGAuthProfile).
+		Preload(consts.PGAuthProfile).
 		First(user, domain.AuthTableName+".token = ?", token).Error
 }
 

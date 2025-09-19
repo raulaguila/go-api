@@ -9,7 +9,8 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/raulaguila/go-api/pkg/consts"
+	"github.com/raulaguila/go-api/pkg/erro"
 )
 
 type AuthHandler struct {
@@ -22,9 +23,9 @@ func NewAuthHandler(route fiber.Router, service domain.AuthService) {
 		service: service,
 		handlerError: newErrorHandler(map[string]map[error][]any{
 			"*": {
-				utils.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
-				utils.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
-				gorm.ErrRecordNotFound:      []any{fiber.StatusNotFound, "userNotFound"},
+				erro.ErrDisabledUser:       []any{fiber.StatusUnauthorized, "disabledUser"},
+				erro.ErrInvalidCredentials: []any{fiber.StatusUnauthorized, "incorrectCredentials"},
+				gorm.ErrRecordNotFound:     []any{fiber.StatusNotFound, "userNotFound"},
 			},
 		}),
 	}
@@ -74,7 +75,7 @@ func (s *AuthHandler) login(c *fiber.Ctx) error {
 // @Router       /auth [get]
 // @Security	 Bearer
 func (s *AuthHandler) me(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(s.service.Me(c.Locals(utils.LocalUser).(*domain.User)))
+	return c.Status(fiber.StatusOK).JSON(s.service.Me(c.Locals(consts.LocalUser).(*domain.User)))
 }
 
 // refresh godoc
@@ -92,5 +93,5 @@ func (s *AuthHandler) me(c *fiber.Ctx) error {
 // @Router       /auth [put]
 func (s *AuthHandler) refresh(c *fiber.Ctx) error {
 	expire := c.Query("expire", "true") == "true"
-	return c.Status(fiber.StatusOK).JSON(s.service.Refresh(c.Locals(utils.LocalUser).(*domain.User), expire))
+	return c.Status(fiber.StatusOK).JSON(s.service.Refresh(c.Locals(consts.LocalUser).(*domain.User), expire))
 }

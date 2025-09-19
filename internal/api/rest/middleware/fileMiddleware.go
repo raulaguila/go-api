@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
-	"github.com/raulaguila/go-api/pkg/utils"
+	"github.com/raulaguila/go-api/pkg/consts"
 )
 
 type File struct {
@@ -41,7 +41,7 @@ func GetFileFromRequest(formKey string, extensions *[]string) func(c *fiber.Ctx)
 			}
 		}(f)
 
-		c.Locals(utils.LocalFile, &File{
+		c.Locals(consts.LocalFile, &File{
 			Name:      file.Filename,
 			Extension: filepath.Ext(file.Filename),
 			File:      f,
