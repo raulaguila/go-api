@@ -39,6 +39,15 @@ definitions:
           type: integer
         type: array
     type: object
+  github_com_raulaguila_go-api_internal_pkg_dto.ItemOutputDTO:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Item
+        type: string
+    type: object
   github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO:
     properties:
       items:
@@ -59,9 +68,9 @@ definitions:
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO:
     properties:
-      current_page:
+      limit:
         type: integer
-      page_size:
+      page:
         type: integer
       total_items:
         type: integer
@@ -393,9 +402,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO'
-            type: array
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO'
         "500":
           description: Internal Server Error
           schema:
@@ -514,6 +521,84 @@ paths:
       summary: Update profile by ID
       tags:
       - Profile
+  /profile/list:
+    get:
+      consumes:
+      - application/json
+      description: List profiles
+      parameters:
+      - default: true
+        description: Skip auth
+        enum:
+        - true
+        - false
+        in: header
+        name: X-Skip-Auth
+        type: boolean
+      - default: en-US
+        description: Request language
+        enum:
+        - en-US
+        - pt-BR
+        in: header
+        name: Accept-Language
+        type: string
+      - in: query
+        minimum: 1
+        name: id
+        type: integer
+      - default: 10
+        in: query
+        minimum: 1
+        name: limit
+        type: integer
+      - example: false
+        in: query
+        name: list_root
+        type: boolean
+      - default: desc
+        enum:
+        - asc
+        - desc
+        in: query
+        name: order
+        type: string
+      - default: 1
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - example: name
+        in: query
+        name: search
+        type: string
+      - default: updated_at
+        example: updated_at
+        in: query
+        name: sort
+        type: string
+      - example: false
+        in: query
+        name: with_permissions
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemOutputDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response'
+      security:
+      - Bearer: []
+      summary: List profiles
+      tags:
+      - Profile
   /user:
     delete:
       consumes:
@@ -625,9 +710,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO'
-            type: array
+            $ref: '#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO'
         "500":
           description: Internal Server Error
           schema:

@@ -45,9 +45,38 @@ func NewProfileHandler(route fiber.Router, service domain.ProfileService) {
 	route.Use(middleware.MidAccess)
 
 	route.Get("", middlewareProfileFilterDTO, handler.getProfiles)
+	route.Get("/list", middlewareProfileFilterDTO, handler.listProfiles)
 	route.Post("", middlewareProfileDTO, handler.createProfile)
 	route.Put("/:"+consts.ParamID, middlewareIDIntDTO, middlewareProfileDTO, handler.updateProfile)
 	route.Delete("", middlewareIDsIntDTO, handler.deleteProfiles)
+}
+
+// listProfiles godoc
+// @Summary      List profiles
+// @Description  List profiles
+// @Tags         Profile
+// @Accept       json
+// @Produce      json
+// @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
+// @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
+// @Param        pgfilter			query	dto.ProfileFilter	false	"Profile Filter"
+// @Success      200  {array}   	dto.ItemOutputDTO
+// @Failure      500  {object}  	HTTPResponse.Response
+// @Router       /profile/list [get]
+// @Security	 Bearer
+func (s *profileHandler) listProfiles(c *fiber.Ctx) error {
+	f := c.Locals(consts.LocalFilter).(*dto.ProfileFilter)
+	f.ListRoot = false
+	if u := c.Locals(consts.LocalUser); u != nil && u.(*domain.User).Auth != nil {
+		f.ListRoot = u.(*domain.User).Auth.ProfileID == 1
+	}
+
+	response, err := s.service.ListProfiles(c.Context(), f)
+	if err != nil {
+		return s.handlerError(c, err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
 }
 
 // getProfiles godoc
@@ -59,7 +88,7 @@ func NewProfileHandler(route fiber.Router, service domain.ProfileService) {
 // @Param        X-Skip-Auth		header	bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header	string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        pgfilter			query	dto.ProfileFilter	false	"Profile Filter"
-// @Success      200  {array}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
+// @Success      200  {object}   	dto.ItemsOutputDTO[dto.ProfileOutputDTO]
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /profile [get]
 // @Security	 Bearer

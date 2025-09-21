@@ -5,18 +5,23 @@ import (
 )
 
 type (
+	ItemOutputDTO struct {
+		ID   *uint   `json:"id,omitempty" example:"1"`
+		Name *string `json:"name,omitempty" example:"Item"`
+	}
+
 	ProfileOutputDTO struct {
-		ID          *uint           `json:"id" example:"1"`
-		Name        *string         `json:"name" example:"ADMIN"`
+		ID          *uint           `json:"id,omitempty" example:"1"`
+		Name        *string         `json:"name,omitempty" example:"ADMIN"`
 		Permissions *pq.StringArray `json:"permissions,omitempty"`
 	}
 
 	UserOutputDTO struct {
-		ID       *uint             `json:"id" example:"1"`
-		Name     *string           `json:"name" example:"John Cena"`
-		Email    *string           `json:"email" example:"john.cena@email.com"`
-		Username *string           `json:"corp_id" example:"john.cena"`
-		Status   *bool             `json:"status" example:"true"`
+		ID       *uint             `json:"id,omitempty" example:"1"`
+		Name     *string           `json:"name,omitempty" example:"John Cena"`
+		Email    *string           `json:"email,omitempty" example:"john.cena@email.com"`
+		Username *string           `json:"corp_id,omitempty" example:"john.cena"`
+		Status   *bool             `json:"status,omitempty" example:"true"`
 		New      *bool             `json:"new,omitempty" example:"true"`
 		Profile  *ProfileOutputDTO `json:"profile,omitempty"`
 	}
@@ -26,10 +31,10 @@ type (
 	}
 
 	PaginationDTO struct {
-		CurrentPage uint `json:"current_page"`
-		PageSize    uint `json:"page_size"`
-		TotalItems  uint `json:"total_items"`
-		TotalPages  uint `json:"total_pages"`
+		Page       uint `json:"page"`
+		Limit      uint `json:"limit"`
+		TotalItems uint `json:"total_items"`
+		TotalPages uint `json:"total_pages"`
 	}
 
 	ItemsOutputDTO[T outputDTO] struct {

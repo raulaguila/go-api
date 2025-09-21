@@ -7,14 +7,13 @@ import (
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
 	"github.com/raulaguila/go-api/internal/pkg/consts"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 
-var middlewareFilterDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: consts.LocalFilter,
-	OnLookup:   datatransferobject.Query,
-	Model:      &pgfilter.Filter{},
-})
+// var middlewareFilterDTO = datatransferobject.New(datatransferobject.Config{
+// 	ContextKey: consts.LocalFilter,
+// 	OnLookup:   datatransferobject.Query,
+// 	Model:      &pgfilter.Filter{},
+// })
 
 var middlewareProfileFilterDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: consts.LocalFilter,
@@ -26,12 +25,6 @@ var middlewareUserFilterDTO = datatransferobject.New(datatransferobject.Config{
 	ContextKey: consts.LocalFilter,
 	OnLookup:   datatransferobject.Query,
 	Model:      &dto.UserFilter{},
-})
-
-var middlewareEvidenceFilterDTO = datatransferobject.New(datatransferobject.Config{
-	ContextKey: consts.LocalFilter,
-	OnLookup:   datatransferobject.Query,
-	Model:      &dto.EvidenceFilter{},
 })
 
 var middlewareIDIntDTO = datatransferobject.New(datatransferobject.Config{
@@ -53,7 +46,7 @@ var middlewareIDsIntDTO = datatransferobject.New(datatransferobject.Config{
 })
 
 // var middlewareIDsStringDTO = datatransferobject.New(datatransferobject.Config{
-// 	ContextKey: utils.LocalID,
+// 	ContextKey: consts.LocalID,
 // 	OnLookup:   datatransferobject.Body,
 // 	Model:      &dto.IDsInputDTO[string]{},
 // 	ErrorHandler: func(c *fiber.Ctx, err error) error {

@@ -315,10 +315,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO"
-                            }
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO"
                         }
                     },
                     "500": {
@@ -467,6 +464,122 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_HTTPResponse.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/list": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "List profiles",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "List profiles",
+                "parameters": [
+                    {
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Skip auth",
+                        "name": "X-Skip-Auth",
+                        "in": "header"
+                    },
+                    {
+                        "enum": [
+                            "en-US",
+                            "pt-BR"
+                        ],
+                        "type": "string",
+                        "default": "en-US",
+                        "description": "Request language",
+                        "name": "Accept-Language",
+                        "in": "header"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "name": "list_root",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "default": "desc",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "updated_at",
+                        "example": "updated_at",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "name": "with_permissions",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemOutputDTO"
+                            }
                         }
                     },
                     "500": {
@@ -666,10 +779,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO"
-                            }
+                            "$ref": "#/definitions/github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_UserOutputDTO"
                         }
                     },
                     "500": {
@@ -1111,6 +1221,19 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_raulaguila_go-api_internal_pkg_dto.ItemOutputDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Item"
+                }
+            }
+        },
         "github_com_raulaguila_go-api_internal_pkg_dto.ItemsOutputDTO-github_com_raulaguila_go-api_internal_pkg_dto_ProfileOutputDTO": {
             "type": "object",
             "properties": {
@@ -1142,10 +1265,10 @@ const docTemplate = `{
         "github_com_raulaguila_go-api_internal_pkg_dto.PaginationDTO": {
             "type": "object",
             "properties": {
-                "current_page": {
+                "limit": {
                     "type": "integer"
                 },
-                "page_size": {
+                "page": {
                     "type": "integer"
                 },
                 "total_items": {

@@ -19,37 +19,28 @@ type userService struct {
 	repository domain.UserRepository
 }
 
-func (s *userService) GenerateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
+func (s *userService) GenerateUserOutputDTO(output *domain.User) *dto.UserOutputDTO {
 	return &dto.UserOutputDTO{
-		ID:       &user.ID,
-		Name:     &user.Name,
-		Username: &user.Username,
-		Email:    &user.Email,
-		Status:   &user.Auth.Status,
-		New:      packhub.Pointer(user.Auth.Password == nil),
+		ID:       &output.ID,
+		Name:     &output.Name,
+		Username: &output.Username,
+		Email:    &output.Email,
+		Status:   &output.Auth.Status,
+		New:      packhub.Pointer(output.Auth.Password == nil),
 		Profile: &dto.ProfileOutputDTO{
-			ID:   &user.Auth.Profile.ID,
-			Name: &user.Auth.Profile.Name,
+			ID:   &output.Auth.Profile.ID,
+			Name: &output.Auth.Profile.Name,
 		},
 	}
 }
 
-func (s *userService) GetUserByID(ctx context.Context, userID uint) (*dto.UserOutputDTO, error) {
-	user := &domain.User{BaseInt: domain.BaseInt{ID: userID}}
-	if err := s.repository.GetUser(ctx, user); err != nil {
-		return nil, err
-	}
-
-	return s.GenerateUserOutputDTO(user), nil
-}
-
-func (s *userService) GetUsers(ctx context.Context, userFilter *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
-	users, err := s.repository.GetUsers(ctx, userFilter)
+func (s *userService) GetUsers(ctx context.Context, f *dto.UserFilter) (*dto.ItemsOutputDTO[dto.UserOutputDTO], error) {
+	users, err := s.repository.GetUsers(ctx, f)
 	if err != nil {
 		return nil, err
 	}
 
-	count, err := s.repository.CountUsers(ctx, userFilter)
+	count, err := s.repository.CountUsers(ctx, f)
 	if err != nil {
 		return nil, err
 	}
@@ -62,17 +53,17 @@ func (s *userService) GetUsers(ctx context.Context, userFilter *dto.UserFilter) 
 	return &dto.ItemsOutputDTO[dto.UserOutputDTO]{
 		Items: outputUsers,
 		Pagination: dto.PaginationDTO{
-			CurrentPage: uint(packhub.Max(userFilter.Page, 1)),
-			PageSize:    uint(packhub.Max(userFilter.Limit, len(outputUsers))),
-			TotalItems:  uint(count),
-			TotalPages:  uint(userFilter.CalcPages(count)),
+			Page:       uint(packhub.Max(f.Page, 1)),
+			Limit:      uint(packhub.Max(f.Limit, len(outputUsers))),
+			TotalItems: uint(count),
+			TotalPages: uint(f.CalcPages(count)),
 		},
 	}, nil
 }
 
-func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
+func (s *userService) CreateUser(ctx context.Context, input *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
 	user := &domain.User{Auth: &domain.Auth{}}
-	if err := user.Bind(data); err != nil {
+	if err := user.Bind(input); err != nil {
 		return nil, err
 	}
 
@@ -88,13 +79,13 @@ func (s *userService) CreateUser(ctx context.Context, data *dto.UserInputDTO) (*
 	return s.GenerateUserOutputDTO(user), nil
 }
 
-func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
-	user := &domain.User{BaseInt: domain.BaseInt{ID: userID}}
+func (s *userService) UpdateUser(ctx context.Context, id uint, input *dto.UserInputDTO) (*dto.UserOutputDTO, error) {
+	user := &domain.User{BaseInt: domain.BaseInt{ID: id}}
 	if err := s.repository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
-	if err := user.Bind(data); err != nil {
+	if err := user.Bind(input); err != nil {
 		return nil, err
 	}
 
@@ -102,7 +93,7 @@ func (s *userService) UpdateUser(ctx context.Context, userID uint, data *dto.Use
 		return nil, err
 	}
 
-	user = &domain.User{BaseInt: domain.BaseInt{ID: userID}}
+	user = &domain.User{BaseInt: domain.BaseInt{ID: id}}
 	if err := s.repository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}

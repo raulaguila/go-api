@@ -105,7 +105,7 @@ func New(postgresDB *gorm.DB, minioClient *minio.Client) {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return HTTPResponse.New(c, fiber.StatusInternalServerError, err.Error(), nil)
 		},
-		BodyLimit: 100 * 1024 * 1024,
+		BodyLimit: 4 * 1024 * 1024,
 	})
 
 	app.Use(recover.New())

@@ -73,7 +73,7 @@ func NewUserHandler(route fiber.Router, service domain.UserService) {
 // @Param        X-Skip-Auth		header		bool				false	"Skip auth" enums(true,false) default(true)
 // @Param        Accept-Language	header		string				false	"Request language" enums(en-US,pt-BR) default(en-US)
 // @Param        pgfilter			query		dto.UserFilter		false	"Optional Filter"
-// @Success      200  {array}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
+// @Success      200  {object}   	dto.ItemsOutputDTO[dto.UserOutputDTO]
 // @Failure      500  {object}  	HTTPResponse.Response
 // @Router       /user [get]
 // @Security	 Bearer

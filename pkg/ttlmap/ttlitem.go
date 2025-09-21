@@ -6,32 +6,32 @@ import (
 )
 
 // NewItem creates an item with the specified value and optional expiration.
-func newItem(value any, expiration time.Time, expires bool) *ttlItem {
+func newItem(value any, expiration *time.Duration) *ttlItem {
 	return &ttlItem{
 		value:      value,
+		createdAt:  time.Now(),
 		expiration: expiration,
-		expires:    expires,
 	}
 }
 
 type ttlItem struct {
 	value      any
-	expiration time.Time
-	expires    bool
+	createdAt  time.Time
+	expiration *time.Duration
 }
 
 // TTL returns the remaining duration until expiration (negative if expired).
 func (s *ttlItem) TTL() time.Duration {
-	if s.expires {
-		return s.expiration.Sub(time.Now())
+	if s.expiration != nil {
+		return time.Until(s.createdAt.Add(*s.expiration))
 	}
 	return time.Duration(math.MaxInt64)
 }
 
 // Expired checks whether the item is already expired.
 func (s *ttlItem) Expired() bool {
-	if s.expires {
-		return s.expiration.Before(time.Now())
+	if s.expiration != nil {
+		return s.createdAt.Add(*s.expiration).Before(time.Now())
 	}
 	return false
 }

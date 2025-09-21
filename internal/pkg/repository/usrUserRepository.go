@@ -100,9 +100,9 @@ func (s *userRepository) UpdateUser(ctx context.Context, input *domain.User) err
 	})
 }
 
-func (s *userRepository) DeleteUsers(ctx context.Context, toDelete []uint) error {
+func (s *userRepository) DeleteUsers(ctx context.Context, ids []uint) error {
 	users := new([]domain.User)
-	if err := s.postgreDB.WithContext(ctx).Find(users, toDelete).Error; err != nil {
+	if err := s.postgreDB.WithContext(ctx).Find(users, ids).Error; err != nil {
 		return err
 	}
 	if len(*users) == 0 {

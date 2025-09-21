@@ -20,21 +20,21 @@ type authService struct {
 	repository domain.UserRepository
 }
 
-func (s *authService) generateUserOutputDTO(user *domain.User) *dto.UserOutputDTO {
-	if user == nil {
+func (s *authService) generateUserOutputDTO(output *domain.User) *dto.UserOutputDTO {
+	if output == nil {
 		return nil
 	}
 
 	return &dto.UserOutputDTO{
-		ID:       &user.ID,
-		Name:     &user.Name,
-		Username: &user.Username,
-		Email:    &user.Email,
-		Status:   &user.Auth.Status,
+		ID:       &output.ID,
+		Name:     &output.Name,
+		Username: &output.Username,
+		Email:    &output.Email,
+		Status:   &output.Auth.Status,
 		Profile: &dto.ProfileOutputDTO{
-			ID:          &user.Auth.Profile.ID,
-			Name:        &user.Auth.Profile.Name,
-			Permissions: &user.Auth.Profile.Permissions,
+			ID:          &output.Auth.Profile.ID,
+			Name:        &output.Auth.Profile.Name,
+			Permissions: &output.Auth.Profile.Permissions,
 		},
 	}
 }
@@ -60,13 +60,13 @@ func (s *authService) generateAuthOutputDTO(user *domain.User, expiration bool) 
 	}
 }
 
-func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) (*dto.AuthOutputDTO, error) {
-	user := &domain.User{Username: credentials.Login}
+func (s *authService) Login(ctx context.Context, input *dto.AuthInputDTO) (*dto.AuthOutputDTO, error) {
+	user := &domain.User{Username: input.Login}
 	if err := s.repository.GetUser(ctx, user); err != nil {
 		return nil, err
 	}
 
-	if !user.ValidatePassword(credentials.Password) {
+	if !user.ValidatePassword(input.Password) {
 		return nil, erro.ErrInvalidCredentials
 	}
 
@@ -74,7 +74,7 @@ func (s *authService) Login(ctx context.Context, credentials *dto.AuthInputDTO) 
 		return nil, erro.ErrDisabledUser
 	}
 
-	return s.generateAuthOutputDTO(user, credentials.Expiration), nil
+	return s.generateAuthOutputDTO(user, input.Expiration), nil
 }
 
 func (s *authService) Me(user *domain.User) *dto.UserOutputDTO {

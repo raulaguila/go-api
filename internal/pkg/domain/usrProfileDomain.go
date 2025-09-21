@@ -21,18 +21,19 @@ type (
 
 	ProfileRepository interface {
 		CountProfiles(ctx context.Context, f *dto.ProfileFilter) (int64, error)
-		GetProfile(ctx context.Context, p *Profile) error
+		GetProfile(ctx context.Context, input *Profile) error
 		GetProfiles(ctx context.Context, f *dto.ProfileFilter) (*[]Profile, error)
-		CreateProfile(ctx context.Context, p *Profile) error
-		UpdateProfile(ctx context.Context, p *Profile) error
-		DeleteProfiles(ctx context.Context, i []uint) error
+		CreateProfile(ctx context.Context, input *Profile) error
+		UpdateProfile(ctx context.Context, input *Profile) error
+		DeleteProfiles(ctx context.Context, ids []uint) error
 	}
 
 	ProfileService interface {
 		GenerateProfileOutputDTO(p *Profile) *dto.ProfileOutputDTO
 		GetProfiles(ctx context.Context, f *dto.ProfileFilter) (*dto.ItemsOutputDTO[dto.ProfileOutputDTO], error)
-		CreateProfile(ctx context.Context, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
-		UpdateProfile(ctx context.Context, id uint, pdto *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
+		ListProfiles(ctx context.Context, f *dto.ProfileFilter) (*[]dto.ItemOutputDTO, error)
+		CreateProfile(ctx context.Context, input *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
+		UpdateProfile(ctx context.Context, id uint, input *dto.ProfileInputDTO) (*dto.ProfileOutputDTO, error)
 		DeleteProfiles(ctx context.Context, ids []uint) error
 	}
 )
