@@ -12,8 +12,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
+	"github.com/raulaguila/go-api/internal/pkg/consts"
 	"github.com/raulaguila/go-api/internal/pkg/domain"
-	"github.com/raulaguila/go-api/pkg/consts"
 )
 
 var (

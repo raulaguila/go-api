@@ -6,10 +6,10 @@ WORKDIR /opt/api
 
 # Copy files to docker image
 COPY configs/.env configs/.env
-COPY binbackend .
+COPY bin/backend .
 
-RUN chmod +x binbackend
+RUN chmod +x backend
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 
-CMD [ "./binbackend" ]
+CMD [ "./backend" ]

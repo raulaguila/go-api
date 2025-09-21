@@ -1071,7 +1071,7 @@
                 },
                 "login": {
                     "type": "string",
-                    "example": "00000000"
+                    "example": "admin"
                 },
                 "password": {
                     "type": "string",
@@ -1217,7 +1217,7 @@
                 },
                 "username": {
                     "type": "string",
-                    "example": "51515151"
+                    "example": "john.cena"
                 }
             }
         },

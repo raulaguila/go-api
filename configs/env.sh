@@ -1,9 +1,9 @@
 #!/bin/bash
 
+ipaddr=$(hostname -I | cut -d' ' -f1)
 release_version=$(cat configs/version.txt | tr -d "[:space:]")
 access_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
 refresh_token=$(openssl genrsa 2048 | base64 | tr -d \\n)
-ipaddr=$(hostname -I | cut -d' ' -f1)
 
 echo "TZ='America/Manaus'                             # Set system time zone
 SYS_VERSION='${release_version}'                    # System version

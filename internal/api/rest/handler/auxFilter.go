@@ -5,8 +5,8 @@ import (
 
 	"github.com/raulaguila/go-api/internal/api/rest/middleware/datatransferobject"
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
+	"github.com/raulaguila/go-api/internal/pkg/consts"
 	"github.com/raulaguila/go-api/internal/pkg/dto"
-	"github.com/raulaguila/go-api/pkg/consts"
 	"github.com/raulaguila/go-api/pkg/pgfilter"
 )
 

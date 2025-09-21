@@ -17,7 +17,7 @@ definitions:
         example: true
         type: boolean
       login:
-        example: "00000000"
+        example: admin
         type: string
       password:
         example: "12345678"
@@ -115,7 +115,7 @@ definitions:
         example: true
         type: boolean
       username:
-        example: "51515151"
+        example: john.cena
         type: string
     type: object
   github_com_raulaguila_go-api_internal_pkg_dto.UserOutputDTO:

@@ -32,9 +32,6 @@ coverage.html
 .vscode/
 .run/
 bin/
-docker/
-!build/
-!*/docker/
 
 # Files
 *.7z

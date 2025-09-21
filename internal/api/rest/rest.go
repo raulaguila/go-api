@@ -2,6 +2,7 @@ package rest
 
 import (
 	"fmt"
+	"html/template"
 	"os"
 	"strings"
 	"time"
@@ -19,6 +20,7 @@ import (
 
 	"github.com/raulaguila/go-api/configs"
 	"github.com/raulaguila/go-api/docs"
+	"github.com/raulaguila/go-api/docs/style"
 	"github.com/raulaguila/go-api/internal/api/rest/handler"
 	"github.com/raulaguila/go-api/internal/api/rest/middleware"
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
@@ -76,6 +78,11 @@ func start(app *fiber.App, postgresDB *gorm.DB, minioClient *minio.Client) {
 			DisplayRequestDuration: true,
 			DocExpansion:           "none",
 			ValidatorUrl:           "none",
+			SyntaxHighlight: &swagger.SyntaxHighlightConfig{
+				Activate: true,
+				Theme:    "arta",
+			},
+			CustomStyle: template.CSS(style.SwaggerStyle),
 		}))
 	}
 

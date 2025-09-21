@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/raulaguila/go-api/internal/pkg/HTTPResponse"
-	"github.com/raulaguila/go-api/pkg/consts"
+	"github.com/raulaguila/go-api/internal/pkg/consts"
 )
 
 type File struct {

@@ -1078,7 +1078,7 @@ const docTemplate = `{
                 },
                 "login": {
                     "type": "string",
-                    "example": "00000000"
+                    "example": "admin"
                 },
                 "password": {
                     "type": "string",
@@ -1224,7 +1224,7 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string",
-                    "example": "51515151"
+                    "example": "john.cena"
                 }
             }
         },
