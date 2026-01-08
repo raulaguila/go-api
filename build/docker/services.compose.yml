@@ -46,7 +46,7 @@ services:
 
     hostname: minio
     container_name: api_minio
-    image: bitnami/minio:2024
+    image: bitnamilegacy/minio:2024
     restart: always
     volumes:
       - minio_volume:/bitnami/minio/data
